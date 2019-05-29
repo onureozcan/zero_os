@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+    build:
+        image: zos_build_env
+        container_name: zero_os_build_environment
+        build: .
+        volumes:
+            - ../:/project
+        command: 'bash -c "cd /project/build_scripts/ && ./build.sh"'

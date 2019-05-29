@@ -1,0 +1,5 @@
+build_dir/
+dist/
+iso/boot/kernel
+.idea
+cmake-build-debug
