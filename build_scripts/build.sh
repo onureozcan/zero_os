@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 ./cmake_build.sh \
 && cd ../build_dir \
-&& mv kernel ../iso/boot \
-&& grub-mkrescue -o os.iso ../iso && chmod 777 os.iso
+&& cp kernel ../iso/boot \
+&& grub-mkrescue -o ../dist/os.iso ../iso \
+&& chmod 777 ../dist/os.iso \
+&& cd ../iso/boot \
+&& objcopy --only-keep-debug kernel kernel.sym \
+&& objcopy --strip-debug kernel
