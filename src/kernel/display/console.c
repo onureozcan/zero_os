@@ -34,7 +34,7 @@ void console_put_char(char c) {
     // scroll if necessary
     if (console_buffer_pos >= KERNEL_CONSOLE_BUFFER_SIZE) {
         int scroll_amount = KERNEL_CONSOLE_WIDTH; // scroll one line
-        for (int i = 0; i < KERNEL_CONSOLE_BUFFER_SIZE; i++) {
+        for (int i = 0; i < KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount; i++) {
             kernel_console_buffer[i] = kernel_console_buffer[i + scroll_amount];
         }
         // clear scrolled line
