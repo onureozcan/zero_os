@@ -3,3 +3,5 @@ dist/
 iso/boot/kernel
 .idea
 cmake-build-debug
+#ignores symbol files
+*.sym
