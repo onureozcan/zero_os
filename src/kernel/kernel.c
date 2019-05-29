@@ -1,7 +1,7 @@
 //
 // Created by onureozcan on 28.05.2019.
 //
-#include <console.h>
+#include <display/console.h>
 
 void kmain(void) {
     console_clear();

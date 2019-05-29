@@ -2,7 +2,7 @@
 // Created by onureozcan on 29.05.2019.
 //
 
-#include <console.h>
+#include <display/console.h>
 
 char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;
