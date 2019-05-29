@@ -2,12 +2,12 @@
 // Created by onureozcan on 28.05.2019.
 //
 #include <display/console.h>
+#include <cpu/gdt.h>
 
 void kmain(void) {
     console_clear();
     console_put_string("initializing Zero Os ...");
-    for (int i = 0; i < 500; i++) {
-        console_put_string("this will trigger scroll");
-    }
+    console_put_string("gdt_init");
+    gdt_init();
     return;
 }
