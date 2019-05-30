@@ -3,6 +3,8 @@
 //
 
 #include <display/console.h>
+#include <stdarg.h>
+#include <tinyprintf.h>
 
 char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;
@@ -50,21 +52,26 @@ void console_put_char(char c) {
     }
 }
 
+static void console_buffer_scroll_by_n_chars(int n) {
+    int scroll_amount = n;
+    for (int i = 0; i < KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount; i++) {
+        kernel_console_buffer[i] = kernel_console_buffer[i + scroll_amount];
+    }
+    // clear scrolled line
+    for (int i = 0; i < scroll_amount; i++) {
+        kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount + i] = 0;
+    }
+    // reposition the cursor
+    console_buffer_pos = KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount;
+}
+
 void console_put_char_internal(char c) {
     kernel_console_buffer[console_buffer_pos] = c;
     console_buffer_pos++;
     // scroll if necessary
     if (console_buffer_pos >= KERNEL_CONSOLE_BUFFER_SIZE) {
         int scroll_amount = KERNEL_CONSOLE_WIDTH; // scroll one line
-        for (int i = 0; i < KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount; i++) {
-            kernel_console_buffer[i] = kernel_console_buffer[i + scroll_amount];
-        }
-        // clear scrolled line
-        for (int i = 0; i < scroll_amount; i++) {
-            kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount + i] = 0;
-        }
-        // reposition the cursor
-        console_buffer_pos = KERNEL_CONSOLE_BUFFER_SIZE - scroll_amount;
+        console_buffer_scroll_by_n_chars(scroll_amount);
     }
     console_repaint();
 }
@@ -77,4 +84,27 @@ void console_put_string(char *string) {
         i++;
         c = string[i];
     }
+}
+
+void console_printf(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    char buffer[KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE + 1] = {0};
+    tfp_vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, format, args);
+    va_end(args);
+    console_put_string(buffer);
+}
+
+void console_log(const char *tag, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    char buffer[KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE + 1] = {0};
+    tfp_vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, format, args);
+    va_end(args);
+    console_printf("[%s]:", tag);
+    console_put_string(buffer);
+}
+
+void console_init() {
+
 }

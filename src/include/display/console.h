@@ -2,18 +2,21 @@
  * This file defines an interface for basic logging for 80*25 console.
  */
 
+#ifndef ZEROOS_CONSOLE_H
+#define ZEROOS_CONSOLE_H
+
 #include <stdint-gcc.h>
 
 #define KERNEL_CONSOLE_WIDTH 80
 #define KERNEL_CONSOLE_HEIGHT 25
 #define KERNEL_CONSOLE_BUFFER_SIZE (KERNEL_CONSOLE_WIDTH * KERNEL_CONSOLE_HEIGHT)
-#define VGA_TEXT_BUFFER_SIZE (KERNEL_CONSOLE_WIDTH * KERNEL_CONSOLE_HEIGHT * 2)
 #define VGA_TEXT_BUFFER_SIZE_CHARS (KERNEL_CONSOLE_WIDTH * KERNEL_CONSOLE_HEIGHT)
 #define KERNEL_CONSOLE_BKG_COLOR VGA_COLOR_DARK_GREY
 #define KERNEL_CONSOLE_FG_COLOR VGA_COLOR_WHITE
 #define VGA_TEXT_MODE_MEMORY_START_ADDRESS 0xB8000
 
 #define KERNEL_CONSOLE_TAB_SPACE_COUNT 4
+#define KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE (KERNEL_CONSOLE_WIDTH * 5)
 
 enum vga_color {
     VGA_COLOR_BLACK = 0,
@@ -34,9 +37,16 @@ enum vga_color {
     VGA_COLOR_WHITE = 15,
 };
 
+void console_init();
 
 void console_put_char(char c);
 
 void console_put_string(char *str);
 
+void console_printf(const char *fmt, ...);
+
+void console_log(const char *tag, const char *fmt, ...);
+
 void console_clear();
+
+#endif

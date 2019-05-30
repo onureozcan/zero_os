@@ -9,7 +9,9 @@
 
 #ifndef ZEROOS_GDT_H
 #define ZEROOS_GDT_H
+#define LOG_TAG "GDT"
 
+#include <display/console.h>
 #include <stdint-gcc.h>
 
 #define SEG_DESCTYPE(x)  ((x) << 0x04) // Descriptor type (0 for system, 1 for code/data)

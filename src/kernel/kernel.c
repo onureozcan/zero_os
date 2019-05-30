@@ -5,10 +5,7 @@
 #include <cpu/gdt.h>
 
 void kmain(void) {
-    console_clear();
+    console_init();
     console_put_string("initializing Zero Os ...\n");
-    console_put_string("global descriptor table");
     gdt_init();
-    console_put_string("...OK");
-    return;
 }

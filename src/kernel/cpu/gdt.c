@@ -30,4 +30,5 @@ void gdt_init() {
     gdt_entries[4] = create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL3));
     set_gdtr((uint32_t) gdt_entries, GDT_ENTRIES_SIZE * sizeof(uint64_t) - 1);
     gdt_load_kernel_selectors();
+    console_log(LOG_TAG, "loaded gdt at %p \n", gdt_entries);
 }
