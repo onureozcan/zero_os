@@ -18,6 +18,8 @@ extern kmain	        ;kmain is defined in the c file
 start:
   cli 			;block interrupts
   mov esp, stack_space	;set stack pointer
+  push eax; GRUB puts multiboot info struct pointer to here
+  push ebx;
   call kmain
   hlt		 	;halt the CPU
 
