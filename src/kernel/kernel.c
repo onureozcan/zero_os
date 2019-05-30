@@ -6,8 +6,9 @@
 
 void kmain(void) {
     console_clear();
-    console_put_string("initializing Zero Os ...");
-    console_put_string("gdt_init");
+    console_put_string("initializing Zero Os ...\n");
+    console_put_string("global descriptor table");
     gdt_init();
+    console_put_string("...OK");
     return;
 }

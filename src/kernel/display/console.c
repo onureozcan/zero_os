@@ -8,6 +8,8 @@ char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;
 char *video_memory = (char *) VGA_TEXT_MODE_MEMORY_START_ADDRESS;
 
+void console_put_char_internal(char c);
+
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
     return fg | bg << 4;
 }
@@ -29,6 +31,26 @@ void console_clear() {
 }
 
 void console_put_char(char c) {
+    switch (c) {
+        case '\n': {
+            int line_leftover = KERNEL_CONSOLE_WIDTH - (console_buffer_pos % KERNEL_CONSOLE_WIDTH);
+            for (int i = 0; i < line_leftover; i++) {
+                console_put_char(' ');
+            }
+            break;
+        }
+        case '\t': {
+            for (int i = 0; i < KERNEL_CONSOLE_TAB_SPACE_COUNT; i++) {
+                console_put_char(' ');
+            }
+            break;
+        }
+        default:
+            console_put_char_internal(c);
+    }
+}
+
+void console_put_char_internal(char c) {
     kernel_console_buffer[console_buffer_pos] = c;
     console_buffer_pos++;
     // scroll if necessary
@@ -54,9 +76,5 @@ void console_put_string(char *string) {
         console_put_char(c);
         i++;
         c = string[i];
-    }
-    int line_leftover = KERNEL_CONSOLE_WIDTH - (i % KERNEL_CONSOLE_WIDTH);
-    for (i = 0; i < line_leftover; i++) {
-        console_put_char(' ');
     }
 }

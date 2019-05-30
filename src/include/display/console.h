@@ -13,6 +13,8 @@
 #define KERNEL_CONSOLE_FG_COLOR VGA_COLOR_WHITE
 #define VGA_TEXT_MODE_MEMORY_START_ADDRESS 0xB8000
 
+#define KERNEL_CONSOLE_TAB_SPACE_COUNT 4
+
 enum vga_color {
     VGA_COLOR_BLACK = 0,
     VGA_COLOR_BLUE = 1,
@@ -34,8 +36,6 @@ enum vga_color {
 
 
 void console_put_char(char c);
-
-void console_put_number(int32_t c);
 
 void console_put_string(char *str);
 
