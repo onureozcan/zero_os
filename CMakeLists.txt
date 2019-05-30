@@ -18,6 +18,7 @@ add_executable(kernel
         src/kernel/cpu/gdt.c
         src/kernel/cpu/gdt.asm
         src/kernel/lib/external/tinyprintf/tinyprintf-master/tinyprintf.c
+        src/kernel/memory/memory_manager.c
 )
 
 target_link_libraries(kernel libgcc.a)
