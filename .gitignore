@@ -5,3 +5,5 @@ iso/boot/kernel
 cmake-build-debug
 #ignores symbol files
 *.sym
+#ignore 3rd party libs
+src/kernel/lib/external/*
