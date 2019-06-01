@@ -8,6 +8,8 @@ set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <FLAGS> -f elf32 -o
 set(CMAKE_EXE_LINKER_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g")
 
 include_directories(src/include)
+include_directories(src/kernel/lib/include)
+
 # TODO: looks ugly
 include_directories(src/kernel/lib/external/tinyprintf/tinyprintf-master)
 
@@ -19,7 +21,8 @@ add_executable(kernel
         src/kernel/cpu/gdt.asm
         src/kernel/lib/external/tinyprintf/tinyprintf-master/tinyprintf.c
         src/kernel/memory/memory_manager.c
+        src/kernel/memory/malloc.c
+        src/kernel/lib/str/k_string.c
 )
 
 target_link_libraries(kernel libgcc.a)
-

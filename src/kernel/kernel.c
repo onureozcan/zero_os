@@ -15,5 +15,6 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
         console_printf("ERROR: multiboot magic bytes was corrupted.");
         return;
     }
-    memory_manager_init((multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr, multiboot_info_ptr->mmap_length);
+    memory_manager_malloc_init();
+    memory_manager_mmap_init((multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr, multiboot_info_ptr->mmap_length);
 }

@@ -1,0 +1,100 @@
+//
+// Created by onureozcan on 01.06.2019.
+//
+
+/**
+ * This file implements k_malloc, k_free and k_realloc defined in memory_manager.h
+ * */
+#include <memory/memory_manager.h>
+#include <common.h>
+#include <k_string.h>
+
+#ifdef LOG_TAG
+#undef LOG_TAG
+#endif
+#define LOG_TAG "K_MALLOC"
+#define SIZE_OF_K_MALLOC_NODE sizeof(struct k_malloc_node)
+
+struct k_malloc_node {
+    int is_free;  // TODO: why wasting this many bytes?
+    size_t size;
+    struct k_malloc_node *next;
+};
+
+static struct k_malloc_node *head = (void *) kernel_heap_area;
+
+static struct k_malloc_node *get_k_malloc_node_from_ptr(void *ptr) {
+    return ((struct k_malloc_node *) (ptr - SIZE_OF_K_MALLOC_NODE));
+}
+
+void memory_manager_malloc_init() {
+    head->is_free = TRUE;
+    head->next = NULL;
+    head->size = KERNEL_HEAP_SIZE_BYTES - SIZE_OF_K_MALLOC_NODE;
+}
+
+/**
+ * splits a given block
+ * @param big_block
+ * @param size
+ */
+static void k_malloc_split(struct k_malloc_node *big_block, size_t size) {
+
+    struct k_malloc_node *new_block = ((void *) big_block + size + SIZE_OF_K_MALLOC_NODE);
+    new_block->size = (big_block->size - size - SIZE_OF_K_MALLOC_NODE);
+    new_block->is_free = TRUE;
+    new_block->next = big_block->next;
+    big_block->size = size;
+    big_block->is_free = FALSE;
+    big_block->next = new_block;
+
+}
+
+static void k_malloc_merge_2_blocks(struct k_malloc_node *current, struct k_malloc_node *next) {
+    current->next = next->next;
+    current->size += next->size + SIZE_OF_K_MALLOC_NODE;
+}
+
+static void k_malloc_merge() {
+    struct k_malloc_node *current = head;
+    while (current->next != NULL) {
+        if (current->is_free) {
+            struct k_malloc_node *next = current->next;
+            if (next && next->is_free) {
+                k_malloc_merge_2_blocks(current, next);
+            }
+        }
+    }
+}
+
+void *k_malloc(size_t size) {
+    size = ALIGN_8(size);
+    struct k_malloc_node *current = head;
+    while (current->next != NULL) {
+        if (current->is_free && current->size >= size) {
+            if (current->size != size) {
+                k_malloc_split(current, size);
+            }
+            current->is_free = FALSE;
+            return current;
+        }
+    }
+    return NULL;
+}
+
+void *k_realloc(void *ptr, size_t size) {
+    if (ptr == NULL) {
+        return k_malloc(size);
+    } else {
+        size_t old_size = get_k_malloc_node_from_ptr(ptr)->size;
+        void *new_ptr = k_malloc(size);
+        memcpy(new_ptr, ptr, old_size);
+    }
+    return NULL;
+}
+
+void k_free(void *ptr) {
+    get_k_malloc_node_from_ptr(ptr)->is_free = TRUE;
+    k_malloc_merge();
+}
+
