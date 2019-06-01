@@ -3,9 +3,8 @@ project(ZeroOs C)
 set(CMAKE_C_STANDARD 11)
 enable_language(ASM_NASM)
 
-set(CMAKE_C_FLAGS "-m32 -nostdlib -Wall -g")
-set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <FLAGS> -f elf32 -o <OBJECT> <SOURCE>")
-set(CMAKE_EXE_LINKER_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g")
+set(CMAKE_C_FLAGS "-m32 -Wall -g")
+set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f elf32 -o <OBJECT> <SOURCE>")
 
 include_directories(src/include)
 include_directories(src/kernel/lib/include)
@@ -25,4 +24,20 @@ add_executable(kernel
         src/kernel/lib/str/k_string.c
 )
 
+set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
+set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -nostdlib -g -Wall")
+
 target_link_libraries(kernel libgcc.a)
+
+## TESTS
+
+enable_testing()
+
+add_executable(malloc_tester
+        src/tests/mock/mock_console_functions.c
+        src/kernel/memory/memory_manager.c
+        src/kernel/memory/malloc.c
+        src/tests/malloc_tester.c
+)
+
+add_test(test_k_malloc malloc_tester COMMAND malloc_tester)

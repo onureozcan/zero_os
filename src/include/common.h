@@ -7,7 +7,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#define ALIGN_8(size) (((size) + (8-1)) & ~(8-1))
+#define ALIGN_4(size) (((size) + (4-1)) & ~(4-1))
 
 #define ZEROOS_COMMON_H
 

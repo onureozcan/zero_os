@@ -24,7 +24,7 @@ struct k_malloc_node {
 static struct k_malloc_node *head = (void *) kernel_heap_area;
 
 static struct k_malloc_node *get_k_malloc_node_from_ptr(void *ptr) {
-    return ((struct k_malloc_node *) (ptr - SIZE_OF_K_MALLOC_NODE));
+    return ((struct k_malloc_node *) ((void *) ptr - SIZE_OF_K_MALLOC_NODE));
 }
 
 void memory_manager_malloc_init() {
@@ -57,27 +57,29 @@ static void k_malloc_merge_2_blocks(struct k_malloc_node *current, struct k_mall
 
 static void k_malloc_merge() {
     struct k_malloc_node *current = head;
-    while (current->next != NULL) {
+    while (current != NULL) {
         if (current->is_free) {
             struct k_malloc_node *next = current->next;
             if (next && next->is_free) {
                 k_malloc_merge_2_blocks(current, next);
             }
         }
+        current = current->next;
     }
 }
 
 void *k_malloc(size_t size) {
-    size = ALIGN_8(size);
+    size = ALIGN_4(size);
     struct k_malloc_node *current = head;
-    while (current->next != NULL) {
-        if (current->is_free && current->size >= size) {
-            if (current->size != size) {
+    while (current != NULL) {
+        if (current->is_free && current->size + SIZE_OF_K_MALLOC_NODE >= size) {
+            if (current->size + SIZE_OF_K_MALLOC_NODE != size) {
                 k_malloc_split(current, size);
             }
             current->is_free = FALSE;
-            return current;
+            return (void *) current + SIZE_OF_K_MALLOC_NODE;
         }
+        current = current->next;
     }
     return NULL;
 }
@@ -89,12 +91,14 @@ void *k_realloc(void *ptr, size_t size) {
         size_t old_size = get_k_malloc_node_from_ptr(ptr)->size;
         void *new_ptr = k_malloc(size);
         memcpy(new_ptr, ptr, old_size);
+        return new_ptr;
     }
     return NULL;
 }
 
 void k_free(void *ptr) {
-    get_k_malloc_node_from_ptr(ptr)->is_free = TRUE;
+    struct k_malloc_node *node = get_k_malloc_node_from_ptr(ptr);
+    node->is_free = TRUE;
     k_malloc_merge();
 }
 
