@@ -7,3 +7,5 @@ cmake-build-debug
 *.sym
 #ignore 3rd party libs
 src/kernel/lib/external/*
+#ignore logs
+*.log
