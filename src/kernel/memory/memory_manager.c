@@ -44,6 +44,7 @@ void *memory_manager_alloc_page_frame() {
     // The simplest solution.
     for (int i = 0; i < memory_manager_total_number_of_pages; i++) {
         if (!mmap_is_used(i)) {
+            mmap_set(i);
             return (void *) (i * PAGE_SIZE_BYTES);
         }
     }
@@ -58,6 +59,10 @@ static void memory_manager_unset_page_by_address(uint32_t address) {
 
 void memory_manager_free_page_frame(void *ptr) {
     memory_manager_unset_page_by_address((uint32_t) ptr);
+}
+
+int memory_manager_get_total_number_of_pages() {
+    return memory_manager_total_number_of_pages;
 }
 
 void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_length) {

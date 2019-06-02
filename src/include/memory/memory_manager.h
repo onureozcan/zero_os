@@ -41,11 +41,13 @@ void memory_manager_malloc_init();
  * */
 void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t);
 
-/* allocates a 4K aligned page frame. MUST be 0(1) */
+/* allocates a 4K aligned page frame */
 void *memory_manager_alloc_page_frame();
 
-/* de-allocates a 4K aligned page frame. MUST be 0(1) */
+/* de-allocates a 4K aligned page frame*/
 void memory_manager_free_page_frame(void *);
+
+int memory_manager_get_total_number_of_pages();
 
 /**
  * There must be a non-paged area to use as a kernel heap space

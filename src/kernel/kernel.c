@@ -28,4 +28,5 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     memory_manager_mmap_init((multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr,
                              multiboot_info_ptr->mmap_length);
     memory_manager_set_kernel_used_areas(multiboot_info_ptr->u.elf_sec);
+    page_manager_init();
 }

@@ -21,11 +21,13 @@ add_executable(kernel
         src/kernel/lib/external/tinyprintf/tinyprintf-master/tinyprintf.c
         src/kernel/memory/memory_manager.c
         src/kernel/memory/malloc.c
+        src/kernel/memory/page_manager.c
+        src/kernel/memory/page_manager.asm
         src/kernel/lib/str/k_string.c
 )
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
-set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -nostdlib -g -Wall")
+set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")
 
 target_link_libraries(kernel libgcc.a)
 
