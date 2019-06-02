@@ -8,6 +8,8 @@
 
 #ifndef ZEROOS_MEMORY_MANAGER_H
 
+#define ZEROOS_MEMORY_MANAGER_H
+
 // 4 mb non paged area reserved for kernel use.
 #define KERNEL_HEAP_SIZE_BYTES (1024*1024*4)
 
@@ -32,6 +34,12 @@ void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_l
  */
 void memory_manager_malloc_init();
 
+/**
+ * This function takes elf section table and marks specific areas as as used by the kernel
+ * so that these sections will never be given to a user program
+ * */
+void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t);
+
 /* allocates a 4K aligned page frame. MUST be 0(1) */
 void *memory_manager_alloc_page_frame();
 
@@ -48,7 +56,5 @@ void *k_malloc(size_t);
 void *k_realloc(void *, size_t);
 
 void k_free(void *);
-
-#define ZEROOS_MEMORY_MANAGER_H
 
 #endif //ZEROOS_MEMORY_MANAGER_H
