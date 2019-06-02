@@ -40,9 +40,24 @@ static void memory_manager_set_page_by_address(uint32_t address) {
     mmap_set(index);
 }
 
+void *memory_manager_alloc_page_frame() {
+    // The simplest solution.
+    for (int i = 0; i < memory_manager_total_number_of_pages; i++) {
+        if (!mmap_is_used(i)) {
+            return (void *) (i * PAGE_SIZE_BYTES);
+        }
+    }
+    return NULL;
+}
+
+
 static void memory_manager_unset_page_by_address(uint32_t address) {
     int index = memory_manager_get_page_number_from_address(address);
     mmap_unset(index);
+}
+
+void memory_manager_free_page_frame(void *ptr) {
+    memory_manager_unset_page_by_address((uint32_t) ptr);
 }
 
 void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_length) {
