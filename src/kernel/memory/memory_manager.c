@@ -128,7 +128,7 @@ void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t e
         }
         section++;
     }
-    console_log(LOG_TAG, "kernel reserved:%d mb\n", total_size);
+    console_log(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
     console_log(LOG_TAG, "%d mb available for user space out of %d mb\n",
                 memory_manager_number_of_free_pages / 256,
                 memory_manager_total_number_of_pages / 256);
