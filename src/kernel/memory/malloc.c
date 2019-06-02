@@ -81,6 +81,7 @@ void *k_malloc(size_t size) {
         }
         current = current->next;
     }
+    panic("kernel runs out of memory!");
     return NULL;
 }
 

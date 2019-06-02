@@ -46,3 +46,8 @@ void console_log(const char *tag, const char *format, ...) {
 void console_init() {
 
 }
+
+void panic(char* reason){
+    console_put_string(reason);
+    while (1);
+}

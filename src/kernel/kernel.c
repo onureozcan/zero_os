@@ -6,6 +6,14 @@
 #include <multiboot.h>
 #include <memory/memory_manager.h>
 #include <elf.h>
+#include <memory/page_manager.h>
+
+// TODO: should it be here?
+void panic(char *reason) {
+    console_clear();
+    console_put_string(reason);
+    while (1);
+}
 
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     console_init();

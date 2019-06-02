@@ -11,6 +11,8 @@
 
 #define ALIGN_4K(size) (((size) + (4096-1)) & ~(4096-1))
 
+void panic(char* reason);
+
 #define ZEROOS_COMMON_H
 
 #endif //ZEROOS_COMMON_H
