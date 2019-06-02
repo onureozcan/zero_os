@@ -15,6 +15,7 @@
 
 char kernel_heap_area[KERNEL_HEAP_SIZE_BYTES];
 
+#define PAGE_SIZE_BYTES 4096
 
 #ifdef LOG_TAG
 #undef LOG_TAG

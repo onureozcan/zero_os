@@ -9,6 +9,8 @@
 
 #define ALIGN_4(size) (((size) + (4-1)) & ~(4-1))
 
+#define ALIGN_4K(size) (((size) + (4096-1)) & ~(4096-1))
+
 #define ZEROOS_COMMON_H
 
 #endif //ZEROOS_COMMON_H
