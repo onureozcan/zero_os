@@ -48,6 +48,7 @@ void console_put_char(char c) {
             break;
         }
         case '\b': {
+            if (console_buffer_pos == 0) break;
             console_buffer_pos--;
             console_put_char(' ');
             console_buffer_pos--;
