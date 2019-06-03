@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 #download external files before build
-#download tinyprintf
-# TODO: find an elegant way to do this. using bash script fro this job is rather hacky
-EXTERNAL_KERNEL_LIB_DIR=../src/kernel/lib/external
-TINY_PRINTF_DOWNLOAD_DIR=$EXTERNAL_KERNEL_LIB_DIR/tinyprintf
-TINY_PRINTF_DOWNLOAD_URL=https://github.com/cjlano/tinyprintf/archive/master.zip
 
 function download_external_file() {
    DOWNLOAD_DIR=$1
@@ -21,9 +16,6 @@ function download_external_file() {
        unzip master.zip);
    fi
 }
-
-download_external_file $TINY_PRINTF_DOWNLOAD_DIR $TINY_PRINTF_DOWNLOAD_URL
-
 
 ./cmake_build.sh \
 && cd ../build_dir \

@@ -9,16 +9,13 @@ set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f elf32 -o <OBJECT
 include_directories(src/include)
 include_directories(src/kernel/lib/include)
 
-# TODO: looks ugly
-include_directories(src/kernel/lib/external/tinyprintf/tinyprintf-master)
-
 add_executable(kernel
         src/kernel/kernel.c
         src/kernel/kernel.asm
         src/kernel/display/console.c
         src/kernel/cpu/gdt.c
         src/kernel/cpu/gdt.asm
-        src/kernel/lib/external/tinyprintf/tinyprintf-master/tinyprintf.c
+        src/kernel/lib/tinyprintf/tinyprintf.c
         src/kernel/memory/memory_manager.c
         src/kernel/memory/malloc.c
         src/kernel/memory/page_manager.c
