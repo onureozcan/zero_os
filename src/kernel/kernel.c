@@ -7,6 +7,7 @@
 #include <memory/memory_manager.h>
 #include <elf.h>
 #include <memory/page_manager.h>
+#include <cpu/idt.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -29,4 +30,5 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
                              multiboot_info_ptr->mmap_length);
     memory_manager_set_kernel_used_areas(multiboot_info_ptr->u.elf_sec);
     page_manager_init();
+    idt_init();
 }
