@@ -17,6 +17,8 @@ add_executable(kernel
         src/kernel/cpu/gdt.c
         src/kernel/cpu/idt.asm
         src/kernel/cpu/idt.c
+        src/kernel/cpu/ihandlers.c
+        src/kernel/cpu/ihandlers.asm
         src/kernel/cpu/gdt.asm
         src/kernel/lib/tinyprintf/tinyprintf.c
         src/kernel/memory/memory_manager.c
