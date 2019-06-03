@@ -16,6 +16,8 @@ void panic(char* reason);
 extern void write_port(uint32_t port,uint32_t data);
 extern uint8_t read_port(uint32_t port);
 
+extern uint32_t kernel_esp;
+
 #define ZEROOS_COMMON_H
 
 #endif //ZEROOS_COMMON_H

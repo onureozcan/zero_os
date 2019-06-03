@@ -13,6 +13,7 @@ section .text
         dd - (0x1BADB002 + 0x00) ;checksum. m+f+c should be zero
 
 global start
+global kernel_esp
 extern kmain	        ;kmain is defined in the c file
 
 start:
@@ -20,8 +21,11 @@ start:
   mov esp, stack_space	;set stack pointer
   push eax; GRUB puts multiboot info struct pointer to here
   push ebx;
+  mov dword [kernel_esp], stack_space;
   call kmain
   hlt		 	;halt the CPU
+
+kernel_esp: dd 0;
 
 section .bss
 resb 8192		;8KB for stack
