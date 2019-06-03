@@ -12,6 +12,7 @@ include_directories(src/kernel/lib/include)
 add_executable(kernel
         src/kernel/kernel.c
         src/kernel/kernel.asm
+        src/kernel/common.asm
         src/kernel/display/console.c
         src/kernel/cpu/gdt.c
         src/kernel/cpu/gdt.asm
