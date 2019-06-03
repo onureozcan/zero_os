@@ -47,6 +47,12 @@ void console_put_char(char c) {
             }
             break;
         }
+        case '\b': {
+            console_buffer_pos--;
+            console_put_char(' ');
+            console_buffer_pos--;
+            break;
+        }
         default:
             console_put_char_internal(c);
     }
