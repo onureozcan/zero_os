@@ -9,6 +9,10 @@
  * This file contains headers of interrupt handlers
  */
 
+
+extern void gpf();
+extern void double_fault();
+
 extern void irq0();
 extern void irq1();
 extern void irq2();

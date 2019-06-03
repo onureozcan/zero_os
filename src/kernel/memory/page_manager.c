@@ -19,7 +19,7 @@ void page_manager_init() {
     kernel_pages = page_directory_new();
     for (int i = 0; i < memory_manager_get_total_number_of_pages(); i++) {
         page_manager_map_page(kernel_pages, (void *) (i * PAGE_SIZE_BYTES),
-                              (void *) (i * PAGE_SIZE_BYTES), TRUE);
+                              (void *) (i * PAGE_SIZE_BYTES), FALSE);
     }
     page_manager_load_kernel_pages();
 }

@@ -30,6 +30,9 @@ void idt_init() {
         idt_set_gate(&isr_null, i);
     }
 
+    idt_set_gate(&double_fault, 8);
+    idt_set_gate(&gpf, 13);
+
     idt_set_gate(&irq0, 32 + 0);
     idt_set_gate(&irq1, 32 + 1);
     idt_set_gate(&irq2, 32 + 2);

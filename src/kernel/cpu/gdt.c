@@ -3,32 +3,63 @@
 //
 
 #include <cpu/gdt.h>
+#include <cpu/tss.h>
 
-static uint64_t create_descriptor(uint32_t base, uint32_t limit, uint16_t flag) {
-    uint64_t descriptor;
+static uint64_t create_descriptor(uint32_t base, uint32_t limit, uint8_t access, uint8_t grand) {
+    struct gdt_descriptor descriptor = {0};
+    //! set limit and base addresses
+    descriptor.baseLo	= (uint16_t)(base & 0xffff);
+    descriptor.baseMid	= (uint8_t)((base >> 16) & 0xff);
+    descriptor.baseHi	= (uint8_t)((base >> 24) & 0xff);
+    descriptor.limit	= (uint16_t)(limit & 0xffff);
 
-    // Create the high 32 bit segment
-    descriptor = limit & 0x000F0000;         // set limit bits 19:16
-    descriptor |= (flag << 8) & 0x00F0FF00;         // set type, p, dpl, s, g, d/b, l and avl fields
-    descriptor |= (base >> 16) & 0x000000FF;         // set base bits 23:16
-    descriptor |= base & 0xFF000000;         // set base bits 31:24
+    //! set flags and grandularity bytes
+    descriptor.flags = access;
+    descriptor.grand = (uint8_t)((limit >> 16) & 0x0f);
+    descriptor.grand |= grand & 0xf0;
+//    descriptor.limit = limit;
+//    descriptor.baseLo = base & 0xFFFF;
+//    descriptor.baseMid = (base >> 16) & 0x000000FF;
+//    descriptor.baseHi = ((base >> 24) & 0xFF);
+//    descriptor.flags = flag;
+//    descriptor.grand = grand;
+//
+//    descriptor.grand = (uint8_t) ((limit >> 16) & 0x0f);
+//    descriptor.grand |= grand & 0xf0;
+    return *((uint64_t *) &descriptor);
+}
 
-    // Shift by 32 to allow for low part of segment
-    descriptor <<= 32;
-
-    // Create the low 32 bit segment
-    descriptor |= base << 16;                       // set base bits 15:0
-    descriptor |= limit & 0x0000FFFF;               // set limit bits 15:0
-    return descriptor;
+static uint64_t get_tss_descriptor() {
+    uint32_t base = (uint32_t) &tss;
+    return create_descriptor(base, base + (sizeof(struct tss_entry)),
+                             I86_GDT_DESC_ACCESS | I86_GDT_DESC_EXEC_CODE | I86_GDT_DESC_DPL | I86_GDT_DESC_MEMORY,
+                             0);
 }
 
 void gdt_init() {
-    gdt_entries[0] = create_descriptor(0, 0, 0);
-    gdt_entries[1] = create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL0));
-    gdt_entries[2] = create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL0));
-    gdt_entries[3] = create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL3));
-    gdt_entries[4] = create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL3));
+
+    gdt_entries[0] = create_descriptor(0, 0, 0, 0);
+    gdt_entries[1] = create_descriptor(0, 0xFFFFFFFF,
+                                       I86_GDT_DESC_READWRITE | I86_GDT_DESC_EXEC_CODE | I86_GDT_DESC_CODEDATA |
+                                       I86_GDT_DESC_MEMORY,
+                                       I86_GDT_GRAND_4K | I86_GDT_GRAND_32BIT | I86_GDT_GRAND_LIMITHI_MASK);
+    gdt_entries[2] = create_descriptor(0, 0xFFFFFFFF,
+                                       I86_GDT_DESC_READWRITE | I86_GDT_DESC_CODEDATA | I86_GDT_DESC_MEMORY,
+                                       I86_GDT_GRAND_4K | I86_GDT_GRAND_32BIT | I86_GDT_GRAND_LIMITHI_MASK);
+    gdt_entries[3] = create_descriptor(0, 0xFFFFFFFF,
+                                       I86_GDT_DESC_READWRITE | I86_GDT_DESC_EXEC_CODE | I86_GDT_DESC_CODEDATA |
+                                       I86_GDT_DESC_MEMORY | I86_GDT_DESC_DPL,
+                                       I86_GDT_GRAND_4K | I86_GDT_GRAND_32BIT | I86_GDT_GRAND_LIMITHI_MASK);
+    gdt_entries[4] = create_descriptor(0, 0xFFFFFFFF,
+                                       I86_GDT_DESC_READWRITE | I86_GDT_DESC_CODEDATA | I86_GDT_DESC_MEMORY |
+                                       I86_GDT_DESC_DPL,
+                                       I86_GDT_GRAND_4K | I86_GDT_GRAND_32BIT | I86_GDT_GRAND_LIMITHI_MASK);
+
+    // install TSS descriptor
+    gdt_entries[5] = get_tss_descriptor();
+
     set_gdtr((uint32_t) gdt_entries, GDT_ENTRIES_SIZE * sizeof(uint64_t) - 1);
     gdt_load_kernel_selectors();
     console_log(LOG_TAG, "loaded gdt at %p \n", gdt_entries);
+
 }

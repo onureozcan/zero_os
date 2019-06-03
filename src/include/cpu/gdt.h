@@ -4,7 +4,8 @@
 
 /**
  * Global Descriptor Table Interface.
- * Used https://wiki.osdev.org/GDT_Tutorial#What_should_I_put_in_my_GDT.3F to prepare this file and related implementations.
+ * Used https://wiki.osdev.org/GDT_Tutorial#What_should_I_put_in_my_GDT.3F
+ * and http://www.brokenthorn.com/Resources/OSDev23.html to prepare this file and related implementations.
  */
 
 #ifndef ZEROOS_GDT_H
@@ -14,48 +15,65 @@
 #include <display/console.h>
 #include <stdint-gcc.h>
 
-#define SEG_DESCTYPE(x)  ((x) << 0x04) // Descriptor type (0 for system, 1 for code/data)
-#define SEG_PRES(x)      ((x) << 0x07) // Present
-#define SEG_SAVL(x)      ((x) << 0x0C) // Available for system use
-#define SEG_LONG(x)      ((x) << 0x0D) // Long mode
-#define SEG_SIZE(x)      ((x) << 0x0E) // Size (0 for 16-bit, 1 for 32)
-#define SEG_GRAN(x)      ((x) << 0x0F) // Granularity (0 for 1B - 1MB, 1 for 4KB - 4GB)
-#define SEG_PRIV(x)     (((x) &  0x03) << 0x05)   // Set privilege level (0 - 3)
+//! maximum amount of descriptors allowed
+#define MAX_DESCRIPTORS					6
 
-#define SEG_DATA_RD        0x00 // Read-Only
-#define SEG_DATA_RDA       0x01 // Read-Only, accessed
-#define SEG_DATA_RDWR      0x02 // Read/Write
-#define SEG_DATA_RDWRA     0x03 // Read/Write, accessed
-#define SEG_DATA_RDEXPD    0x04 // Read-Only, expand-down
-#define SEG_DATA_RDEXPDA   0x05 // Read-Only, expand-down, accessed
-#define SEG_DATA_RDWREXPD  0x06 // Read/Write, expand-down
-#define SEG_DATA_RDWREXPDA 0x07 // Read/Write, expand-down, accessed
-#define SEG_CODE_EX        0x08 // Execute-Only
-#define SEG_CODE_EXA       0x09 // Execute-Only, accessed
-#define SEG_CODE_EXRD      0x0A // Execute/Read
-#define SEG_CODE_EXRDA     0x0B // Execute/Read, accessed
-#define SEG_CODE_EXC       0x0C // Execute-Only, conforming
-#define SEG_CODE_EXCA      0x0D // Execute-Only, conforming, accessed
-#define SEG_CODE_EXRDC     0x0E // Execute/Read, conforming
-#define SEG_CODE_EXRDCA    0x0F // Execute/Read, conforming, accessed
+/***	 gdt descriptor access bit flags.	***/
 
-#define GDT_CODE_PL0 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
-                     SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
-                     SEG_PRIV(0)     | SEG_CODE_EXRD
+//! set access bit
+#define I86_GDT_DESC_ACCESS			0x0001			//00000001
 
-#define GDT_DATA_PL0 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
-                     SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
-                     SEG_PRIV(0)     | SEG_DATA_RDWR
+//! descriptor is readable and writable. default: read only
+#define I86_GDT_DESC_READWRITE			0x0002			//00000010
 
-#define GDT_CODE_PL3 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
-                     SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
-                     SEG_PRIV(3)     | SEG_CODE_EXRD
+//! set expansion direction bit
+#define I86_GDT_DESC_EXPANSION			0x0004			//00000100
 
-#define GDT_DATA_PL3 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
-                     SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
-                     SEG_PRIV(3)     | SEG_DATA_RDWR
+//! executable code segment. Default: data segment
+#define I86_GDT_DESC_EXEC_CODE			0x0008			//00001000
 
-#define GDT_ENTRIES_SIZE 5
+//! set code or data descriptor. defult: system defined descriptor
+#define I86_GDT_DESC_CODEDATA			0x0010			//00010000
+
+//! set dpl bits
+#define I86_GDT_DESC_DPL			0x0060			//01100000
+
+//! set "in memory" bit
+#define I86_GDT_DESC_MEMORY			0x0080			//10000000
+
+/**	gdt descriptor grandularity bit flags	***/
+
+//! masks out limitHi (High 4 bits of limit)
+#define I86_GDT_GRAND_LIMITHI_MASK		0x0f			//00001111
+
+//! set os defined bit
+#define I86_GDT_GRAND_OS			0x10			//00010000
+
+//! set if 32bit. default: 16 bit
+#define I86_GDT_GRAND_32BIT			0x40			//01000000
+
+//! 4k grandularity. default: none
+#define I86_GDT_GRAND_4K			0x80			//10000000
+
+#define GDT_ENTRIES_SIZE 6
+
+struct gdt_descriptor {
+
+    //! bits 0-15 of segment limit
+    uint16_t		limit;
+
+    //! bits 0-23 of base address
+    uint16_t		baseLo;
+    uint8_t			baseMid;
+
+    //! descriptor access flags
+    uint8_t			flags;
+
+    uint8_t			grand;
+
+    //! bits 24-32 of base address
+    uint8_t			baseHi;
+};
 
 uint64_t gdt_entries[GDT_ENTRIES_SIZE];
 

@@ -8,13 +8,20 @@
 #include <elf.h>
 #include <memory/page_manager.h>
 #include <cpu/idt.h>
+#include <cpu/tss.h>
+#include <cpu/usermode.h>
+#include <common.h>
+
+#define KERNEL_STACK_SIZE PAGE_SIZE_BYTES
 
 // TODO: should it be here?
 void panic(char *reason) {
-    console_clear();
+    //console_clear();
     console_put_string(reason);
     while (1);
 }
+
+char kernel_stack[KERNEL_STACK_SIZE];
 
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     console_init();
@@ -22,7 +29,7 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     console_printf("multiboot info is located at %p. magic: %p\n", multiboot_info_ptr, magic);
     gdt_init();
     if (magic != 0x2BADB002) {
-        console_printf("ERROR: multiboot magic bytes was corrupted.");
+        panic("ERROR: multiboot magic bytes was corrupted.");
         return;
     }
     memory_manager_malloc_init();
@@ -31,4 +38,15 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     memory_manager_set_kernel_used_areas(multiboot_info_ptr->u.elf_sec);
     page_manager_init();
     idt_init();
+
+    // having the same stack in both user and kernel modes would cause gpf
+    kernel_esp = kernel_stack + KERNEL_STACK_SIZE;
+    tss_init();
+    enter_user_mode();
+}
+
+void inside_user_mode() {
+    console_printf("inside user mode!\n");
+    while (1) {
+    }
 }

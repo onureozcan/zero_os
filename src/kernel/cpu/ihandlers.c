@@ -12,6 +12,16 @@
 #include <common.h>
 #include <keyboard/keyboard.h>
 
+/*GPF*/
+void gpf_handler(){
+    panic("gpf");
+}
+
+/*Double Fault*/
+void double_fault_handler(){
+    panic("double fault");
+}
+
 /* TIMER */
 void irq0_handler(void) {
     write_port(0x20, 0x20); //EOI

@@ -21,7 +21,6 @@ start:
   mov esp, stack_space	;set stack pointer
   push eax; GRUB puts multiboot info struct pointer to here
   push ebx;
-  mov dword [kernel_esp], stack_space;
   call kmain
   hlt		 	;halt the CPU
 

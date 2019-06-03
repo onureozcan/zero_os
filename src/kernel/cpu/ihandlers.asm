@@ -1,3 +1,9 @@
+global gpf;
+global double_fault;
+
+extern gpf_handler;
+extern double_fault_handler;
+
 global irq0
 global irq1
 global irq2
@@ -48,6 +54,18 @@ extern irq12_handler
 extern irq13_handler
 extern irq14_handler
 extern irq15_handler
+
+gpf:
+  pusha
+  call gpf_handler
+  popa
+  iret
+
+double_fault:
+  pusha
+  call double_fault_handler
+  popa
+  iret
 
 irq0:
   pusha
