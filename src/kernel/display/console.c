@@ -4,7 +4,7 @@
 
 #include <display/console.h>
 #include <stdarg.h>
-#include <tinyprintf.h>
+#include <tinyprintf/tinyprintf.h>
 
 char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;

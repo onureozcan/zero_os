@@ -7,7 +7,7 @@
  * */
 #include <memory/memory_manager.h>
 #include <common.h>
-#include <k_string.h>
+#include <string/k_string.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
