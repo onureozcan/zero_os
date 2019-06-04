@@ -56,15 +56,11 @@ extern irq14_handler
 extern irq15_handler
 
 gpf:
-  pusha
   call gpf_handler
-  popa
   iret
 
 double_fault:
-  pusha
   call double_fault_handler
-  popa
   iret
 
 irq0:

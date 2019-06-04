@@ -13,8 +13,9 @@
 #include <keyboard/keyboard.h>
 
 /*GPF*/
-void gpf_handler(){
-    panic("gpf");
+void gpf_handler(uint32_t error_code){
+    console_printf("!!!gpf: error code %d", error_code);
+    panic("");
 }
 
 /*Double Fault*/
