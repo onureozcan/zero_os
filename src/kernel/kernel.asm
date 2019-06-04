@@ -24,8 +24,6 @@ start:
   call kmain
   hlt		 	;halt the CPU
 
-kernel_esp: dd 0;
-
 section .bss
 resb 8192		;8KB for stack
 stack_space:

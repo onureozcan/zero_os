@@ -10,11 +10,11 @@
 #ifdef LOG_TAG
 #undef LOG_TAG
 #endif
-#define LOG_TAG "tss"
+#define LOG_TAG "TSS"
 
-void tss_init() {
+void tss_init(uint32_t kernel_stack) {
 
-    console_log(LOG_TAG, "init called. kernel esp is %p\n", kernel_esp);
+    console_log(LOG_TAG, "init called. kernel esp is %p\n", kernel_stack);
     // zero out the tss
     char *tss_as_char = (char *) &tss;
     for (int i = 0; i < sizeof(struct tss_entry); i++) {
@@ -22,7 +22,7 @@ void tss_init() {
     }
 
     tss.ss0 = 0x10;
-    tss.esp0 = kernel_esp;
+    tss.esp0 = kernel_stack;
 
     tss.cs = 0x0b;
     tss.ss = 0x13;

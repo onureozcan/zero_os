@@ -55,6 +55,6 @@ add_test(test_k_malloc malloc_tester COMMAND malloc_tester)
 add_executable(hello_world src/user/hello_world/hello.c)
 
 set_target_properties(hello_world PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -F dwarf -g -nostdlib")
-set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")
+set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -Wall")
 
 

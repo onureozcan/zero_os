@@ -39,7 +39,7 @@ struct tss_entry {
 
 struct tss_entry tss;
 
-void tss_init();
+void tss_init(uint32_t kernel_stack);
 
 void tss_flush();
 

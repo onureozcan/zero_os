@@ -5,6 +5,9 @@
 #ifndef ZEROOS_TASK_MANAGER_H
 #define ZEROOS_TASK_MANAGER_H
 
+#include <memory/page_manager.h>
+#include <stdint-gcc.h>
+
 #define PROCESS_STATE_SLEEP  0
 #define PROCESS_STATE_ACTIVE 1
 
