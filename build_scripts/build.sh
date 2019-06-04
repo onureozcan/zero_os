@@ -20,6 +20,8 @@ function download_external_file() {
 ./cmake_build.sh \
 && cd ../build_dir \
 && cp kernel ../iso/boot \
+&& mkdir -p ../iso/user \
+&& cp hello_world ../iso/user \
 && mkdir -p ../dist \
 && chmod 777 ../dist \
 && grub-mkrescue -o ../dist/os.iso ../iso \

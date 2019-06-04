@@ -30,7 +30,7 @@ add_executable(kernel
         src/kernel/cpu/tss.asm
         src/kernel/cpu/usermode.asm
         src/kernel/tasking/task_manager.c
-)
+        src/kernel/tasking/init.c)
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
 set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")
@@ -49,3 +49,12 @@ add_executable(malloc_tester
 )
 
 add_test(test_k_malloc malloc_tester COMMAND malloc_tester)
+
+# USER PROGRAMS
+
+add_executable(hello_world src/user/hello_world/hello.c)
+
+set_target_properties(hello_world PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -F dwarf -g -nostdlib")
+set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")
+
+
