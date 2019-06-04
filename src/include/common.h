@@ -7,6 +7,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define KERNEL_STACK_SIZE PAGE_SIZE_BYTES
+
 #define ALIGN_4(size) (((size) + (4-1)) & ~(4-1))
 
 #define ALIGN_4K(size) (((size) + (4096-1)) & ~(4096-1))

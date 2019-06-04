@@ -11,8 +11,7 @@
 #include <cpu/tss.h>
 #include <cpu/usermode.h>
 #include <common.h>
-
-#define KERNEL_STACK_SIZE PAGE_SIZE_BYTES
+#include <tasking/task_manager.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -21,7 +20,7 @@ void panic(char *reason) {
     while (1);
 }
 
-char kernel_stack[KERNEL_STACK_SIZE];
+char kernel_stack[KERNEL_STACK_SIZE] = {0};
 
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     console_init();
@@ -42,7 +41,13 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // having the same stack in both user and kernel modes would cause gpf
     kernel_esp = kernel_stack + KERNEL_STACK_SIZE;
     tss_init();
-    enter_user_mode();
+
+    // enter user mode was just a test if we can go into the user mode or not.
+    // since we proved that, no need to call it.
+    // task manager is now on responsible for using user process if any.
+    task_manager_init(multiboot_info_ptr);
+
+    //enter_user_mode();
 }
 
 void inside_user_mode() {

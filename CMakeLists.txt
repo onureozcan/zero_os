@@ -29,6 +29,7 @@ add_executable(kernel
         src/kernel/cpu/tss.c
         src/kernel/cpu/tss.asm
         src/kernel/cpu/usermode.asm
+        src/kernel/tasking/task_manager.c
 )
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
