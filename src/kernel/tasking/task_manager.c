@@ -4,6 +4,6 @@
 
 #include <multiboot.h>
 
-void task_manager_init(struct multiboot_info* multiboot_info) {
+void task_manager_init() {
 
 }

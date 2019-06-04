@@ -49,15 +49,9 @@ typedef struct process {
 process_t *current_process;
 
 /**
- * initializes tasking.
- * loads initial programs.
- * since we do not have a file system yet,
- * it relies on GRUB boot modules to read files.
- * pretends that it reads files but what it actually does is
- * reading boot modules and passing them off as files
- * this is the reason it needs to have a pointer to multiboot struct
+ * initializes and starts tasking.
  */
-void task_manager_init(struct multiboot_info *);
+void task_manager_init();
 
 /**
  * loads a task from bytes
