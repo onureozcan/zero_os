@@ -66,8 +66,8 @@ int memory_manager_get_total_number_of_pages() {
 }
 
 void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_length) {
-    uint64_t available_memory_in_bytes = 0;
-    uint64_t total_memory_in_bytes = 0;
+    uint32_t available_memory_in_bytes = 0;
+    uint32_t total_memory_in_bytes = 0;
 
     // in this iteration, detects total pages required
     multiboot_memory_map_t *mmap = mmap_addr;
@@ -75,6 +75,12 @@ void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_l
         total_memory_in_bytes += mmap->len_low;
         mmap = (multiboot_memory_map_t *) ((unsigned int) mmap + mmap->size + sizeof(mmap->size));
     }
+    if (total_memory_in_bytes > MAX_AMOUNT_OF_RAM_IN_BYTES) {
+        // something is wrong. most probably mmap entries overlap.
+        total_memory_in_bytes = MAX_AMOUNT_OF_RAM_IN_BYTES;
+        console_log(LOG_TAG, "mmap reporting unrealistic total memory, probably it is overlapping");
+    }
+
 
     // allocates  bitmap
     int required_pages = total_memory_in_bytes / PAGE_SIZE_BYTES;
