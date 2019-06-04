@@ -29,7 +29,7 @@ char kernel_heap_area[KERNEL_HEAP_SIZE_BYTES];
  * @param mmap_addr multiboot memory map address
  * @param mmap_length multiboot memory map length
  */
-void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_length);
+void memory_manager_mmap_init(uint32_t,multiboot_memory_map_t *mmap_addr, uint32_t mmap_length);
 
 /**
  * THis function initializes internal structures for k_malloc

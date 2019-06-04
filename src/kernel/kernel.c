@@ -33,7 +33,8 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
         return;
     }
     memory_manager_malloc_init();
-    memory_manager_mmap_init((multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr,
+    memory_manager_mmap_init((multiboot_info_ptr->mem_upper + multiboot_info_ptr->mem_lower) * 1024,
+                             (multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr,
                              multiboot_info_ptr->mmap_length);
     memory_manager_set_kernel_used_areas(multiboot_info_ptr->u.elf_sec);
 

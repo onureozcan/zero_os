@@ -8,6 +8,12 @@
 #include <elf.h>
 #include <common.h>
 
+#ifdef LOG_TAG
+#undef LOG_TAG
+#endif
+
+#define LOG_TAG "M_MANAGER"
+
 //! memory map bit array. Each bit represents a memory block
 static uint32_t *memory_manager_memory_map = 0;
 static int memory_manager_total_number_of_pages = 0;
@@ -65,31 +71,18 @@ int memory_manager_get_total_number_of_pages() {
     return memory_manager_total_number_of_pages;
 }
 
-void memory_manager_mmap_init(multiboot_memory_map_t *mmap_addr, uint32_t mmap_length) {
+void memory_manager_mmap_init(uint32_t total_memory_in_bytes, multiboot_memory_map_t *mmap_addr, uint32_t mmap_length) {
     uint32_t available_memory_in_bytes = 0;
-    uint32_t total_memory_in_bytes = 0;
-
-    // in this iteration, detects total pages required
     multiboot_memory_map_t *mmap = mmap_addr;
-    while (mmap < mmap_addr + mmap_length) {
-        total_memory_in_bytes += mmap->len_low;
-        mmap = (multiboot_memory_map_t *) ((unsigned int) mmap + mmap->size + sizeof(mmap->size));
-    }
-    if (total_memory_in_bytes > MAX_AMOUNT_OF_RAM_IN_BYTES) {
-        // something is wrong. most probably mmap entries overlap.
-        total_memory_in_bytes = MAX_AMOUNT_OF_RAM_IN_BYTES;
-        console_log(LOG_TAG, "mmap reporting unrealistic total memory, probably it is overlapping");
-    }
-
-
     // allocates  bitmap
     int required_pages = total_memory_in_bytes / PAGE_SIZE_BYTES;
     memory_manager_total_number_of_pages = required_pages;
-    int required_bytes_for_mmap = required_pages / 8; // each byte is a block
-    memory_manager_memory_map = k_malloc(required_bytes_for_mmap);
+    int required_bits_for_mmap = required_pages; // each bit is a block
+    int required_ints_for_mmap = required_bits_for_mmap / sizeof(uint32_t) + 1;
+    memory_manager_memory_map = k_malloc(required_ints_for_mmap * sizeof(uint32_t));
 
     // mark all the blocks as occupied initially. as we discover usable memory chunks we will clear them
-    for (int i = 0; i < required_bytes_for_mmap / 4; i++) {
+    for (int i = 0; i < required_ints_for_mmap; i++) {
         memory_manager_memory_map[i] = 0xFFFFFFFF;
     }
 

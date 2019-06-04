@@ -8,6 +8,7 @@
 #include <memory/memory_manager.h>
 #include <common.h>
 #include <string/k_string.h>
+#include <display/console.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -47,6 +48,7 @@ static void k_malloc_split(struct k_malloc_node *big_block, size_t size) {
     big_block->size = size;
     big_block->is_free = FALSE;
     big_block->next = new_block;
+    console_log(LOG_TAG, "split block %p. new block: %p, size: %d\n", big_block, new_block, new_block->size);
 
 }
 
@@ -69,9 +71,11 @@ static void k_malloc_merge() {
 }
 
 void *k_malloc(size_t size) {
+    console_log(LOG_TAG, "malloc %d bytes\n", size);
     size = ALIGN_4(size);
     struct k_malloc_node *current = head;
     while (current != NULL) {
+        console_log(LOG_TAG, "current:%p is_free:%d, size:%d\n", current, current->is_free, current->size);
         if (current->is_free && current->size + SIZE_OF_K_MALLOC_NODE >= size) {
             if (current->size + SIZE_OF_K_MALLOC_NODE != size) {
                 k_malloc_split(current, size);
@@ -81,6 +85,7 @@ void *k_malloc(size_t size) {
         }
         current = current->next;
     }
+    console_log(LOG_TAG, "unable to deliver %d bytes requested\n", size);
     panic("kernel runs out of memory!");
     return NULL;
 }
