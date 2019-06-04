@@ -45,7 +45,7 @@ typedef struct process {
         uint32_t stderr;
         uint32_t stdout;
     };
-    page_directory_t page_directory;
+    page_directory_t* page_directory;
 } process_t;
 
 // linked list of all process

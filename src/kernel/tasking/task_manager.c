@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <memory/memory_manager.h>
 #include <cpu/idt.h>
+#include <common.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -66,6 +67,15 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
         process->name = name;
         process->pid = (uint32_t) process; // this is silly
         process->state = PROCESS_STATE_ACTIVE;
+        process->page_directory = page_directory_new();
+
+        // map kernel pages to newly initialized directory
+        // 256 for 0-1MB
+        int kernel_page_count = kernel_used_memory_in_bytes / PAGE_SIZE_BYTES + 1 + 256;
+        for (int i = 0; i < kernel_page_count; i++) {
+            page_manager_map_page(process->page_directory, (void *) (i * PAGE_SIZE_BYTES),
+                                  (void *) (i * PAGE_SIZE_BYTES), TRUE);
+        }
 
         if (current_process) {
             process->next = current_process->next;

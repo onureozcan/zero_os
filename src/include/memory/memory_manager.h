@@ -14,6 +14,7 @@
 #define KERNEL_HEAP_SIZE_BYTES (1024*1024*4)
 
 char kernel_heap_area[KERNEL_HEAP_SIZE_BYTES];
+uint32_t kernel_used_memory_in_bytes;
 
 #define PAGE_SIZE_BYTES 4096
 #define MAX_AMOUNT_OF_RAM_IN_BYTES (1024*1024*4096 -1)

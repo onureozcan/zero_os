@@ -122,8 +122,6 @@ void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t e
     uint32_t total_size = 0;
     for (int i = 0; i < elf_section_header.num; i++) {
         total_size += section->sh_size;
-//        console_log(LOG_TAG, "section %d: type: %d, address: %p. size: %d\n", i, section->sh_type, section->sh_addr,
-//                    section->sh_size);
         int total_pages_needed_to_be_occupied = section->sh_size / PAGE_SIZE_BYTES + 1;
         uint32_t address = section->sh_addr;
         for (int j = 0; j < total_pages_needed_to_be_occupied; j++) {
@@ -132,6 +130,7 @@ void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t e
         }
         section++;
     }
+    kernel_used_memory_in_bytes = total_size;
     console_log(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
     console_log(LOG_TAG, "%d mb available for user space out of %d mb\n",
                 memory_manager_number_of_free_pages / 256,
