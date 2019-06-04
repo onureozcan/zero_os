@@ -53,6 +53,7 @@ static void k_malloc_split(struct k_malloc_node *big_block, size_t size) {
 }
 
 static void k_malloc_merge_2_blocks(struct k_malloc_node *current, struct k_malloc_node *next) {
+    console_log(LOG_TAG,"merging blocks %p and %d\n", current, next);
     current->next = next->next;
     current->size += next->size + SIZE_OF_K_MALLOC_NODE;
 }
