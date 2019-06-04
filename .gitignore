@@ -9,3 +9,5 @@ cmake-build-debug
 src/kernel/lib/external/*
 #ignore logs
 *.log
+#ignore user program binaries
+iso/user/*
