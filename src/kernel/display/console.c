@@ -16,7 +16,7 @@ static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
     return fg | bg << 4;
 }
 
-static void console_repaint() {
+void console_repaint() {
     // print the entire buffer
     for (int i = 0; i < VGA_TEXT_BUFFER_SIZE_CHARS; i++) {
         video_memory[i * 2] = kernel_console_buffer[i];
@@ -39,12 +39,14 @@ void console_put_char(char c) {
             for (int i = 0; i < line_leftover; i++) {
                 console_put_char(' ');
             }
+            console_repaint();
             break;
         }
         case '\t': {
             for (int i = 0; i < KERNEL_CONSOLE_TAB_SPACE_COUNT; i++) {
                 console_put_char(' ');
             }
+            console_repaint();
             break;
         }
         case '\b': {
@@ -52,6 +54,7 @@ void console_put_char(char c) {
             console_buffer_pos--;
             console_put_char(' ');
             console_buffer_pos--;
+            console_repaint();
             break;
         }
         default:
@@ -80,7 +83,6 @@ void console_put_char_internal(char c) {
         int scroll_amount = KERNEL_CONSOLE_WIDTH; // scroll one line
         console_buffer_scroll_by_n_chars(scroll_amount);
     }
-    console_repaint();
 }
 
 void console_put_string(char *string) {

@@ -58,6 +58,7 @@ void irq1_handler(void) {
         *  held. If shift is held using the larger lookup table,
         *  you would add 128 to the scancode when you look for it */
         console_put_char(keyboard_map[scancode]);
+        console_repaint();
     }
     write_port(0x20, 0x20); //EOI
 }

@@ -41,6 +41,8 @@ void console_init();
 
 void console_put_char(char c);
 
+void console_repaint();
+
 void console_put_string(char *str);
 
 void console_printf(const char *fmt, ...);
