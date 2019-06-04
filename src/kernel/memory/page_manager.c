@@ -76,3 +76,7 @@ page_directory_t *page_directory_new() {
     }
     return page_directory;
 }
+
+void page_manager_restore_pages() {
+    // TODO
+}

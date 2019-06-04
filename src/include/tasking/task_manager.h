@@ -67,10 +67,10 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size);
 
 /**
  * adds a new thread to an existing process
- * @param pid process id
+ * @param process process
  * @param eip initial eip of thread
  * @return thread id or NULL if failed
  */
-uint32_t task_manager_add_thread(uint32_t pid, uint32_t eip);
+uint32_t task_manager_add_thread(process_t* process, uint32_t eip);
 
 #endif //ZEROOS_TASK_MANAGER_H

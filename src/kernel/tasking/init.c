@@ -35,4 +35,5 @@ void init_gather_user_programs_from_boot_modules(struct multiboot_info *multiboo
 void init_load_hello() {
     console_log(LOG_TAG, "loading hello...\n");
     task_manager_load_process("hello", hello_world_bytes, hello_world_size);
+    k_free(hello_world_bytes);
 }

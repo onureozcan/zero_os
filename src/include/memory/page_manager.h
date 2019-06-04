@@ -47,6 +47,12 @@ void page_manager_map_page(page_directory_t *page_directory, void *virtual_addre
 
 void page_manager_unmap_page(page_directory_t *page_directory, void *address);
 
+/**
+ * When kernel pages are loaded, old page directory is cached.
+ * Once kernel done its work with pages, load old page table using this function
+ */
+void page_manager_restore_pages();
+
 extern void page_manager_load_page_directory(page_directory_t *page_directory);
 
 #endif //ZEROOS_PAGE_MANAGER_H
