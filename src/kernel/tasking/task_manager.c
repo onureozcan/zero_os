@@ -9,6 +9,7 @@
 #include <memory/memory_manager.h>
 #include <cpu/idt.h>
 #include <common.h>
+#include <string/k_string.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -96,7 +97,46 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
                 console_log(LOG_TAG, "section %d: type: %d, address: %p. size: %d\n", i, section->sh_type,
                             section->sh_addr,
                             section->sh_size);
-                // TODO: load the contents and map pages
+
+                int required_pages = section->sh_size / PAGE_SIZE_BYTES + 1;
+                uint32_t current_virtual_addr = section->sh_addr;
+                uint32_t total_bytes_to_load = section->sh_size;
+                uint32_t total_bytes_loaded = 0;
+
+                for (int j = 0; j < required_pages; j++) {
+
+                    void *source = bytes + section->sh_offset + total_bytes_loaded;
+                    uint32_t virtual_page_number_lower = current_virtual_addr / PAGE_SIZE_BYTES;
+                    uint32_t virtual_page_number_upper = virtual_page_number_lower + 1;
+
+                    uint32_t virtual_page_boundary_upper = virtual_page_number_upper * PAGE_SIZE_BYTES;
+                    uint32_t virtual_page_boundary_lower = virtual_page_number_lower * PAGE_SIZE_BYTES;
+
+                    uint32_t bytes_to_load_for_page = virtual_page_boundary_upper - current_virtual_addr;
+
+                    if (total_bytes_to_load < bytes_to_load_for_page) {
+                        bytes_to_load_for_page = total_bytes_to_load;
+                    }
+
+                    void *physical = page_manager_virtual_to_physical(process->page_directory,
+                                                                      (void *) (current_virtual_addr));
+                    if (!physical) {
+                        // not mapped
+                        page_manager_map_page(process->page_directory,
+                                              (void *) virtual_page_boundary_lower, memory_manager_alloc_page_frame(),
+                                              FALSE);
+                        physical = page_manager_virtual_to_physical(process->page_directory,
+                                                                    (void *) (current_virtual_addr));
+                    }
+                    console_log(LOG_TAG, "%d bytes from %p, loaded to physical %p virtual %p\n",
+                                bytes_to_load_for_page,
+                                source, physical,
+                                current_virtual_addr);
+                    memcpy(physical, source, bytes_to_load_for_page);
+                    current_virtual_addr += bytes_to_load_for_page;
+                    total_bytes_loaded += bytes_to_load_for_page;
+                    total_bytes_to_load -= bytes_to_load_for_page;
+                }
             }
             section++;
         }

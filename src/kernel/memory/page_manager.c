@@ -14,6 +14,10 @@
 
 static page_directory_t *kernel_pages;
 
+page_table_t *get_ptable(page_directory_t *directory, uint32_t directory_index) {
+    return (page_table_t *) (((uint32_t) directory->page_tables[directory_index]) & 0xFFFFF000);
+}
+
 void page_manager_init() {
     console_log(LOG_TAG, "init. identity mapping pages\n");
     kernel_pages = page_directory_new();
@@ -41,7 +45,7 @@ void page_manager_map_page(page_directory_t *directory,
     } else {
         physical_address_int |= PAGE_FLAGS_USER_ALSO;
     }
-    page_table_t *page_table = (page_table_t *) (((uint32_t) directory->page_tables[directory_index]) & 0xFFFFF000);
+    page_table_t *page_table = get_ptable(directory, directory_index);
     if (page_table == NULL) {
         page_table = page_table_new();
         uint32_t page_table_entry = (uint32_t) page_table;
@@ -54,6 +58,7 @@ void page_manager_map_page(page_directory_t *directory,
     }
     page_table->pages[ptable_index] = physical_address_int;
 }
+
 
 page_table_t *page_table_new() {
     page_table_t *page_table = memory_manager_alloc_page_frame();
@@ -79,4 +84,21 @@ page_directory_t *page_directory_new() {
 
 void page_manager_restore_pages() {
     // TODO
+}
+
+void *page_manager_virtual_to_physical(page_directory_t *page_directory, void *virtual_address) {
+    uint32_t address_int = (uint32_t) virtual_address;
+    uint32_t directory_index = PAGE_DIRECTORY_INDEX(address_int);
+    uint32_t ptable_index = PAGE_TABLE_INDEX(address_int);
+    uint32_t offset = address_int & 0xFFF;
+    page_table_t *page_table = get_ptable(page_directory, directory_index);
+    if (!page_table) {
+        return NULL;
+    }
+    uint32_t mapped_base = page_table->pages[ptable_index];
+    if (mapped_base == 0) {
+        return NULL;
+    } else {
+        return (void *) (mapped_base + offset);
+    }
 }

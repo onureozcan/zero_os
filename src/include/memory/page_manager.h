@@ -53,6 +53,8 @@ void page_manager_unmap_page(page_directory_t *page_directory, void *address);
  */
 void page_manager_restore_pages();
 
+void* page_manager_virtual_to_physical(page_directory_t* page_directory, void* virtual_address);
+
 extern void page_manager_load_page_directory(page_directory_t *page_directory);
 
 #endif //ZEROOS_PAGE_MANAGER_H
