@@ -1,7 +1,12 @@
 # Zero Os
 
-It is an hobby os that literally has no features apart from booting up and even that is possible thanks to GRUB.
-As new features are added, will update this file also.
+It is an x86 hobby os written in C and assembly. Uses GRUB to boot.
+It utilizes paging, can load elf32 binaries (only statically linked). 
+Has multitasking and multithreading but libc and syscalls are yet to come so user apps are pretty much useless :)
+It still does not even have a file system, relies on GRUB boot modules to read files from iso.
+
+It is still too young and I am implementing core features one by one. 
+As new features are added, will amend this file also.
 
 **How to build**:
 
