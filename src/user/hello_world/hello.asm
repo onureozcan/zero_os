@@ -1,7 +1,8 @@
 bits 32
-section .text
- align 4
 
+extern main
 global start
+
 start:
-jmp start
+    call main
+    jmp start

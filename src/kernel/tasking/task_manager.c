@@ -145,8 +145,8 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
         }
 
 
-        console_log(LOG_TAG, "loaded to the memory, adding main thread\n"); // this is a lie
-        task_manager_add_thread(process, (void *) 0x40000000, (void *) 0xFFFFFFFF);
+        console_log(LOG_TAG, "loaded to the memory, adding main thread\n");
+        task_manager_add_thread(process, (void *) elf_header->e_entry, (void *) 0xFFFFFFFF);
 
         page_manager_restore_pages();
         store_interrupts();
@@ -184,7 +184,7 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
 }
 
 void task_manager_next_task() {
-    console_log(LOG_TAG, "schedule\n");
+    //console_log(LOG_TAG, "schedule\n");
     // TODO: write a scheduler. this is just mocking
     // Considerations: what if no running process exists? need to have a null process or something
     current_thread = current_process->current_thread;
