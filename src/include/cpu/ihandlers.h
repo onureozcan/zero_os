@@ -13,6 +13,7 @@
 extern void gpf();
 extern void double_fault();
 extern void page_fault();
+extern void syscall_fnc();
 
 extern void irq0();
 extern void irq1();

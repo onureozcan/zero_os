@@ -5,6 +5,9 @@ global page_fault;
 extern gpf_handler;
 extern double_fault_handler;
 extern page_fault_handler;
+extern syscall_dispatcher;
+
+global syscall_fnc;
 
 global irq0
 global irq1
@@ -56,6 +59,12 @@ extern irq12_handler
 extern irq13_handler
 extern irq14_handler
 extern irq15_handler
+
+syscall_fnc:
+    pusha
+    call syscall_dispatcher
+    popa
+    iret
 
 gpf:
   call gpf_handler

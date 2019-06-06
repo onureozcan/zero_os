@@ -31,7 +31,7 @@ add_executable(kernel
         src/kernel/cpu/usermode.asm
         src/kernel/tasking/task_manager.c
         src/kernel/tasking/task_manager.asm
-        src/kernel/tasking/init.c)
+        src/kernel/tasking/init.c src/kernel/tasking/syscall.c src/include/tasking/syscall.h)
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
 set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")

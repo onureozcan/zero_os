@@ -22,6 +22,15 @@ void idt_set_gate(void *isr, int index) {
     idt[index].offset_higher_bits = (isr_address & 0xffff0000) >> 16;
 }
 
+void idt_set_syscall(void *isr, int index) {
+    uint32_t isr_address = (uint32_t) isr;
+    idt[index].offset_lower_bits = isr_address & 0xffff;
+    idt[index].selector = 0x08; /* USER_CODE_SEGMENT_OFFSET */
+    idt[index].zero = 0;
+    idt[index].type_attr = 0xEE; /* SYSCALL ATTRS */
+    idt[index].offset_higher_bits = (isr_address & 0xffff0000) >> 16;
+}
+
 void idt_init() {
 
     idt_ptr.limit = (sizeof(struct idt_entry) * 256) - 1;
@@ -34,6 +43,7 @@ void idt_init() {
     idt_set_gate(&double_fault, 8);
     idt_set_gate(&gpf, 13);
     idt_set_gate(&page_fault,14);
+    idt_set_syscall(&syscall_fnc, 0x80);
 
     idt_set_gate(&task_manager_task_switch, 32 + 0);
     idt_set_gate(&irq1, 32 + 1);

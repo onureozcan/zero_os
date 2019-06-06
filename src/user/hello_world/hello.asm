@@ -5,4 +5,6 @@ global start
 
 start:
     call main
-    jmp start
+    mov eax,0
+    int 0x80 ; syscall test
+    jmp $
