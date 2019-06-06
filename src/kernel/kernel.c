@@ -49,13 +49,14 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // having the same stack in both user and kernel modes would cause gpf
     tss_init((uint32_t) &kernel_stack[KERNEL_STACK_SIZE - 1]);
 
+    // load the hello program. if lucky, we will se a hello world in the screen printed by the user program
+    init_load_hello();
+
+
     // enter user mode was just a test if we can go into the user mode or not.
     // since we proved that, no need to call it.
     // task manager is now on responsible for using user process if any.
     task_manager_init();
-
-    // load the hello program. if lucky, we will se a hello world in the screen printed by the user program
-    init_load_hello();
 
     //enter_user_mode();
 }

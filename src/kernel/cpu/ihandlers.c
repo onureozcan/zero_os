@@ -13,14 +13,19 @@
 #include <keyboard/keyboard.h>
 
 /*GPF*/
-void gpf_handler(uint32_t error_code){
-    console_printf("!!!gpf: error code %d", error_code);
+void gpf_handler(uint32_t error_code) {
+    console_printf("!!!gpf: error code %d\n", error_code);
     panic("");
 }
 
 /*Double Fault*/
-void double_fault_handler(){
+void double_fault_handler() {
     panic("double fault");
+}
+
+void page_fault_handler(uint32_t virtual_address) {
+    console_printf("page fault %p\n", virtual_address);
+    while (1);
 }
 
 /* TIMER */
@@ -38,13 +43,10 @@ void irq1_handler(void) {
 
     /* If the top bit of the byte we read from the keyboard is
     *  set, that means that a key has just been released */
-    if (scancode & 0x80)
-    {
+    if (scancode & 0x80) {
         /* You can use this one to see if the user released the
         *  shift, alt, or control keys... */
-    }
-    else
-    {
+    } else {
         /* Here, a key was just pressed. Please note that if you
         *  hold a key down, you will get repeated key press
         *  interrupts. */

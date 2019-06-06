@@ -6,6 +6,7 @@
 #include <cpu/ihandlers.h>
 #include <common.h>
 #include <display/console.h>
+#include <tasking/task_manager.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -32,8 +33,9 @@ void idt_init() {
 
     idt_set_gate(&double_fault, 8);
     idt_set_gate(&gpf, 13);
+    idt_set_gate(&page_fault,14);
 
-    idt_set_gate(&irq0, 32 + 0);
+    idt_set_gate(&task_manager_task_switch, 32 + 0);
     idt_set_gate(&irq1, 32 + 1);
     idt_set_gate(&irq2, 32 + 2);
     idt_set_gate(&irq3, 32 + 3);

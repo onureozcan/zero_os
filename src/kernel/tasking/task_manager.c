@@ -18,7 +18,10 @@
 #define LOG_TAG "TASK_MANAGER"
 
 void task_manager_init() {
-
+    clear_interrupts();
+    tasking_enabled = TRUE;
+    tasking_initial = TRUE;
+    task_manager_task_switch();
 }
 
 uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
@@ -83,7 +86,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
             current_process->next = process;
         } else {
             current_process = process;
-            process->next = NULL;
+            process->next = process;
         }
 
         console_log(LOG_TAG, "program image is valid, loading sections..\n");
@@ -92,8 +95,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
         uint32_t section_count = elf_header->e_shnum;
 
         for (int i = 0; i < section_count; i++) {
-            if (section->sh_type == SHT_PROGBITS
-                && section->sh_addr) {
+            if (section->sh_addr) {
                 console_log(LOG_TAG, "section %d: type: %d, address: %p. size: %d\n", i, section->sh_type,
                             section->sh_addr,
                             section->sh_size);
@@ -122,8 +124,9 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
                                                                       (void *) (current_virtual_addr));
                     if (!physical) {
                         // not mapped
+                        void *new_frame = memory_manager_alloc_page_frame();
                         page_manager_map_page(process->page_directory,
-                                              (void *) virtual_page_boundary_lower, memory_manager_alloc_page_frame(),
+                                              (void *) virtual_page_boundary_lower, new_frame,
                                               FALSE);
                         physical = page_manager_virtual_to_physical(process->page_directory,
                                                                     (void *) (current_virtual_addr));
@@ -141,10 +144,9 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
             section++;
         }
 
-        uint32_t eip = elf_header->e_entry;
 
         console_log(LOG_TAG, "loaded to the memory, adding main thread\n"); // this is a lie
-        task_manager_add_thread(process, eip);
+        task_manager_add_thread(process, (void *) 0x40000000, (void *) 0xFFFFFFFF);
 
         page_manager_restore_pages();
         store_interrupts();
@@ -155,7 +157,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
     return 0;
 }
 
-uint32_t task_manager_add_thread(process_t *process, uint32_t eip) {
+uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
 
     console_log(LOG_TAG, "adding new thread to %d with eip %p\n", process->pid, eip);
     thread_t *thread = (thread_t *) k_malloc(sizeof(thread_t));
@@ -163,13 +165,28 @@ uint32_t task_manager_add_thread(process_t *process, uint32_t eip) {
     thread->pid = process->pid;
     thread->tid = (uint32_t) thread;
     thread->trap_frame.eip = eip;
+    thread->trap_frame.esp = stack;
     thread->next = NULL;
+    thread->user_stack = memory_manager_alloc_page_frame();
+    thread->user_stack_size = PAGE_SIZE_BYTES;
+    page_manager_map_page(process->page_directory, stack, thread->user_stack, FALSE);
+    // if not the first thread
     if (process->current_thread) {
         thread->next = process->current_thread->next;
         process->current_thread->next = thread;
     } else {
         process->current_thread = thread;
+        // cyclic
+        thread->next = thread;
     }
     return thread->tid;
 
+}
+
+void task_manager_next_task() {
+    console_log(LOG_TAG, "schedule\n");
+    // TODO: write a scheduler. this is just mocking
+    // Considerations: what if no running process exists? need to have a null process or something
+    current_thread = current_process->current_thread;
+    page_manager_load_page_directory(current_process->page_directory);
 }

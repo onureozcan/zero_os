@@ -1,8 +1,10 @@
 global gpf;
 global double_fault;
+global page_fault;
 
 extern gpf_handler;
 extern double_fault_handler;
+extern page_fault_handler;
 
 global irq0
 global irq1
@@ -61,6 +63,12 @@ gpf:
 
 double_fault:
   call double_fault_handler
+  iret
+
+page_fault:
+  mov eax, cr2
+  push dword eax
+  call page_fault_handler
   iret
 
 irq0:
