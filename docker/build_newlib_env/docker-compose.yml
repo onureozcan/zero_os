@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+    newlib_build:
+        build: .
+        volumes:
+            - ../../:/project
+            - ../../newlib:/newlib
+        command: 'bash -c "cd /project/build_scripts/ && ./download_and_compile_newlib.sh"'

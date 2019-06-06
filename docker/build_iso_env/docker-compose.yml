@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+    iso_build:
+        image: zos_build_env
+        build: .
+        volumes:
+            - ../../:/project
+        command: 'bash -c "cd /project/build_scripts/ && ./build.sh"'

@@ -53,12 +53,19 @@ add_test(test_k_malloc malloc_tester COMMAND malloc_tester)
 
 # USER PROGRAMS
 
+set(NEWLIB_INCLUDE_DIR "../newlib/usr/i686-zero_os/include")
+set(NEWLIB_LIB_DIR "../newlib/usr/i686-zero_os/lib")
+
 add_executable(hello_world
         src/user/hello_world/hello.c
         src/user/hello_world/hello.asm
         )
 
-set_target_properties(hello_world PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib")
-set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -Wall")
+set_target_properties(hello_world PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
+set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -g -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
+
+target_link_libraries(hello_world PUBLIC libc.a)
+
+
 
 

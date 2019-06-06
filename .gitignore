@@ -11,3 +11,5 @@ src/kernel/lib/external/*
 *.log
 #ignore user program binaries
 iso/user/*
+#ignore newlib_build_contents
+newlib/*
