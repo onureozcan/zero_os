@@ -99,6 +99,6 @@ void *page_manager_virtual_to_physical(page_directory_t *page_directory, void *v
     if (mapped_base == 0) {
         return NULL;
     } else {
-        return (void *) (mapped_base + offset);
+        return (void *) ((mapped_base & 0xFFFFF000) + offset);
     }
 }
