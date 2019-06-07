@@ -95,6 +95,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
 
         Elf32_Shdr *section = (Elf32_Shdr *) (bytes + elf_header->e_shoff);
         uint32_t section_count = elf_header->e_shnum;
+
         for (int i = 0; i < section_count; i++) {
             if (section->sh_addr) {
 
@@ -137,12 +138,13 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
                                 bytes_to_load_for_page,
                                 source, physical,
                                 current_virtual_addr);
-                    memcpy(physical, source, bytes_to_load_for_page);
-                    // FIXME: this is a hack. find .bss section and replace this with something like is_bss
-                    if (i == 16) {
+
+                    if (section->sh_type == SHT_NOBITS) {
                         for (int j = 0; j < bytes_to_load_for_page; j++) {
                             ((char *) physical)[j] = 0;
                         }
+                    } else {
+                        memcpy(physical, source, bytes_to_load_for_page);
                     }
                     current_virtual_addr += bytes_to_load_for_page;
                     total_bytes_loaded += bytes_to_load_for_page;
