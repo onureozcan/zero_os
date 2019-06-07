@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # This file is intended to run in docker container not in host environment
-NEWLIB_VERSION="2.4.0"
+NEWLIB_VERSION="3.1.0"
 NEWLIB_DIR="/newlib/newlib-${NEWLIB_VERSION}"
 #download newlib
 echo "downloading newlib"
