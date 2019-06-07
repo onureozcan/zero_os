@@ -11,8 +11,9 @@
 #include <stdio.h>
 
 static int make_syscall(int fnc, int arg0, int arg1, int arg2) {
-    // TODO: how to do?
-    return 0;
+    int ret;
+    asm volatile("int $0x80" : "=a"(ret): "a"(fnc), "b"(arg0), "c"(arg1), "d"(arg2));
+    return ret;
 }
 
 void _exit(int code) {
@@ -80,6 +81,5 @@ int wait(int *status) {
 }
 
 int write(int file, char *ptr, int len) {
-    int buff[] = {(int) ptr, len};
-    return make_syscall(16, (int) ptr, (int) buff, 0);
+    return make_syscall(16, (int) ptr, len, 0);
 }
