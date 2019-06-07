@@ -56,15 +56,23 @@ add_test(test_k_malloc malloc_tester COMMAND malloc_tester)
 set(NEWLIB_INCLUDE_DIR "../newlib/usr/i686-zero_os/include")
 set(NEWLIB_LIB_DIR "../newlib/usr/i686-zero_os/lib")
 
+add_library(syscalls_wrapper
+            src/user/userlib/syscalls.c
+            src/user/userlib/crt0.asm
+            )
+
+set_target_properties(syscalls_wrapper PROPERTIES COMPILE_FLAGS "-fno-stack-protector -I${NEWLIB_INCLUDE_DIR}")
+
 add_executable(hello_world
         src/user/hello_world/hello.c
-        src/user/crt0.asm
         )
 
 set_target_properties(hello_world PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
 set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -g -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
 
-target_link_libraries(hello_world PUBLIC libc.a)
+target_link_libraries(hello_world PUBLIC libc.a syscalls_wrapper)
+
+
 
 
 
