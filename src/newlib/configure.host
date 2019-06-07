@@ -894,4 +894,4 @@ if test -z "${have_crt0}" && test -n "${sys_dir}"; then
   have_crt0="yes"
 fi
 
-newlib_cflags="${newlib_cflags} -DSIGNAL_PROVIDED"
+newlib_cflags="${newlib_cflags} -DSIGNAL_PROVIDED -DPREFER_SIZE_OVER_SPEED -DSMALL_MEMORY -Os"
