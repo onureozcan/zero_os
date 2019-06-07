@@ -13,6 +13,9 @@
 #define PROCESS_STATE_SLEEP  0
 #define PROCESS_STATE_ACTIVE 1
 
+#define MAIN_THREAD_DEFAULT_SP 0xFFFFFFFF
+#define THREAD_INITIAL_STACK_FRAME_SIZE 5
+
 typedef struct trap_frame {
     void *esp;
     void *ebp;
@@ -70,10 +73,11 @@ void task_manager_init();
  * loads a task from bytes
  * @param name name of the task
  * @param bytes bytes of program (elf32)
- * @param size size of bytes
+ * @param args initial arguments
+ * @param size size of args bytes
  * @return pid or NULL if failed
  */
-uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size);
+uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_t args_size);
 
 /**
  * adds a new thread to an existing process
@@ -85,8 +89,10 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack);
 
 void task_manager_next_task();
 
-void* task_manager_sbrk(process_t *process, uint32_t size);
+void *task_manager_sbrk(process_t *process, uint32_t size);
 
 extern void task_manager_task_switch();
+
+void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint32_t value);
 
 #endif //ZEROOS_TASK_MANAGER_H

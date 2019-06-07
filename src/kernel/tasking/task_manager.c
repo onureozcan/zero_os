@@ -17,8 +17,6 @@
 
 #define LOG_TAG "TASK_MANAGER"
 
-#define THREAD_INITIAL_STACK_FRAME_SIZE 5
-
 void task_manager_init() {
     clear_interrupts();
     tasking_enabled = TRUE;
@@ -26,7 +24,7 @@ void task_manager_init() {
     task_manager_task_switch();
 }
 
-uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
+uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_t args_size) {
 
     Elf32_Ehdr *elf_header = (Elf32_Ehdr *) bytes;
     console_log(LOG_TAG, "load process %s\n", name);
@@ -156,7 +154,14 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
 
 
         console_log(LOG_TAG, "loaded to the memory, adding main thread\n");
-        task_manager_add_thread(process, (void *) elf_header->e_entry, (void *) 0xFFFFFFFF);
+        task_manager_add_thread(process, (void *) elf_header->e_entry, (void *) MAIN_THREAD_DEFAULT_SP);
+
+        for (int i = 0; i < args_size; i++) {
+            task_manager_push_to_user_stack(process, process->current_thread, (uint32_t) args[i]);
+        }
+        task_manager_push_to_user_stack(process, process->current_thread,
+                                        (uint32_t) (MAIN_THREAD_DEFAULT_SP - 4)); // argsv
+        task_manager_push_to_user_stack(process, process->current_thread, (uint32_t) args_size); // argsc
 
         page_manager_restore_pages();
         store_interrupts();
@@ -164,6 +169,26 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
     }
     error_return:
     return 0;
+}
+
+void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint32_t value) {
+
+    thread->trap_frame.esp -= 4;
+    get_physical_addr:;
+    uint32_t *user_stack_physical = (uint32_t *) page_manager_virtual_to_physical(process->page_directory,
+                                                                                  (void *) thread->trap_frame.esp);
+    if (!user_stack_physical) {
+        // if not mapped, first alloc a page and map it
+        int page_number = (uint32_t) thread->trap_frame.esp / PAGE_SIZE_BYTES;
+        void *page_aligned_virtual_address = (void *) (page_number * PAGE_SIZE_BYTES);
+        page_manager_map_page(process->page_directory, page_aligned_virtual_address, memory_manager_alloc_page_frame(),
+                              FALSE);
+        console_log(LOG_TAG, "adding stack frame to thread %p, %p\n", thread, thread->trap_frame.esp);
+        goto get_physical_addr;
+    }
+    // already mapped, then simply put
+    *user_stack_physical = value;
+
 }
 
 uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
