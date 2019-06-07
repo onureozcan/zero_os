@@ -98,6 +98,7 @@ int sys_fork() {
 };
 
 int sys_fstat(int file, struct stat *st) {
+    // we do not have a fs yet, so returning default values.
     void *physical = page_manager_virtual_to_physical(
             current_process->page_directory,
             (void *) st
@@ -106,7 +107,22 @@ int sys_fstat(int file, struct stat *st) {
         panic("fstat has been fed an unmapped page");
     }
     struct stat *st_physical = physical;
-    console_log(LOG_TAG, "fstat: fd :%d, stat: %p\n", file, st_physical);
+    // FIXME: this causes page fault.
+//    st_physical->st_dev = 0;
+//    st_physical->st_ino = 0;
+//    st_physical->st_mode = 777;
+//    st_physical->st_nlink = 0;
+//    st_physical->st_uid = 0;
+//    st_physical->st_gid = 0;
+//    st_physical->st_rdev = 0;
+//    st_physical->st_dev = 0;
+//    st_physical->st_size = KERNEL_CONSOLE_HEIGHT * KERNEL_CONSOLE_WIDTH;
+//    st_physical->st_blksize = KERNEL_CONSOLE_WIDTH;
+//    st_physical->st_blocks = 20;
+//    st_physical->st_atime = 0;
+//    st_physical->st_mtime = 0;
+//    st_physical->st_ctime = 0;
+    console_log(LOG_TAG, "fstat: fd :%d, stat: %p physical, %p virtual\n", file, st_physical, st);
     return 0;
 };
 

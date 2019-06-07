@@ -16,7 +16,9 @@
 
 // TODO: should it be here?
 void panic(char *reason) {
+    console_put_string("PANIC:");
     console_put_string(reason);
+    console_repaint();
     while (1);
 }
 
