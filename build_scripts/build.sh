@@ -28,5 +28,8 @@ function download_external_file() {
 && chmod 777 ../dist/os.iso \
 && cd ../iso/boot \
 && objcopy --only-keep-debug kernel kernel.sym \
-&& objcopy --strip-debug kernel
+&& objcopy --strip-debug kernel \
+&& cd ../user \
+&& objcopy --only-keep-debug hello_world hello.sym \
+&& objcopy --strip-debug hello_world \
 
