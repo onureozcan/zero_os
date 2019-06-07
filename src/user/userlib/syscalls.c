@@ -10,11 +10,7 @@
 #include <sys/time.h>
 #include <stdio.h>
 
-static int make_syscall(int fnc, int arg0, int arg1, int arg2) {
-    int ret;
-    asm volatile("int $0x80" : "=a"(ret): "a"(fnc), "b"(arg0), "c"(arg1), "d"(arg2));
-    return ret;
-}
+extern int make_syscall(int fnc, int arg0, int arg1, int arg2);
 
 void _exit(int code) {
     make_syscall(0, code, 0, 0);
@@ -48,38 +44,42 @@ int link(char *old, char *new) {
     return make_syscall(7, (int) (old), (int) new, 0);
 }
 
+int kill(int pid, int sig) {
+    return make_syscall(8, pid, sig, 0);
+}
+
 int lseek(int file, int ptr, int dir) {
-    return make_syscall(8, file, ptr, dir);
+    return make_syscall(9, file, ptr, dir);
 }
 
 int open(const char *name, int flags, ...) {
-    return make_syscall(9, (int) name, flags, 0);
+    return make_syscall(10, (int) name, flags, 0);
 }
 
 int read(int file, char *ptr, int len) {
-    return make_syscall(10, file, (int) ptr, len);
+    return make_syscall(11, file, (int) ptr, len);
 }
 
 caddr_t sbrk(int incr) {
-    return (void *) make_syscall(11, incr, 0, 0);
+    return (void *) make_syscall(12, incr, 0, 0);
 }
 
 int stat(const char *file, struct stat *st) {
-    return make_syscall(12, (int) file, (int) st, 0);
+    return make_syscall(13, (int) file, (int) st, 0);
 }
 
 clock_t times(struct tms *buf) {
-    return make_syscall(13, (int) buf, 0, 0);
+    return make_syscall(14, (int) buf, 0, 0);
 }
 
 int unlink(char *name) {
-    return make_syscall(14, (int) name, 0, 0);
+    return make_syscall(15, (int) name, 0, 0);
 }
 
 int wait(int *status) {
-    return make_syscall(15, (int) status, 0, 0);
+    return make_syscall(16, (int) status, 0, 0);
 }
 
 int write(int file, char *ptr, int len) {
-    return make_syscall(16, (int) ptr, len, 0);
+    return make_syscall(17, (int) ptr, len, 0);
 }

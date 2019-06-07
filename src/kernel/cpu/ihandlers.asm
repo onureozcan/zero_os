@@ -61,9 +61,11 @@ extern irq14_handler
 extern irq15_handler
 
 syscall_fnc:
-    pusha
+    push dword eax
+    push dword ebx
+    push dword ecx
+    push dword edx
     call syscall_dispatcher
-    popa
     iret
 
 gpf:
