@@ -6,6 +6,7 @@
 #include <memory/memory_manager.h>
 #include <common.h>
 #include <display/console.h>
+#include <tasking/task_manager.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -29,7 +30,7 @@ void page_manager_init() {
 }
 
 void page_manager_load_kernel_pages() {
-    console_log(LOG_TAG, "loading kernel page directory located at %p\n", kernel_pages);
+    console_log(LOG_TAG, "loading kernel pages at %p\n", kernel_pages);
     page_manager_load_page_directory(kernel_pages);
 }
 
@@ -83,7 +84,8 @@ page_directory_t *page_directory_new() {
 }
 
 void page_manager_restore_pages() {
-    // TODO
+    console_log(LOG_TAG, "restoring pages of latest process (%p)\n", current_process->page_directory);
+    page_manager_load_page_directory(current_process->page_directory);
 }
 
 void *page_manager_virtual_to_physical(page_directory_t *page_directory, void *virtual_address) {
@@ -101,4 +103,9 @@ void *page_manager_virtual_to_physical(page_directory_t *page_directory, void *v
     } else {
         return (void *) ((mapped_base & 0xFFFFF000) + offset);
     }
+}
+
+
+page_directory_t *page_manager_get_kernel_page_directory() {
+    return kernel_pages;
 }

@@ -43,6 +43,8 @@ page_directory_t *page_directory_new();
  */
 page_table_t *page_table_new();
 
+page_directory_t *page_manager_get_kernel_page_directory();
+
 void page_manager_map_page(page_directory_t *page_directory, void *virtual_address, void *address, int is_kernel_only);
 
 void page_manager_unmap_page(page_directory_t *page_directory, void *address);
