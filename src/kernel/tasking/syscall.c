@@ -6,8 +6,8 @@
 #include <memory/page_manager.h>
 #include <common.h>
 #include <tasking/task_manager.h>
-#include "tasking/syscall.h"
-#include "../../../newlib/usr/i686-zero_os/include/sys/stat.h"
+#include <tasking/syscall.h>
+#include <memory/memory_manager.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -34,7 +34,7 @@ int syscall_dispatcher(int eax, int ebx, int ecx, int edx) {
             ret = sys_fork();
             break;
         case SYSCALL_FSTAT:
-            ret = sys_fstat(ebx, (struct stat *) ecx);
+            ret = sys_fstat(ebx, (struct stat *) ecx, edx);
             break;
         case SYSCALL_GET_PID:
             ret = sys_getpid();
@@ -97,7 +97,7 @@ int sys_fork() {
     return 0;
 };
 
-int sys_fstat(int file, struct stat *st) {
+int sys_fstat(int file, struct stat *st, int size) {
     // we do not have a fs yet, so returning default values.
     void *physical = page_manager_virtual_to_physical(
             current_process->page_directory,
@@ -122,7 +122,11 @@ int sys_fstat(int file, struct stat *st) {
 //    st_physical->st_atime = 0;
 //    st_physical->st_mtime = 0;
 //    st_physical->st_ctime = 0;
+    for (int i = 0; i < size; i++) {
+        ((char *) (st_physical))[i] = 0;
+    }
     console_log(LOG_TAG, "fstat: fd :%d, stat: %p physical, %p virtual\n", file, st_physical, st);
+    console_log(LOG_TAG, "sizeof(stat), given sizeof(stat) : %d, %d\n", sizeof(struct stat), size);
     return 0;
 };
 
@@ -155,7 +159,8 @@ int sys_read(int file, char *ptr, int len) {
 };
 
 void *sys_sbrk(int incr) {
-    return 0;
+    console_log(LOG_TAG, "sbrk gets called :%d bytes - %d pages\n", incr, incr / PAGE_SIZE_BYTES + 1);
+    return task_manager_sbrk(current_process, incr);
 }
 
 int sys_stat(const char *file, struct stat *st) {
@@ -175,5 +180,17 @@ int sys_wait(int *status) {
 };
 
 int sys_write(int file, char *ptr, int len) {
+    char *physical = page_manager_virtual_to_physical(
+            current_process->page_directory,
+            (void *) ptr
+    );
+    if (!physical) { // TODO: in such cases, we will kill the process instead of killing the whole system
+        panic("write has been fed an unmapped page");
+    }
+    console_log(LOG_TAG, "write called. fd:%d, virtual:%p, physical:%p , len:%p\n", file, ptr, physical, len);
+    for (int i = 0; i < len; i++) {
+        console_put_char(physical[i]);
+    }
+    console_repaint();
     return 0;
 };

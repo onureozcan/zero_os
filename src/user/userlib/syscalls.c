@@ -29,7 +29,7 @@ int fork() {
 }
 
 int fstat(int file, struct stat *st) {
-    return make_syscall(4, file, (int) (st), 0);
+    return make_syscall(4, file, (int) (st), sizeof(struct stat));
 }
 
 int getpid() {
@@ -61,7 +61,8 @@ int read(int file, char *ptr, int len) {
 }
 
 caddr_t sbrk(int incr) {
-    return (void *) make_syscall(12, incr, 0, 0);
+    int i = make_syscall(12, incr, 0, 0);
+    return (void *) i;
 }
 
 int stat(const char *file, struct stat *st) {
@@ -81,5 +82,5 @@ int wait(int *status) {
 }
 
 int write(int file, char *ptr, int len) {
-    return make_syscall(17, (int) ptr, len, 0);
+    return make_syscall(17, file ,(int) ptr, len);
 }

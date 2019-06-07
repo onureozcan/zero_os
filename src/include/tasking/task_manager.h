@@ -49,6 +49,7 @@ typedef struct process {
         uint32_t stdout;
     };
     page_directory_t *page_directory;
+    void *v_program_break;
 } process_t;
 
 // linked list of all process
@@ -80,9 +81,11 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size);
  * @param eip initial eip of thread
  * @return thread id or NULL if failed
  */
-uint32_t task_manager_add_thread(process_t *process, void* eip, void *stack);
+uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack);
 
 void task_manager_next_task();
+
+void* task_manager_sbrk(process_t *process, uint32_t size);
 
 extern void task_manager_task_switch();
 

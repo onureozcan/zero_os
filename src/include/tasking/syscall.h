@@ -35,7 +35,7 @@ int sys_execve(char *name, char **argv, char **env);
 
 int sys_fork();
 
-int sys_fstat(int file, struct stat *st);
+int sys_fstat(int file, struct stat *st, int size);
 
 int sys_getpid();
 

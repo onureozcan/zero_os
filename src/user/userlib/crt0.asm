@@ -21,4 +21,4 @@ _start:
 ;    push dword 4;
 ;    call make_syscall
     call main
-    jmp _start
+    jmp $
