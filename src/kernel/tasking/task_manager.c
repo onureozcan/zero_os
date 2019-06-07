@@ -17,6 +17,8 @@
 
 #define LOG_TAG "TASK_MANAGER"
 
+#define THREAD_INITIAL_STACK_FRAME_SIZE 5
+
 void task_manager_init() {
     clear_interrupts();
     tasking_enabled = TRUE;
@@ -100,12 +102,11 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
                             section->sh_addr,
                             section->sh_size);
 
-                int required_pages = section->sh_size / PAGE_SIZE_BYTES + 1;
                 uint32_t current_virtual_addr = section->sh_addr;
                 uint32_t total_bytes_to_load = section->sh_size;
                 uint32_t total_bytes_loaded = 0;
 
-                for (int j = 0; j < required_pages; j++) {
+                while (total_bytes_loaded < section->sh_size) {
 
                     void *source = bytes + section->sh_offset + total_bytes_loaded;
                     uint32_t virtual_page_number_lower = current_virtual_addr / PAGE_SIZE_BYTES;
@@ -150,7 +151,6 @@ uint32_t task_manager_load_process(char *name, char *bytes, uint32_t size) {
 
         page_manager_restore_pages();
         store_interrupts();
-
         return process->pid;
     }
     error_return:
@@ -167,9 +167,14 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
     thread->trap_frame.eip = eip;
     thread->trap_frame.esp = stack;
     thread->next = NULL;
-    thread->user_stack = memory_manager_alloc_page_frame();
-    thread->user_stack_size = PAGE_SIZE_BYTES;
-    page_manager_map_page(process->page_directory, stack, thread->user_stack, FALSE);
+    thread->user_stack_size = PAGE_SIZE_BYTES * THREAD_INITIAL_STACK_FRAME_SIZE;
+    for (int i = 0; i < THREAD_INITIAL_STACK_FRAME_SIZE; i++) {
+        console_log(LOG_TAG, "mapping stack frame %p\n", stack - PAGE_SIZE_BYTES * i);
+        page_manager_map_page(process->page_directory,
+                              stack - PAGE_SIZE_BYTES * i,
+                              memory_manager_alloc_page_frame(),
+                              FALSE);
+    }
     // if not the first thread
     if (process->current_thread) {
         thread->next = process->current_thread->next;
