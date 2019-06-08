@@ -1,21 +1,45 @@
 # Zero Os
 
-It is an x86 hobby os written in C and assembly. Uses GRUB to boot.
-It utilizes paging, can load elf32 binaries (only statically linked). 
-Has multitasking and multithreading but libc and syscalls are yet to come so user apps are pretty much useless :)
-It still does not even have a file system, relies on GRUB boot modules to read files from iso.
+It is an x86 hobby os written in C and assembly.   
+Uses GRUB to boot.  
+It utilizes paging, can load elf32 binaries (only statically linked).   
+Has multitasking and multithreading.   
+Uses newlib in user applications. 
+17 syscalls required by newlib are placed in syscall interface. 
+Some of them has implementations and some are empty.  
+No filesystem driver and virtual file system yet.  
+Also does not have a gui. Uses 80*25 text mode   
 
 It is still too young and I am implementing core features one by one. 
 As new features are added, will amend this file also.
 
 **How to build**:
 
-Inside build_scripts folder, there is a script named build_iso_using_docker.sh to build bootable iso images using docker. Just run it.
-It will create an evironment inside a container suitable for building the image and run build.sh inside that container resulting in creation of os.iso inside dist folder.
+Build environment and dependencies are intended to be provided by dockerfiles. 
+Host environment just needs docker for building and qemu for testing.
 
-**Running in emulator**:
+Before building iso image, building newlib is a must. User apps depend on it.
+Therefore first run `build_newlib_using_docker.sh` inside `build_scripts` folder.
+This will download newlib and build. 
+The resulting libc.a will only be used to link against user apps so building newlib just once is enough as long as you do not want to change newlib version or build flags or so.
 
- Run ./run_qemu.sh. If you want to test it in a different emulator, iso image located at dist/os.iso is bootable. You can use it.
+Secondly, run `build_iso_using_docker` in that folder. It builds both kernel and user apps, creates `dist/os.iso` and runs it on qemu as well.
+
+**Running on emulator**:
  
- Never test it on a real machine.
+ Building iso runs the created image also.
+ if you just want to run it on a different emulator you can use this iso as well.
+ 
+ Never run it on a real machine.
+ 
+ **Debugging**
+ 
+` gdb_debug_qemu.sh` starts qemu with gdb server listening on port 1234. 
+ Symbol files will appear inside iso folder after build. You can configure your ide to debug user apps or kernel image.
+ 
+ **Screenshots**
+ 
+ ![image](https://user-images.githubusercontent.com/21360651/59148391-25841100-8a11-11e9-98bb-dfdefec6eca3.png)
+
+ 
  
