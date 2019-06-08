@@ -108,6 +108,7 @@ int sys_fstat(int file, struct stat *st, int size) {
     }
     struct stat *st_physical = physical;
     // FIXME: this causes page fault.
+    // FIXME: and it disappeared by itself, what is happening?
     st_physical->st_dev = 0;
     st_physical->st_ino = 0;
     st_physical->st_mode = 777;
