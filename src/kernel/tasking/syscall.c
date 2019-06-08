@@ -108,23 +108,20 @@ int sys_fstat(int file, struct stat *st, int size) {
     }
     struct stat *st_physical = physical;
     // FIXME: this causes page fault.
-//    st_physical->st_dev = 0;
-//    st_physical->st_ino = 0;
-//    st_physical->st_mode = 777;
-//    st_physical->st_nlink = 0;
-//    st_physical->st_uid = 0;
-//    st_physical->st_gid = 0;
-//    st_physical->st_rdev = 0;
-//    st_physical->st_dev = 0;
-//    st_physical->st_size = KERNEL_CONSOLE_HEIGHT * KERNEL_CONSOLE_WIDTH;
-//    st_physical->st_blksize = KERNEL_CONSOLE_WIDTH;
-//    st_physical->st_blocks = 20;
-//    st_physical->st_atime = 0;
-//    st_physical->st_mtime = 0;
-//    st_physical->st_ctime = 0;
-    for (int i = 0; i < size; i++) {
-        ((char *) (st_physical))[i] = 0;
-    }
+    st_physical->st_dev = 0;
+    st_physical->st_ino = 0;
+    st_physical->st_mode = 777;
+    st_physical->st_nlink = 0;
+    st_physical->st_uid = 0;
+    st_physical->st_gid = 0;
+    st_physical->st_rdev = 0;
+    st_physical->st_dev = 0;
+    st_physical->st_size = KERNEL_CONSOLE_HEIGHT * KERNEL_CONSOLE_WIDTH;
+    st_physical->st_blksize = KERNEL_CONSOLE_WIDTH;
+    st_physical->st_blocks = 20;
+    st_physical->st_atime = 0;
+    st_physical->st_mtime = 0;
+    st_physical->st_ctime = 0;
     console_log(LOG_TAG, "fstat: fd :%d, stat: %p physical, %p virtual\n", file, st_physical, st);
     console_log(LOG_TAG, "sizeof(stat), given sizeof(stat) : %d, %d\n", sizeof(struct stat), size);
     return 0;
@@ -192,5 +189,5 @@ int sys_write(int file, char *ptr, int len) {
         console_put_char(physical[i]);
     }
     console_repaint();
-    return 0;
+    return len;
 };

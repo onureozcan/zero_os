@@ -14,7 +14,7 @@
 #define PROCESS_STATE_ACTIVE 1
 
 #define MAIN_THREAD_DEFAULT_SP 0xFFFFFFFF
-#define THREAD_INITIAL_STACK_FRAME_SIZE 5
+#define THREAD_INITIAL_STACK_FRAME_SIZE 128
 
 typedef struct trap_frame {
     void *esp;
