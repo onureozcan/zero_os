@@ -5,8 +5,7 @@
 #ifndef ZEROOS_INIT_H
 #define ZEROOS_INIT_H
 
-/* gathers a copy of initial programs.
- * since we do not have a file system yet,
+/* finds location of initial programs
  * it relies on GRUB boot modules to read files.
  * pretends that it reads files but what it actually does is
  * reading boot modules and passing them off as files

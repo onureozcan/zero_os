@@ -50,6 +50,17 @@ void *memory_manager_alloc_page_frame();
 void memory_manager_free_page_frame(void *);
 
 int memory_manager_get_total_number_of_pages();
+/**
+ * mark a page used
+ * @param page_number
+ */
+void memory_manager_mark_page_used(int page_number);
+
+/**
+ * mark a page free
+ * @param page_number
+ */
+void memory_manager_mark_page_free(int page_number);
 
 /**
  * There must be a non-paged area to use as a kernel heap space

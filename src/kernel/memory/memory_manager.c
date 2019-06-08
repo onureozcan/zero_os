@@ -41,6 +41,15 @@ void mmap_unset(uint32_t bit) {
     memory_manager_memory_map[bit / 32] &= ~(1 << (bit % 32));
 }
 
+
+void memory_manager_mark_page_used(int page_number) {
+    mmap_set(page_number);
+}
+
+void memory_manager_mark_page_free(int page_number) {
+    mmap_unset(page_number);
+}
+
 static void memory_manager_set_page_by_address(uint32_t address) {
     int index = memory_manager_get_page_number_from_address(address);
     mmap_set(index);
