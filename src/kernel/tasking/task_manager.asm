@@ -26,6 +26,8 @@ task_manager_task_switch:
 .tasking_enabled:
     popa
     ;save state of current thread
+    mov [esp - 4], eax ; save eax
+    mov [esp - 4 -4], ebx ; save ebx
 
     mov ebx, [current_thread] ; dereference
 
@@ -41,10 +43,14 @@ task_manager_task_switch:
     mov [ebx + 1*4], ebp
     mov [ebx + 3*4], edi
     mov [ebx + 4*4], esi
-    mov [ebx + 5*4], eax
     mov [ebx + 7*4], ecx
     mov [ebx + 8*4], edx
-    mov [ebx + 6*4], ebx
+
+    mov ecx, [esp -4 -4] ; ecx is now ebx
+    mov edx, [esp -4] ; edx is now eax
+
+    mov [ebx + 5*4], edx;eax
+    mov [ebx + 6*4], ecx;ebx
 
     jmp .tasking_load_next
 
