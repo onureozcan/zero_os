@@ -9,8 +9,13 @@ section .text
         ;multiboot spec
         align 4
         dd 0x1BADB002            ;magic
-        dd 0x00                  ;flags
-        dd - (0x1BADB002 + 0x00) ;checksum. m+f+c should be zero
+        dd 0x04                  ;flags
+        dd - (0x1BADB002 + 0x04) ;checksum. m+f+c should be zero
+        resb 20
+        dd 0 ; lfb
+        dd 1280 ; width pixels
+        dd 768 ; height pixels
+        dd 24 ; depth
 
 global start
 global kernel_esp
