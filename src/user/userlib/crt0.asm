@@ -15,10 +15,5 @@ make_syscall:
     ret
 
 _start:
-;    push dword 4;
-;    push dword 0xFFFFFFFF;
-;    push dword 1;
-;    push dword 4;
-;    call make_syscall
     call main
     jmp $

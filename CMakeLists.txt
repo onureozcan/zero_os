@@ -14,6 +14,7 @@ add_executable(kernel
         src/kernel/kernel.asm
         src/kernel/common.asm
         src/kernel/display/console.c
+        src/kernel/display/lfb/lfb.c
         src/kernel/cpu/gdt.c
         src/kernel/cpu/idt.asm
         src/kernel/cpu/idt.c

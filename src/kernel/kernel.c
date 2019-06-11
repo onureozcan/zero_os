@@ -13,6 +13,7 @@
 #include <common.h>
 #include <tasking/task_manager.h>
 #include <tasking/init.h>
+#include <display/lfb.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -26,6 +27,8 @@ char kernel_stack[KERNEL_STACK_SIZE] = {0};
 
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
 
+    lfb_init(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
+             (void *) multiboot_info_ptr->framebuffer_addr);
     console_init();
     console_put_string("initializing Zero Os ...\n");
     console_printf("multiboot info is located at %p. magic: %p\n", multiboot_info_ptr, magic);
@@ -45,7 +48,9 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // this is the reason we must get a copy of initial boot modules
     init_gather_user_programs_from_boot_modules(multiboot_info_ptr);
 
-    page_manager_init();
+    page_manager_init(multiboot_info_ptr);
+    page_manager_map_lfb_pages(page_manager_get_kernel_page_directory());
+    page_manager_load_kernel_pages();
     idt_init();
 
     // having the same stack in both user and kernel modes would cause gpf

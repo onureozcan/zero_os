@@ -13,25 +13,38 @@
 #endif
 #define LOG_TAG "PAGE_MANAGER"
 
+static void *lfb_start;
+static uint32_t lfb_size;
 static page_directory_t *kernel_pages;
 
 page_table_t *get_ptable(page_directory_t *directory, uint32_t directory_index) {
     return (page_table_t *) (((uint32_t) directory->page_tables[directory_index]) & 0xFFFFF000);
 }
 
-void page_manager_init() {
+void page_manager_init(multiboot_info_t *multiboot_info_ptr) {
     console_log(LOG_TAG, "init. identity mapping pages\n");
     kernel_pages = page_directory_new();
     for (int i = 0; i < memory_manager_get_total_number_of_pages(); i++) {
         page_manager_map_page(kernel_pages, (void *) (i * PAGE_SIZE_BYTES),
                               (void *) (i * PAGE_SIZE_BYTES), TRUE);
     }
-    page_manager_load_kernel_pages();
+    lfb_start = (void *) multiboot_info_ptr->framebuffer_addr;
+    lfb_size = (multiboot_info_ptr->framebuffer_width * multiboot_info_ptr->framebuffer_height *
+                multiboot_info_ptr->framebuffer_bpp);
 }
 
 void page_manager_load_kernel_pages() {
     console_log(LOG_TAG, "loading kernel pages at %p\n", kernel_pages);
     page_manager_load_page_directory(kernel_pages);
+}
+
+
+void page_manager_map_lfb_pages(page_directory_t *page_directory) {
+    uint32_t lfb_page_start = ((uint32_t) (lfb_start) / PAGE_SIZE_BYTES);
+    uint32_t lfb_page_end = (((uint32_t) (lfb_start + lfb_size)) / PAGE_SIZE_BYTES) + 1;
+    for (int i = lfb_page_start - 1; i < lfb_page_end; i++) {
+        page_manager_map_page(page_directory, (void *) (i * PAGE_SIZE_BYTES), (void *) (i * PAGE_SIZE_BYTES), TRUE);
+    }
 }
 
 void page_manager_map_page(page_directory_t *directory,

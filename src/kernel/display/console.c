@@ -5,6 +5,7 @@
 #include <display/console.h>
 #include <stdarg.h>
 #include <tinyprintf/tinyprintf.h>
+#include <display/lfb.h>
 
 char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;
@@ -17,11 +18,18 @@ static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
 }
 
 void console_repaint() {
+#ifndef CONSOLE_USE_LFB
     // print the entire buffer
     for (int i = 0; i < VGA_TEXT_BUFFER_SIZE_CHARS; i++) {
         video_memory[i * 2] = kernel_console_buffer[i];
         video_memory[i * 2 + 1] = vga_entry_color(KERNEL_CONSOLE_FG_COLOR, KERNEL_CONSOLE_BKG_COLOR);
     }
+#else
+    for (int i = 0; i < VGA_TEXT_BUFFER_SIZE_CHARS; i++) {
+        lfb_put_char(kernel_console_buffer[i]);
+    }
+    lfb_repaint();
+#endif
 }
 
 void console_clear() {
@@ -115,5 +123,5 @@ void console_log(const char *tag, const char *format, ...) {
 }
 
 void console_init() {
-
+    console_clear();
 }

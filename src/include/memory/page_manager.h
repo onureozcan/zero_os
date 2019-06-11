@@ -6,11 +6,12 @@
 #define ZEROOS_PAGE_MANAGER_H
 
 #include <stdint-gcc.h>
+#include <multiboot.h>
 
 #define PAGE_FLAGS_USER_ALSO 7
 #define PAGE_FLAGS_KERNEL_ONLY 3
 #define PAGES_PER_TABLE 1024
-#define PAGES_PER_DIR	1024
+#define PAGES_PER_DIR    1024
 
 #define PAGE_DIRECTORY_INDEX(x) (((x) >> 22) & 0x3ff)
 #define PAGE_TABLE_INDEX(x) (((x) >> 12) & 0x3ff)
@@ -24,7 +25,10 @@ typedef struct page_directory {
     page_table_t *page_tables[1024];
 } page_directory_t;
 
-void page_manager_init();
+/**
+ * will use multiboot info to get location and size of lfb.
+ */
+void page_manager_init(multiboot_info_t*);
 
 /**
  * loads the identity page table for kernel only
@@ -55,7 +59,7 @@ void page_manager_unmap_page(page_directory_t *page_directory, void *address);
  */
 void page_manager_restore_pages();
 
-void* page_manager_virtual_to_physical(page_directory_t* page_directory, void* virtual_address);
+void *page_manager_virtual_to_physical(page_directory_t *page_directory, void *virtual_address);
 
 extern void page_manager_load_page_directory(page_directory_t *page_directory);
 
