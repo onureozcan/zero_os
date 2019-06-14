@@ -6,6 +6,7 @@
 
 #define TRUE 1
 #define FALSE 0
+#define NULL 0
 
 #define KERNEL_STACK_SIZE PAGE_SIZE_BYTES
 

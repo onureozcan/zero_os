@@ -8,6 +8,8 @@
 #include <stdint-gcc.h>
 
 #define CANVAS_MAX_ALLOWED_BEZIER_CONTROL_POINTS 32
+#define CANVAS_SIMPLE_FONT_DEFAULT_SIZE 100
+#define CANVAS_SIMPLE_FONT_MAX_LAYERS 10
 
 typedef struct canvas {
     char *buffer;
@@ -17,10 +19,23 @@ typedef struct canvas {
 } canvas_t;
 
 typedef struct point {
-    int x;
-    int y;
+    float x;
+    float y;
 } point_t;
 
+typedef struct simple_bezier_font_layer {
+    int size;
+    point_t data[CANVAS_SIMPLE_FONT_MAX_LAYERS];
+} simple_bezier_font_layer_t;
+
+typedef struct simple_bezier_font {
+    int size;
+    simple_bezier_font_layer_t layers[CANVAS_SIMPLE_FONT_MAX_LAYERS];
+} simple_bezier_font_t;
+
+simple_bezier_font_t simple_bezier_font_table[255];
+
+void canvas_init();
 
 void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t h, uint8_t w);
 
@@ -32,5 +47,8 @@ void canvas_put_pixel(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint
 void
 canvas_draw_bezier_curve(canvas_t *canvas, int x, int y, point_t points[], int size_of_points, uint8_t r, uint8_t g,
                          uint8_t b, uint32_t thickness);
+
+void canvas_draw_char(canvas_t *canvas, int c, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint32_t h, uint32_t w,
+                      uint32_t thickness);
 
 #endif //ZEROOS_CANVAS_H

@@ -18,7 +18,8 @@ static int char_height_pixels;
 static int char_pos;
 static int bkg_color = 220;
 
-#define LFB_SCREEN_PADDING 20
+#define LFB_SCREEN_PADDING_X 100
+#define LFB_SCREEN_PADDING_Y 20
 #define LFB_LINE_SPACING_X 2
 #define LFB_LINE_SPACING_Y 5
 
@@ -30,8 +31,9 @@ void lfb_init(int height, int width, void *lfb_buffer) {
     framebuffer = (char *) lfb_buffer;
     buffer_size = lfb_width * lfb_height * LFB_DEPTH_BYTES;
     lfb_clear();
-    char_height_pixels = (height - LFB_SCREEN_PADDING) / KERNEL_CONSOLE_HEIGHT;
-    char_width_pixels = (width - LFB_SCREEN_PADDING) / KERNEL_CONSOLE_WIDTH;
+    char_height_pixels = (height - LFB_SCREEN_PADDING_Y) / KERNEL_CONSOLE_HEIGHT;
+    char_width_pixels = (width - LFB_SCREEN_PADDING_X) / KERNEL_CONSOLE_WIDTH;
+    canvas_init();
     canvas.depth = LFB_DEPTH_BYTES;
     canvas.buffer = back_buffer;
     canvas.height = height;
@@ -42,12 +44,15 @@ void lfb_put_char(char c) {
     char_pos++;
     char_pos %= (KERNEL_CONSOLE_BUFFER_SIZE);
 
-    int y = char_pos / KERNEL_CONSOLE_WIDTH;
-    int x = char_pos - y * KERNEL_CONSOLE_WIDTH;
+    int col = char_pos / KERNEL_CONSOLE_WIDTH;
+    int row = char_pos - col * KERNEL_CONSOLE_WIDTH;
 
-    canvas_fill_rect_xy(&canvas, x * char_width_pixels + (LFB_SCREEN_PADDING * 2),
-                        y * char_height_pixels + (LFB_SCREEN_PADDING), 0, 0, 0, char_width_pixels - LFB_LINE_SPACING_X,
-                        char_height_pixels - LFB_LINE_SPACING_Y);
+    int x = row * char_width_pixels + (LFB_SCREEN_PADDING_X);
+    int y = col * char_height_pixels + (LFB_SCREEN_PADDING_Y);
+    int h = char_height_pixels - LFB_LINE_SPACING_Y;
+    int w = char_width_pixels - LFB_LINE_SPACING_X;
+
+    canvas_draw_char(&canvas, c, x, y, 0, 0, 0, h, w, 2);
 }
 
 void lfb_clear() {
