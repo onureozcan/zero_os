@@ -28,6 +28,8 @@ void page_manager_init(multiboot_info_t *multiboot_info_ptr) {
         page_manager_map_page(kernel_pages, (void *) (i * PAGE_SIZE_BYTES),
                               (void *) (i * PAGE_SIZE_BYTES), TRUE);
     }
+    // get lfb address and size
+    // will use this to map lfb pages
     lfb_start = (void *) multiboot_info_ptr->framebuffer_addr;
     lfb_size = (multiboot_info_ptr->framebuffer_width * multiboot_info_ptr->framebuffer_height *
                 multiboot_info_ptr->framebuffer_bpp);

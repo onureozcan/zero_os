@@ -47,10 +47,7 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // it only guarantees not to touch kernel, not boot modules
     // this is the reason we must get a copy of initial boot modules
     init_gather_user_programs_from_boot_modules(multiboot_info_ptr);
-
     page_manager_init(multiboot_info_ptr);
-    page_manager_map_lfb_pages(page_manager_get_kernel_page_directory());
-    page_manager_load_kernel_pages();
     idt_init();
 
     // having the same stack in both user and kernel modes would cause gpf
