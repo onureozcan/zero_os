@@ -8,6 +8,9 @@ set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f elf32 -o <OBJECT
 
 include_directories(src/include)
 include_directories(src/kernel/lib/include)
+include_directories(src/common_lib/include)
+
+add_library(canvas src/common_lib/canvas/canvas.c)
 
 add_executable(kernel
         src/kernel/kernel.c
@@ -37,7 +40,7 @@ add_executable(kernel
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
 set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")
 
-target_link_libraries(kernel libgcc.a)
+target_link_libraries(kernel libgcc.a canvas)
 
 ## TESTS
 
@@ -48,7 +51,7 @@ add_executable(malloc_tester
         src/kernel/memory/memory_manager.c
         src/kernel/memory/malloc.c
         src/tests/malloc_tester.c
-)
+        )
 
 add_test(test_k_malloc malloc_tester COMMAND malloc_tester)
 
@@ -58,9 +61,9 @@ set(NEWLIB_INCLUDE_DIR "../newlib/usr/i686-zero_os/include")
 set(NEWLIB_LIB_DIR "../newlib/usr/i686-zero_os/lib")
 
 add_library(syscalls_wrapper
-            src/user/userlib/syscalls.c
-            src/user/userlib/crt0.asm
-            )
+        src/user/userlib/syscalls.c
+        src/user/userlib/crt0.asm
+        )
 
 set_target_properties(syscalls_wrapper PROPERTIES COMPILE_FLAGS "-fno-stack-protector -I${NEWLIB_INCLUDE_DIR}")
 

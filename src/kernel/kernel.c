@@ -28,7 +28,7 @@ char kernel_stack[KERNEL_STACK_SIZE] = {0};
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
 
     lfb_init(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
-             (void *) multiboot_info_ptr->framebuffer_addr);
+             (void *) ((uint32_t) multiboot_info_ptr->framebuffer_addr));
     console_init();
     console_put_string("initializing Zero Os ...\n");
     console_printf("multiboot info is located at %p. magic: %p\n", multiboot_info_ptr, magic);
