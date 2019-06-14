@@ -11,6 +11,7 @@ include_directories(src/kernel/lib/include)
 include_directories(src/common_lib/include)
 
 add_library(canvas src/common_lib/canvas/canvas.c)
+set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector")
 
 add_executable(kernel
         src/kernel/kernel.c
