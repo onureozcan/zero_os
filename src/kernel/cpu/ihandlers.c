@@ -11,6 +11,7 @@
 #include <display/console.h>
 #include <common.h>
 #include <keyboard/keyboard.h>
+#include <memory/page_manager.h>
 
 /*GPF*/
 void gpf_handler(uint32_t error_code) {
@@ -36,6 +37,7 @@ void irq0_handler(void) {
 /*KEYBOARD*/
 // this function is taken from http://www.osdever.net/bkerndev/Docs/keyboard.htm
 void irq1_handler(void) {
+    page_manager_load_kernel_pages();
     unsigned char scancode;
 
     /* Read from the keyboard's data buffer */
@@ -63,6 +65,7 @@ void irq1_handler(void) {
         console_repaint();
     }
     write_port(0x20, 0x20); //EOI
+    page_manager_restore_pages();
 }
 
 void irq2_handler(void) {
