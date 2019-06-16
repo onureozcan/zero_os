@@ -21,6 +21,17 @@ void canvas_init() {
     set_bezier_data_q();
     set_bezier_data_u();
     set_bezier_data_i();
+    set_bezier_data_r();
+    set_bezier_data_k();
+    set_bezier_data_o();
+    set_bezier_data_w();
+    set_bezier_data_n();
+    set_bezier_data_f();
+    set_bezier_data_x();
+    set_bezier_data_j();
+    set_bezier_data_m();
+    set_bezier_data_z();
+    set_bezier_data_Z();
 }
 
 

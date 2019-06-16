@@ -18,7 +18,7 @@ static int char_width_pixels;
 static int char_height_pixels;
 static int char_pos;
 static int bkg_color = 0;
-static int lfb_put_char_available = TRUE;
+static int lfb_available = TRUE;
 // are caches initialized?
 static int caches_available;
 // a map to cache rendered font data.
@@ -30,12 +30,12 @@ static char **font_cache_map;
 #define LFB_SCREEN_PADDING_X 200
 #define LFB_SCREEN_PADDING_Y 5
 #define LFB_LINE_SPACING_X 1
-#define LFB_LINE_SPACING_Y 1
-#define LFB_CHAR_THICKNESS 1
+#define LFB_LINE_SPACING_Y 2
+#define LFB_CHAR_THICKNESS 2
 
-#define CHAR_COLOR_R 250
-#define CHAR_COLOR_G 250
-#define CHAR_COLOR_B 250
+#define CHAR_COLOR_R 220
+#define CHAR_COLOR_G 220
+#define CHAR_COLOR_B 220
 
 #define LFB_USE_CACHE
 
@@ -49,12 +49,12 @@ static char *lfb_cache_char_alpha_map(int c, int w, int h);
  * this function initializes font caches.
  */
 static void init_font_cache_data() {
-    lfb_put_char_available = FALSE;
+    lfb_available = FALSE;
     font_cache_map = (char **) k_malloc(256 * sizeof(char *));
     for (int i = 0; i < 256; i++) {
         font_cache_map[i] = lfb_cache_char_alpha_map(i, char_width_pixels, char_height_pixels);
     }
-    lfb_put_char_available = TRUE;
+    lfb_available = TRUE;
 }
 
 /**
@@ -74,10 +74,9 @@ static char *lfb_cache_char_alpha_map(int c, int w, int h) {
         temp_canvas.depth = LFB_DEPTH_BYTES;
         temp_canvas.buffer = font_cache_map[c];
         memset(temp_canvas.buffer, 0, h * w * LFB_DEPTH_BYTES);
-        canvas_draw_char(&temp_canvas, c, 1, 1, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
-                         temp_canvas.height - 1 - LFB_LINE_SPACING_Y,
-                         temp_canvas.width - 1 - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
-        canvas_blur_xy(&temp_canvas, 0, 0, h, w, 20);
+        canvas_draw_char(&temp_canvas, c, 0, 0, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
+                         temp_canvas.height - LFB_LINE_SPACING_Y,
+                         temp_canvas.width - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
     }
     return font_cache_map[c];
 }
@@ -97,9 +96,9 @@ static void lfb_blend_addition(int x, int y, int width, int height, char *data) 
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
             int t = j * LFB_DEPTH_BYTES;
-            where[t] = where_data[t];
-            where[t + 1] = where_data[t + 1];
-            where[t + 2] = where_data[t + 2];
+            where[t] += where_data[t];
+            where[t + 1] += where_data[t + 1];
+            where[t + 2] += where_data[t + 2];
         }
         where += LFB_DEPTH_BYTES * lfb_width;
         where_data += LFB_DEPTH_BYTES * width;
@@ -132,7 +131,7 @@ void lfb_init(int height, int width, void *lfb_buffer) {
 void lfb_put_char(char c) {
     char_pos++;
     char_pos %= (KERNEL_CONSOLE_BUFFER_SIZE);
-    if (!lfb_put_char_available) return;
+    if (!lfb_available) return;
     int col = char_pos / KERNEL_CONSOLE_WIDTH;
     int row = char_pos - col * KERNEL_CONSOLE_WIDTH;
 
@@ -149,7 +148,7 @@ void lfb_put_char(char c) {
 #ifdef LFB_USE_CACHE
     } else {
         // use pre-rendered chars
-        char *font_alpha_data = lfb_cache_char_alpha_map(c, char_width_pixels, char_height_pixels);
+        char *font_alpha_data = font_cache_map[c];
         lfb_blend_addition(x, y, char_width_pixels, char_height_pixels, font_alpha_data);
 
     }
@@ -158,10 +157,12 @@ void lfb_put_char(char c) {
 }
 
 void lfb_clear() {
+    if (!lfb_available) return;
     memset(back_buffer, bkg_color, buffer_size);
 }
 
 void lfb_repaint() {
+    if (!lfb_available) return;
     memcpy(framebuffer, back_buffer, buffer_size);
     lfb_clear();
 }

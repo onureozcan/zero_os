@@ -65,13 +65,14 @@ void set_bezier_data_b() {
 void set_bezier_data_c() {
     simple_bezier_font_table['c'].size = 1;
     simple_bezier_font_table['c'].layers[0] = (simple_bezier_font_layer_t) {
-            .size = 5,
+            .size = 6,
             .data = {
-                    90, 50,
-                    0, 10,
-                    0, 90,
-                    40, 110,
-                    90, 90
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y + 10,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y - 10,
+                    0, BEZIER_FONT_HALF_Y,
+                    0, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 10,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y - 10,
             }
     };
 }
@@ -104,18 +105,18 @@ void set_bezier_data_e() {
             .data = {
                     40, BEZIER_FONT_HALF_Y + 20,
                     40, BEZIER_FONT_HALF_Y + 20,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y + 20
+                    BEZIER_FONT_FULL_X - 20, BEZIER_FONT_HALF_Y + 20
             }
     };
     simple_bezier_font_table['e'].layers[1] = (simple_bezier_font_layer_t) {
             .size = 6,
             .data = {
-                    100, BEZIER_FONT_HALF_Y + 20,
-                    100, BEZIER_FONT_HALF_Y - 20,
-                    20, 30,
-                    20, BEZIER_FONT_FULL_Y,
-                    50, BEZIER_FONT_FULL_Y,
-                    100, BEZIER_FONT_FULL_Y
+                    80, BEZIER_FONT_HALF_Y + 20,
+                    60, BEZIER_FONT_HALF_Y - 20,
+                    0, 30,
+                    0, BEZIER_FONT_FULL_Y,
+                    30, BEZIER_FONT_FULL_Y,
+                    80, BEZIER_FONT_FULL_Y
             }
     };
 }
@@ -155,8 +156,8 @@ void set_bezier_data_h() {
             .size = 4,
             .data = {
                     BEZIER_FONT_HALF_X - 20, BEZIER_FONT_HALF_Y + 20,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y - 20,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y - 20,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y - 10,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y - 10,
                     BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y
             }
     };
@@ -165,9 +166,10 @@ void set_bezier_data_h() {
 void set_bezier_data_l() {
     simple_bezier_font_table['l'].size = 1;
     simple_bezier_font_table['l'].layers[0] = (simple_bezier_font_layer_t) {
-            .size = 3,
+            .size = 4,
             .data = {
                     BEZIER_FONT_HALF_X, 0,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y - 10,
                     BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y,
                     BEZIER_FONT_HALF_X + 20, BEZIER_FONT_FULL_Y
             }
@@ -199,26 +201,315 @@ void set_bezier_data_q() {
 void set_bezier_data_u() {
     simple_bezier_font_table['u'].size = 1;
     simple_bezier_font_table['u'].layers[0] = (simple_bezier_font_layer_t) {
-            .size = 7,
+            .size = 8,
             .data = {
                     20, BEZIER_FONT_HALF_Y,
                     20, BEZIER_FONT_FULL_Y,
                     20, BEZIER_FONT_FULL_Y,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y,
-                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y,
+                    20, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X - 20, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X - 20, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X - 20, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X - 20, BEZIER_FONT_HALF_Y,
             }
     };
 }
+
+void set_bezier_data_n() {
+    simple_bezier_font_table['n'].size = 1;
+    simple_bezier_font_table['n'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 8,
+            .data = {
+                    10, BEZIER_FONT_FULL_Y,
+                    10, BEZIER_FONT_HALF_Y,
+                    10, BEZIER_FONT_HALF_Y,
+                    10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X - 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X - 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X - 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X - 10, BEZIER_FONT_FULL_Y,
+            }
+    };
+}
+
+
+void set_bezier_data_j() {
+    simple_bezier_font_table['j'].size = 1;
+    simple_bezier_font_table['j'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 7,
+            .data = {
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_FULL_Y + 40,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_FULL_Y + 40,
+                    BEZIER_FONT_HALF_X - 30, BEZIER_FONT_FULL_Y + 40,
+            }
+    };
+}
+
 void set_bezier_data_i() {
-    simple_bezier_font_table['i'].size = 1;
+    simple_bezier_font_table['i'].size = 2;
     simple_bezier_font_table['i'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 5,
+            .data = {
+                    BEZIER_FONT_HALF_X - 20, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_FULL_Y,
+            }
+    };
+    simple_bezier_font_table['i'].size = 2;
+    simple_bezier_font_table['i'].layers[1] = (simple_bezier_font_layer_t) {
             .size = 3,
             .data = {
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y - 20,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y - 20,
+                    BEZIER_FONT_HALF_X + 10, BEZIER_FONT_HALF_Y - 20,
+            }};
+}
+
+void set_bezier_data_r() {
+    simple_bezier_font_table['r'].size = 2;
+    simple_bezier_font_table['r'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_FULL_Y
+            }
+    };
+    simple_bezier_font_table['r'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 4,
+            .data = {
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_HALF_Y + 30,
+                    BEZIER_FONT_HALF_X + 20, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y - 10,
+                    BEZIER_FONT_HALF_X * 2, BEZIER_FONT_HALF_Y + 10,
+            }
+    };
+}
+
+void set_bezier_data_k() {
+    simple_bezier_font_table['k'].size = 3;
+    simple_bezier_font_table['k'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_HALF_X / 2, 0,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_FULL_Y
+            }
+    };
+    simple_bezier_font_table['k'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_HALF_X * 2, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_HALF_Y + BEZIER_FONT_HALF_Y / 2 + 10,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_HALF_Y + BEZIER_FONT_HALF_Y / 2 + 10,
+            }
+    };
+
+    simple_bezier_font_table['k'].layers[2] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_HALF_X * 2, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_HALF_Y + BEZIER_FONT_HALF_Y / 2 + 10,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_HALF_Y + BEZIER_FONT_HALF_Y / 2 + 10,
+            }
+    };
+}
+
+void set_bezier_data_o() {
+    simple_bezier_font_table['o'].size = 1;
+    simple_bezier_font_table['o'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 7,
+            .data = {
                     BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y,
+                    -10, BEZIER_FONT_HALF_Y,
+                    -10, BEZIER_FONT_FULL_Y + 10,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 10,
+                    BEZIER_FONT_FULL_X + 10, BEZIER_FONT_FULL_Y + 10,
+                    BEZIER_FONT_FULL_X + 10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y
+            }
+    };
+}
+
+
+void set_bezier_data_m() {
+    simple_bezier_font_table['m'].size = 2;
+    int top = BEZIER_FONT_HALF_Y - 5;
+    simple_bezier_font_table['m'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 6,
+            .data = {
+                    0, BEZIER_FONT_FULL_Y,
+                    0, top,
+                    0, top,
+                    BEZIER_FONT_HALF_X, top,
+                    BEZIER_FONT_HALF_X, top,
                     BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y,
-                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y
+
+            }
+    };
+    simple_bezier_font_table['m'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 6,
+            .data = {
+                    BEZIER_FONT_HALF_X + 0, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_HALF_X + 0, top,
+                    BEZIER_FONT_HALF_X + 0, top,
+                    BEZIER_FONT_HALF_X + BEZIER_FONT_HALF_X, top,
+                    BEZIER_FONT_HALF_X + BEZIER_FONT_HALF_X, top,
+                    BEZIER_FONT_HALF_X + BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y,
+
+            }
+    };
+
+}
+
+
+void set_bezier_data_w() {
+    simple_bezier_font_table['w'].size = 2;
+    simple_bezier_font_table['w'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 4,
+            .data = {
+                    0, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_FULL_Y + 20,
+                    BEZIER_FONT_HALF_X / 2, BEZIER_FONT_FULL_Y + 20,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y,
+
+            }
+    };
+
+
+    simple_bezier_font_table['w'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 4,
+            .data = {
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X / 2 + BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 20,
+                    BEZIER_FONT_HALF_X / 2 + BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 20,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y,
+            }
+    };
+
+}
+
+
+void set_bezier_data_f() {
+    simple_bezier_font_table['f'].size = 2;
+    simple_bezier_font_table['f'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 5,
+            .data = {
+                    BEZIER_FONT_HALF_X + 20, 0,
+                    BEZIER_FONT_HALF_X, 0,
+                    BEZIER_FONT_HALF_X, 0,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 20,
+                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 20,
+
+            }
+    };
+
+    simple_bezier_font_table['f'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_HALF_X - 40, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 20, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_HALF_X + 20, BEZIER_FONT_HALF_Y
+
+            }
+    };
+}
+
+
+void set_bezier_data_x() {
+    simple_bezier_font_table['x'].size = 2;
+    simple_bezier_font_table['x'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y
+
+            }
+    };
+
+    simple_bezier_font_table['x'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_FULL_X - 10, BEZIER_FONT_HALF_Y,
+                    10, BEZIER_FONT_FULL_Y,
+                    10, BEZIER_FONT_FULL_Y
+
+            }
+    };
+}
+
+void set_bezier_data_Z() {
+    simple_bezier_font_table['Z'].size = 3;
+    simple_bezier_font_table['Z'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    10, 0,
+                    BEZIER_FONT_FULL_X, 0,
+                    BEZIER_FONT_FULL_X, 0
+
+            }
+    };
+
+    simple_bezier_font_table['Z'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_FULL_X - 10, 0,
+                    10, BEZIER_FONT_FULL_Y,
+                    10, BEZIER_FONT_FULL_Y
+
+            }
+    };
+
+
+    simple_bezier_font_table['Z'].layers[2] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    10, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y
+
+            }
+    };
+}
+
+void set_bezier_data_z() {
+    simple_bezier_font_table['z'].size = 3;
+    simple_bezier_font_table['z'].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    10, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_HALF_Y
+
+            }
+    };
+
+    simple_bezier_font_table['z'].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    BEZIER_FONT_FULL_X - 10, BEZIER_FONT_HALF_Y,
+                    10, BEZIER_FONT_FULL_Y,
+                    10, BEZIER_FONT_FULL_Y
+
+            }
+    };
+
+
+    simple_bezier_font_table['z'].layers[2] = (simple_bezier_font_layer_t) {
+            .size = 3,
+            .data = {
+                    10, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y,
+                    BEZIER_FONT_FULL_X, BEZIER_FONT_FULL_Y
+
             }
     };
 }
