@@ -8,7 +8,8 @@
 #include <stdint-gcc.h>
 
 #define CANVAS_MAX_ALLOWED_BEZIER_CONTROL_POINTS 32
-#define CANVAS_SIMPLE_FONT_DEFAULT_SIZE 100
+#define CANVAS_SIMPLE_FONT_DEFAULT_SIZE_X 100
+#define CANVAS_SIMPLE_FONT_DEFAULT_SIZE_Y 200
 #define CANVAS_SIMPLE_FONT_MAX_LAYERS 10
 
 typedef struct canvas {
@@ -33,9 +34,11 @@ typedef struct simple_bezier_font {
     simple_bezier_font_layer_t layers[CANVAS_SIMPLE_FONT_MAX_LAYERS];
 } simple_bezier_font_t;
 
-simple_bezier_font_t simple_bezier_font_table[255];
+simple_bezier_font_t simple_bezier_font_table[256];
 
 void canvas_init();
+
+void canvas_blur_xy(canvas_t *canvas, int x, int y, int h, int w , int mult);
 
 void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t h, uint8_t w);
 

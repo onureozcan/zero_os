@@ -15,6 +15,12 @@ void canvas_init() {
     set_bezier_data_c();
     set_bezier_data_d();
     set_bezier_data_e();
+    set_bezier_data_t();
+    set_bezier_data_h();
+    set_bezier_data_l();
+    set_bezier_data_q();
+    set_bezier_data_u();
+    set_bezier_data_i();
 }
 
 
@@ -129,8 +135,37 @@ void canvas_draw_char(canvas_t *canvas, int c, int x, int y, uint8_t r, uint8_t 
     simple_bezier_font_t glyph = simple_bezier_font_table[c];
     for (int l = 0; l < glyph.size; l++) {
         canvas_draw_bezier_curve_scaled(canvas, x, y, (point_t *) &glyph.layers[l].data, glyph.layers[l].size,
-                                        b, g, r, w / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE),
-                                        h / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE),
+                                        b, g, r, w / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE_X),
+                                        h / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE_Y),
                                         thickness);
+    }
+}
+
+static uint8_t *canvas_get_pixel_xy(canvas_t *canvas, int x, int y) {
+    return (uint8_t *) &canvas->buffer[canvas->depth * canvas->width * y + x * canvas->depth];
+}
+
+void canvas_blur_xy(canvas_t *canvas, int i, int j, int h, int w, int mult) {
+    for (int x = i ; x < w; x++) {
+        for (int y = j; y < h; y++) {
+            uint8_t *pixel_00 = canvas_get_pixel_xy(canvas, x - 1, y - 1);
+            uint8_t *pixel_01 = canvas_get_pixel_xy(canvas, x - 1, y);
+            uint8_t *pixel_02 = canvas_get_pixel_xy(canvas, x - 1, y + 1);
+            uint8_t *pixel_10 = canvas_get_pixel_xy(canvas, x, y - 1);
+            uint8_t *pixel_11 = canvas_get_pixel_xy(canvas, x, y);
+            uint8_t *pixel_12 = canvas_get_pixel_xy(canvas, x, y + 1);
+            uint8_t *pixel_20 = canvas_get_pixel_xy(canvas, x + 1, y - 1);
+            uint8_t *pixel_21 = canvas_get_pixel_xy(canvas, x + 1, y);
+            uint8_t *pixel_22 = canvas_get_pixel_xy(canvas, x + 1, y + 1);
+            pixel_11[0] = (pixel_00[0] + pixel_01[0] + pixel_02[0]
+                           + pixel_10[0] + pixel_11[0] * mult + pixel_12[0]
+                           + pixel_20[0] + pixel_21[0] + pixel_22[0]) / (8 + mult);
+            pixel_11[1] = (pixel_00[1] + pixel_01[1] + pixel_02[1]
+                           + pixel_10[1] + pixel_11[1] * mult + pixel_12[1]
+                           + pixel_20[1] + pixel_21[1] + pixel_22[1]) / (8 + mult);
+            pixel_11[2] = (pixel_00[2] + pixel_01[2] + pixel_02[2]
+                           + pixel_10[2] + pixel_11[2] * mult + pixel_12[2]
+                           + pixel_20[2] + pixel_21[2] + pixel_22[2]) / (8 + mult);
+        }
     }
 }
