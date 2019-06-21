@@ -32,6 +32,11 @@ void canvas_init() {
     set_bezier_data_m();
     set_bezier_data_z();
     set_bezier_data_Z();
+    set_bezier_data_y();
+    set_bezier_data_p();
+    set_bezier_data_s();
+    set_bezier_data_v();
+    set_bezier_data_g();
 }
 
 
@@ -118,6 +123,13 @@ canvas_draw_bezier_curve_internal(canvas_t *canvas, int x, int y, point_t points
     return canvas_draw_bezier_curve_internal(canvas, x, y, new_points, new_size, b, g, r, percent);
 }
 
+static int round(float f) {
+    if (f < .5f) {
+        return (int) (f - .5f);
+    }
+    return (int) (f + .5f);
+}
+
 static void
 canvas_draw_bezier_curve_scaled(canvas_t *canvas, int x, int y, point_t points[], int size_of_points, uint8_t b,
                                 uint8_t g,
@@ -126,8 +138,8 @@ canvas_draw_bezier_curve_scaled(canvas_t *canvas, int x, int y, point_t points[]
     for (int p = 0; p < CANVAS_BEZIER_CURVE_SAMPLING; p++) {
         point_t point = canvas_draw_bezier_curve_internal(canvas, x, y, points, size_of_points, b, g, r, p);
         if (p != 0)
-            canvas_draw_line(canvas, (int) (point.x * scale_x + x), (int) (point.y * scale_y + y),
-                             (int) (prev_point.x * scale_x + x), (int) (prev_point.y * scale_y + y),
+            canvas_draw_line(canvas, round(point.x * scale_x + x), round(point.y * scale_y + y),
+                             round(prev_point.x * scale_x + x), round(prev_point.y * scale_y + y),
                              r, g, b, thickness);
         prev_point = point;
     }
@@ -145,10 +157,11 @@ void canvas_draw_char(canvas_t *canvas, int c, int x, int y, uint8_t r, uint8_t 
                       uint32_t thickness) {
     simple_bezier_font_t glyph = simple_bezier_font_table[c];
     for (int l = 0; l < glyph.size; l++) {
+        float scale_x = w / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE_X);
         canvas_draw_bezier_curve_scaled(canvas, x, y, (point_t *) &glyph.layers[l].data, glyph.layers[l].size,
-                                        b, g, r, w / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE_X),
+                                        b, g, r, scale_x,
                                         h / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE_Y),
-                                        thickness);
+                                        round(CANVAS_SIMPLE_FONT_DEFAULT_THICKNESS * scale_x) + 1);
     }
 }
 
@@ -157,7 +170,7 @@ static uint8_t *canvas_get_pixel_xy(canvas_t *canvas, int x, int y) {
 }
 
 void canvas_blur_xy(canvas_t *canvas, int i, int j, int h, int w, int mult) {
-    for (int x = i ; x < w; x++) {
+    for (int x = i; x < w; x++) {
         for (int y = j; y < h; y++) {
             uint8_t *pixel_00 = canvas_get_pixel_xy(canvas, x - 1, y - 1);
             uint8_t *pixel_01 = canvas_get_pixel_xy(canvas, x - 1, y);

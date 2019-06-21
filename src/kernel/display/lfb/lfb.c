@@ -31,7 +31,7 @@ static char **font_cache_map;
 #define LFB_SCREEN_PADDING_Y 5
 #define LFB_LINE_SPACING_X 1
 #define LFB_LINE_SPACING_Y 2
-#define LFB_CHAR_THICKNESS 2
+#define LFB_CHAR_THICKNESS 1
 
 #define CHAR_COLOR_R 220
 #define CHAR_COLOR_G 220
@@ -74,9 +74,9 @@ static char *lfb_cache_char_alpha_map(int c, int w, int h) {
         temp_canvas.depth = LFB_DEPTH_BYTES;
         temp_canvas.buffer = font_cache_map[c];
         memset(temp_canvas.buffer, 0, h * w * LFB_DEPTH_BYTES);
-        canvas_draw_char(&temp_canvas, c, 0, 0, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
-                         temp_canvas.height - LFB_LINE_SPACING_Y,
-                         temp_canvas.width - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
+        canvas_draw_char(&temp_canvas, c, 1, 1, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
+                         temp_canvas.height - 1 - LFB_LINE_SPACING_Y,
+                         temp_canvas.width - 1 - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
     }
     return font_cache_map[c];
 }
