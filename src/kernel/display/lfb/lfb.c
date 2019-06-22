@@ -25,7 +25,7 @@ static int caches_available;
 // keys are chars and values are buffer to them.
 // each buffer is of width char_width_pixels and
 // of height char_height_pixels
-static char **font_cache_map;
+static uint8_t **font_cache_map;
 
 #define LFB_SCREEN_PADDING_X 200
 #define LFB_SCREEN_PADDING_Y 5
@@ -40,17 +40,21 @@ static char **font_cache_map;
 #define LFB_USE_CACHE
 
 canvas_t canvas;
+uint8_t *aa_atlas;
 
 /***********STATIC METHODS***********/
 
-static char *lfb_cache_char_alpha_map(int c, int w, int h);
+static uint8_t *lfb_cache_char_alpha_map(int c, int w, int h);
 
 /**
  * this function initializes font caches.
  */
 static void init_font_cache_data() {
     lfb_available = FALSE;
-    font_cache_map = (char **) k_malloc(256 * sizeof(char *));
+    int aa_atlas_size = char_width_pixels * char_height_pixels * LFB_DEPTH_BYTES * 4;
+    aa_atlas = (uint8_t *) k_malloc(aa_atlas_size);
+    memset(aa_atlas, 0, aa_atlas_size);
+    font_cache_map = (uint8_t **) k_malloc(256 * sizeof(char *));
     for (int i = 0; i < 256; i++) {
         font_cache_map[i] = lfb_cache_char_alpha_map(i, char_width_pixels, char_height_pixels);
     }
@@ -64,19 +68,32 @@ static void init_font_cache_data() {
  * @param c char to render.
  * @return rendered buffer.
  */
-static char *lfb_cache_char_alpha_map(int c, int w, int h) {
+static uint8_t *lfb_cache_char_alpha_map(int c, int w, int h) {
     if (font_cache_map[c] == NULL) {
         // not rendered and cached
         font_cache_map[c] = (char *) k_malloc(w * h * LFB_DEPTH_BYTES);
         canvas_t temp_canvas;
-        temp_canvas.height = h;
-        temp_canvas.width = w;
+        temp_canvas.height = h * 2;
+        temp_canvas.width = w * 2;
         temp_canvas.depth = LFB_DEPTH_BYTES;
-        temp_canvas.buffer = font_cache_map[c];
-        memset(temp_canvas.buffer, 0, h * w * LFB_DEPTH_BYTES);
+        temp_canvas.buffer = aa_atlas;
+        memset(temp_canvas.buffer, 0, h * 2 * w * 2 * LFB_DEPTH_BYTES);
         canvas_draw_char(&temp_canvas, c, 1, 1, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
                          temp_canvas.height - 1 - LFB_LINE_SPACING_Y,
                          temp_canvas.width - 1 - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
+        for (int j = 0; j < temp_canvas.height; j += 2) {
+            for (int i = 0; i < temp_canvas.width; i += 2) {
+                uint8_t *big00 = aa_atlas + (i * LFB_DEPTH_BYTES + j * LFB_DEPTH_BYTES * temp_canvas.width);
+                uint8_t *big01 = aa_atlas + (i * LFB_DEPTH_BYTES + (j + 1) * LFB_DEPTH_BYTES * temp_canvas.width);
+                uint8_t *big10 = aa_atlas + ((i + 1) * LFB_DEPTH_BYTES + j * LFB_DEPTH_BYTES * temp_canvas.width);
+                uint8_t *big11 = aa_atlas + ((i + 1) * LFB_DEPTH_BYTES + (j + 1) * LFB_DEPTH_BYTES * temp_canvas.width);
+                uint8_t *small =
+                        font_cache_map[c] + (i / 2 * LFB_DEPTH_BYTES + j / 2 * LFB_DEPTH_BYTES * w);
+                *small = (*big00 + *big01 + *big10 + *big11) / 4;
+                small[1] = small[0];
+                small[2] = small[0];
+            }
+        }
     }
     return font_cache_map[c];
 }
@@ -96,9 +113,9 @@ static void lfb_blend_addition(int x, int y, int width, int height, char *data) 
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
             int t = j * LFB_DEPTH_BYTES;
-            where[t] += where_data[t];
-            where[t + 1] += where_data[t + 1];
-            where[t + 2] += where_data[t + 2];
+            where[t] = where_data[t];
+            where[t + 1] = where_data[t + 1];
+            where[t + 2] = where_data[t + 2];
         }
         where += LFB_DEPTH_BYTES * lfb_width;
         where_data += LFB_DEPTH_BYTES * width;
