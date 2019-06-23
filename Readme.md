@@ -8,7 +8,7 @@ Uses newlib in user applications.
 17 syscalls required by newlib are placed in syscall interface. 
 Some of them has implementations and some are empty.  
 No filesystem driver and virtual file system yet.  
-Also does not have a gui. Uses 80*25 text mode   
+Uses VBE linear frame buffer but does not have a gui yet. Uses sequences of simple bezier curves for drawing fonts rather than standard formats like otf, ttf etc.
 
 It is still too young and I am implementing core features one by one. 
 As new features are added, will amend this file also.
@@ -38,6 +38,11 @@ Secondly, run `build_iso_using_docker` in that folder. It builds both kernel and
  Symbol files will appear inside iso folder after build. You can configure your ide to debug user apps or kernel image.
  
  **Screenshots**
+ 
+ (newest to oldest)
+ 
+ ![image](https://user-images.githubusercontent.com/21360651/59981304-f0c7aa80-9609-11e9-88d9-30ec048bcee5.png)
+
  
  ![image](https://user-images.githubusercontent.com/21360651/59148391-25841100-8a11-11e9-98bb-dfdefec6eca3.png)
 
