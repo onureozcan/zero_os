@@ -58,7 +58,7 @@ void set_bezier_data_d() {
             .data = {
                     90, 0,
                     90, 0,
-                    90, 90
+                    90, 100
             }
     };
     simple_bezier_font_table['d'].layers[1] = (simple_bezier_font_layer_t) {
@@ -67,23 +67,23 @@ void set_bezier_data_d() {
                     90, 50,
                     0, 10,
                     0, 120,
-                    90, 90
+                    90, 100
             }
     };
 }
 
 void set_bezier_data_e() {
     simple_bezier_font_table['e'].size = 2;
-    simple_bezier_font_table['e'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{36, 71},
-                                                                                                {99, 71}}};
-    simple_bezier_font_table['e'].layers[1] = (simple_bezier_font_layer_t) {.size = 8, .data = {{98,  71},
-                                                                                                {93,  37},
-                                                                                                {80,  27},
-                                                                                                {12,  27},
-                                                                                                {-1,  72},
-                                                                                                {31,  109},
-                                                                                                {61,  115},
-                                                                                                {103, 90}}};
+    simple_bezier_font_table['e'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{36 - 10, 61},
+                                                                                                {99 - 10, 61}}};
+    simple_bezier_font_table['e'].layers[1] = (simple_bezier_font_layer_t) {.size = 8, .data = {{98 - 10,  61},
+                                                                                                {93 - 10,  37},
+                                                                                                {80 - 10,  27},
+                                                                                                {12 - 10,  27},
+                                                                                                {-1 - 10,  72},
+                                                                                                {31 - 10,  109 - 5},
+                                                                                                {61 - 10,  115 - 5},
+                                                                                                {103 - 15, 90 - 5}}};
 }
 
 void set_bezier_data_t() {
@@ -194,7 +194,7 @@ void set_bezier_data_i() {
     simple_bezier_font_table['i'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{40, 45},
                                                                                                 {70, 45}}};
     simple_bezier_font_table['i'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{60, 45},
-                                                                                                {60, 95}}};
+                                                                                                {60, 100}}};
     simple_bezier_font_table['i'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{55, 20},
                                                                                                 {65, 20}}};
 }
@@ -221,19 +221,15 @@ void set_bezier_data_k() {
 
 void set_bezier_data_o() {
     simple_bezier_font_table['o'].size = 1;
-    simple_bezier_font_table['o'].layers[0] = (simple_bezier_font_layer_t) {
-            .size = 7,
-            .data = {
-                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y,
-                    -10, BEZIER_FONT_HALF_Y,
-                    -10, BEZIER_FONT_FULL_Y + 10,
-                    BEZIER_FONT_HALF_X, BEZIER_FONT_FULL_Y + 10,
-                    BEZIER_FONT_FULL_X + 10, BEZIER_FONT_FULL_Y + 10,
-                    BEZIER_FONT_FULL_X + 10, BEZIER_FONT_HALF_Y,
-                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y,
-                    BEZIER_FONT_HALF_X, BEZIER_FONT_HALF_Y
-            }
-    };
+    simple_bezier_font_table['o'].layers[0] = (simple_bezier_font_layer_t) {.size = 9, .data = {{50,  100},
+                                                                                                {100, 105},
+                                                                                                {100, 55},
+                                                                                                {100, 30},
+                                                                                                {50,  20},
+                                                                                                {0,   30},
+                                                                                                {0,   55},
+                                                                                                {0,   105},
+                                                                                                {56,  100}}};
 }
 
 
@@ -314,7 +310,7 @@ void set_bezier_data_Z() {
     simple_bezier_font_table['Z'].layers[1] = (simple_bezier_font_layer_t) {
             .size = 3,
             .data = {
-                    BEZIER_FONT_FULL_X - 10, 0,
+                    BEZIER_FONT_FULL_X, 0,
                     10, BEZIER_FONT_FULL_Y,
                     10, BEZIER_FONT_FULL_Y
 
@@ -375,8 +371,8 @@ void set_bezier_data_s() {
                                                                                                  {53,  22},
                                                                                                  {3,   51},
                                                                                                  {3,   135},
-                                                                                                 {114, 3},
-                                                                                                 {134, 76},
+                                                                                                 {104, 3},
+                                                                                                 {114, 76},
                                                                                                  {150, 115},
                                                                                                  {25,  114},
                                                                                                  {28,  76}}};
@@ -406,4 +402,465 @@ void set_bezier_data_g() {
                                                                                                 {60, 111},
                                                                                                 {82, 91},
                                                                                                 {88, 68}}};
+}
+
+void set_bezier_data_0() {
+    simple_bezier_font_table['0'].size = 1;
+    simple_bezier_font_table['0'].layers[0] = (simple_bezier_font_layer_t) {.size = 7, .data = {{50,  0},
+                                                                                                {100, 0},
+                                                                                                {100, 130},
+                                                                                                {50,  130},
+                                                                                                {0,   130},
+                                                                                                {0,   0},
+                                                                                                {53,  0}}};
+}
+
+void set_bezier_data_1() {
+    simple_bezier_font_table['1'].size = 3;
+    simple_bezier_font_table['1'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{33, 100},
+                                                                                                {71, 100}}};
+    simple_bezier_font_table['1'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{54, 100},
+                                                                                                {54, 0}}};
+    simple_bezier_font_table['1'].layers[2] = (simple_bezier_font_layer_t) {.size = 3, .data = {{54, 0},
+                                                                                                {51, 15},
+                                                                                                {38, 20}}};
+}
+
+void set_bezier_data_2() {
+    simple_bezier_font_table['2'].size = 2;
+    simple_bezier_font_table['2'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{82, 100},
+                                                                                                {20, 100}}};
+    simple_bezier_font_table['2'].layers[1] = (simple_bezier_font_layer_t) {.size = 5, .data = {{22,  100},
+                                                                                                {102, 44},
+                                                                                                {94,  17},
+                                                                                                {68,  -9},
+                                                                                                {31,  7}}};
+}
+
+void set_bezier_data_3() {
+    simple_bezier_font_table['3'].size = 2;
+    simple_bezier_font_table['3'].layers[0] = (simple_bezier_font_layer_t) {.size = 5, .data = {{18, 90},
+                                                                                                {60, 112},
+                                                                                                {93, 95},
+                                                                                                {94, 58},
+                                                                                                {60, 47}}};
+    simple_bezier_font_table['3'].layers[1] = (simple_bezier_font_layer_t) {.size = 4, .data = {{60, 48},
+                                                                                                {97, 29},
+                                                                                                {67, -8},
+                                                                                                {34, 6}}};
+}
+
+
+void set_bezier_data_4() {
+    simple_bezier_font_table['4'].size = 3;
+    simple_bezier_font_table['4'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{71, 100},
+                                                                                                {71, 00}}};
+    simple_bezier_font_table['4'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{70, 0},
+                                                                                                {21, 66}}};
+    simple_bezier_font_table['4'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{22, 66},
+                                                                                                {86, 66}}};
+}
+
+void set_bezier_data_5() {
+    simple_bezier_font_table['5'].size = 3;
+    simple_bezier_font_table['5'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{82, 4},
+                                                                                                {22, 4}}};
+    simple_bezier_font_table['5'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{22, 5},
+                                                                                                {22, 50}}};
+    simple_bezier_font_table['5'].layers[2] = (simple_bezier_font_layer_t) {.size = 5, .data = {{23,  50},
+                                                                                                {82,  24},
+                                                                                                {109, 60},
+                                                                                                {84,  132},
+                                                                                                {21,  93}}};
+}
+
+void set_bezier_data_6() {
+    simple_bezier_font_table['6'].size = 2;
+    simple_bezier_font_table['6'].layers[0] = (simple_bezier_font_layer_t) {.size = 6, .data = {{56, 100},
+                                                                                                {8,  100},
+                                                                                                {12, 68},
+                                                                                                {22, -1},
+                                                                                                {34, 0},
+                                                                                                {76, 0}}};
+    simple_bezier_font_table['6'].layers[1] = (simple_bezier_font_layer_t) {.size = 7, .data = {{54,  100},
+                                                                                                {88,  100},
+                                                                                                {105, 76},
+                                                                                                {69,  39},
+                                                                                                {94,  34},
+                                                                                                {36,  37},
+                                                                                                {31,  48}}};
+}
+
+void set_bezier_data_7() {
+    simple_bezier_font_table['7'].size = 3;
+    simple_bezier_font_table['7'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{22, 4},
+                                                                                                {88, 4}}};
+    simple_bezier_font_table['7'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{87, 5},
+                                                                                                {87, 23}}};
+    simple_bezier_font_table['7'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{87, 22},
+                                                                                                {43, 100}}};
+}
+
+void set_bezier_data_8() {
+    simple_bezier_font_table['8'].size = 3;
+    simple_bezier_font_table['8'].layers[0] = (simple_bezier_font_layer_t) {.size = 4, .data = {{52, 1},
+                                                                                                {92, 1},
+                                                                                                {84, 34},
+                                                                                                {56, 51}}};
+    simple_bezier_font_table['8'].layers[1] = (simple_bezier_font_layer_t) {.size = 8, .data = {{52,  0},
+                                                                                                {15,  1},
+                                                                                                {10,  30},
+                                                                                                {26,  61},
+                                                                                                {120, 56},
+                                                                                                {92,  87},
+                                                                                                {82,  117},
+                                                                                                {26,  95}}};
+    simple_bezier_font_table['8'].layers[2] = (simple_bezier_font_layer_t) {.size = 4, .data = {{33, 98},
+                                                                                                {5,  85},
+                                                                                                {27, 55},
+                                                                                                {48, 48}}};
+}
+
+void set_bezier_data_9() {
+    simple_bezier_font_table['9'].size = 2;
+    simple_bezier_font_table['9'].layers[0] = (simple_bezier_font_layer_t) {.size = 6, .data = {{75, 56},
+                                                                                                {5,  81},
+                                                                                                {2,  27},
+                                                                                                {4,  -6},
+                                                                                                {62, -8},
+                                                                                                {76, 22}}};
+    simple_bezier_font_table['9'].layers[1] = (simple_bezier_font_layer_t) {.size = 5, .data = {{76, 19},
+                                                                                                {85, 60},
+                                                                                                {98, 91},
+                                                                                                {49, 118},
+                                                                                                {16, 98}}};
+}
+
+void set_bezier_data_A() {
+    simple_bezier_font_table['A'].size = 3;
+    simple_bezier_font_table['A'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{7,  100},
+                                                                                                {50, 1}}};
+    simple_bezier_font_table['A'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{50, 4},
+                                                                                                {92, 103}}};
+    simple_bezier_font_table['A'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{29, 55},
+                                                                                                {70, 55}}};
+}
+
+void set_bezier_data_B() {
+    simple_bezier_font_table['B'].size = 3;
+    simple_bezier_font_table['B'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{24, 100},
+                                                                                                {24, 0}}};
+    simple_bezier_font_table['B'].layers[1] = (simple_bezier_font_layer_t) {.size = 5, .data = {{25, 0},
+                                                                                                {85, 0},
+                                                                                                {81, 30},
+                                                                                                {82, 48},
+                                                                                                {33, 48}}};
+    simple_bezier_font_table['B'].layers[2] = (simple_bezier_font_layer_t) {.size = 5, .data = {{32, 49},
+                                                                                                {97, 44},
+                                                                                                {87, 84},
+                                                                                                {92, 100},
+                                                                                                {23, 100}}};
+}
+
+void set_bezier_data_C() {
+    simple_bezier_font_table['C'].size = 1;
+    simple_bezier_font_table['C'].layers[0] = (simple_bezier_font_layer_t) {.size = 7, .data = {{90, 20},
+                                                                                                {44, -21},
+                                                                                                {7,  20},
+                                                                                                {0,  49},
+                                                                                                {4,  100},
+                                                                                                {44, 126},
+                                                                                                {92, 89}}};
+}
+
+void set_bezier_data_D() {
+    simple_bezier_font_table['D'].size = 2;
+    simple_bezier_font_table['D'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{16, 100},
+                                                                                                {16, 1}}};
+    simple_bezier_font_table['D'].layers[1] = (simple_bezier_font_layer_t) {.size = 5, .data = {{16,  2},
+                                                                                                {102, -4},
+                                                                                                {90,  55},
+                                                                                                {106, 99},
+                                                                                                {17,  99}}};
+}
+
+void set_bezier_data_E() {
+    simple_bezier_font_table['E'].size = 4;
+    simple_bezier_font_table['E'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{26, 1},
+                                                                                                {26, 99}}};
+    simple_bezier_font_table['E'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{25, 2},
+                                                                                                {86, 2}}};
+    simple_bezier_font_table['E'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{26, 48},
+                                                                                                {77, 48}}};
+    simple_bezier_font_table['E'].layers[3] = (simple_bezier_font_layer_t) {.size = 2, .data = {{26, 100},
+                                                                                                {86, 100}}};
+}
+
+void set_bezier_data_F() {
+    simple_bezier_font_table['F'].size = 3;
+    simple_bezier_font_table['F'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{30, 100},
+                                                                                                {30, 0}}};
+    simple_bezier_font_table['F'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{30, 48},
+                                                                                                {76, 48}}};
+    simple_bezier_font_table['F'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{29, 0},
+                                                                                                {89, 0}}};
+}
+
+void set_bezier_data_G() {
+    simple_bezier_font_table['G'].size = 5;
+    simple_bezier_font_table['G'].layers[0] = (simple_bezier_font_layer_t) {.size = 3, .data = {{89, 12},
+                                                                                                {77, 2},
+                                                                                                {50, 2}}};
+    simple_bezier_font_table['G'].layers[1] = (simple_bezier_font_layer_t) {.size = 5, .data = {{52, 2},
+                                                                                                {5,  1},
+                                                                                                {-1, 54},
+                                                                                                {0,  97},
+                                                                                                {56, 100}}};
+    simple_bezier_font_table['G'].layers[2] = (simple_bezier_font_layer_t) {.size = 3, .data = {{54, 100},
+                                                                                                {89, 99},
+                                                                                                {93, 87}}};
+    simple_bezier_font_table['G'].layers[3] = (simple_bezier_font_layer_t) {.size = 2, .data = {{93, 87},
+                                                                                                {93, 53}}};
+    simple_bezier_font_table['G'].layers[4] = (simple_bezier_font_layer_t) {.size = 2, .data = {{94, 55},
+                                                                                                {48, 55}}};
+}
+
+void set_bezier_data_H() {
+    simple_bezier_font_table['H'].size = 3;
+    simple_bezier_font_table['H'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{20, 100},
+                                                                                                {20, 1}}};
+    simple_bezier_font_table['H'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{90, 100},
+                                                                                                {90, 0}}};
+    simple_bezier_font_table['H'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{20, 49},
+                                                                                                {89, 49}}};
+}
+
+void set_bezier_data_I() {
+    simple_bezier_font_table['I'].size = 3;
+    simple_bezier_font_table['I'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{34, 1},
+                                                                                                {78, 1}}};
+    simple_bezier_font_table['I'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{34, 100},
+                                                                                                {78, 100}}};
+    simple_bezier_font_table['I'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{56, 100},
+                                                                                                {56, 1}}};
+}
+
+void set_bezier_data_J() {
+    simple_bezier_font_table['J'].size = 3;
+    simple_bezier_font_table['J'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{34, 1},
+                                                                                                {78, 1}}};
+    simple_bezier_font_table['J'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{0, 0},
+                                                                                                {0, 0}}};
+    simple_bezier_font_table['J'].layers[2] = (simple_bezier_font_layer_t) {.size = 4, .data = {{66, 1},
+                                                                                                {66, 100},
+                                                                                                {66, 100},
+                                                                                                {25, 99}}};
+}
+
+void set_bezier_data_K() {
+    simple_bezier_font_table['K'].size = 3;
+    simple_bezier_font_table['K'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{26, 0},
+                                                                                                {26, 100}}};
+    simple_bezier_font_table['K'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{26, 65},
+                                                                                                {80, 0}}};
+    simple_bezier_font_table['K'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{37, 52},
+                                                                                                {82, 100}}};
+}
+
+void set_bezier_data_L() {
+    simple_bezier_font_table['L'].size = 2;
+    simple_bezier_font_table['L'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{32, 100},
+                                                                                                {32, 0}}};
+    simple_bezier_font_table['L'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{32, 100},
+                                                                                                {88, 100}}};
+}
+
+void set_bezier_data_M() {
+    simple_bezier_font_table['M'].size = 4;
+    simple_bezier_font_table['M'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{10, 100},
+                                                                                                {10, 0}}};
+    simple_bezier_font_table['M'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{10, 0},
+                                                                                                {49, 75}}};
+    simple_bezier_font_table['M'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{49, 75},
+                                                                                                {88, 0}}};
+    simple_bezier_font_table['M'].layers[3] = (simple_bezier_font_layer_t) {.size = 2, .data = {{88, 0},
+                                                                                                {88, 100}}};
+}
+
+void set_bezier_data_N() {
+    simple_bezier_font_table['N'].size = 3;
+    simple_bezier_font_table['N'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{20, 100},
+                                                                                                {20, 0}}};
+    simple_bezier_font_table['N'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{20, 1},
+                                                                                                {84, 100}}};
+    simple_bezier_font_table['N'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{83, 99},
+                                                                                                {83, 0}}};
+}
+
+void set_bezier_data_R() {
+    simple_bezier_font_table['R'].size = 3;
+    simple_bezier_font_table['R'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{24, 0},
+                                                                                                {24, 100}}};
+    simple_bezier_font_table['R'].layers[1] = (simple_bezier_font_layer_t) {.size = 6, .data = {{24, 1},
+                                                                                                {85, 0},
+                                                                                                {71, 6},
+                                                                                                {78, 54},
+                                                                                                {74, 56},
+                                                                                                {24, 54}}};
+    simple_bezier_font_table['R'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{46, 54},
+                                                                                                {86, 102}}};
+}
+
+void set_bezier_data_O() {
+    simple_bezier_font_table['O'].size = 4;
+    simple_bezier_font_table['O'].layers[0] = (simple_bezier_font_layer_t) {.size = 3, .data = {{49, 100},
+                                                                                                {90, 100},
+                                                                                                {90, 50}}};
+    simple_bezier_font_table['O'].layers[1] = (simple_bezier_font_layer_t) {.size = 3, .data = {{90, 51},
+                                                                                                {90, 0},
+                                                                                                {50, 0}}};
+    simple_bezier_font_table['O'].layers[2] = (simple_bezier_font_layer_t) {.size = 3, .data = {{51, 0},
+                                                                                                {10, 0},
+                                                                                                {10, 50}}};
+    simple_bezier_font_table['O'].layers[3] = (simple_bezier_font_layer_t) {.size = 3, .data = {{10, 50},
+                                                                                                {10, 100},
+                                                                                                {50, 100}}};
+}
+
+void set_bezier_data_P() {
+    simple_bezier_font_table['P'].size = 3;
+    simple_bezier_font_table['P'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{28, 100},
+                                                                                                {28, 0}}};
+    simple_bezier_font_table['P'].layers[1] = (simple_bezier_font_layer_t) {.size = 3, .data = {{27, 0},
+                                                                                                {80, -3},
+                                                                                                {84, 28}}};
+    simple_bezier_font_table['P'].layers[2] = (simple_bezier_font_layer_t) {.size = 3, .data = {{84, 28},
+                                                                                                {84, 61},
+                                                                                                {29, 56}}};
+}
+
+void set_bezier_data_S() {
+    simple_bezier_font_table['S'].size = 2;
+    simple_bezier_font_table['S'].layers[0] = (simple_bezier_font_layer_t) {.size = 5, .data = {{81, 5},
+                                                                                                {21, -17},
+                                                                                                {2,  22},
+                                                                                                {13, 46},
+                                                                                                {42, 47}}};
+    simple_bezier_font_table['S'].layers[1] = (simple_bezier_font_layer_t) {.size = 5, .data = {{40,  47},
+                                                                                                {118, 52},
+                                                                                                {86,  86},
+                                                                                                {96,  111},
+                                                                                                {13,  99}}};
+}
+
+void set_bezier_data_T() {
+    simple_bezier_font_table['T'].size = 2;
+    simple_bezier_font_table['T'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{8,  0},
+                                                                                                {91, 0}}};
+    simple_bezier_font_table['T'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{48, 1},
+                                                                                                {48, 100}}};
+}
+
+void set_bezier_data_U() {
+    simple_bezier_font_table['U'].size = 2;
+    simple_bezier_font_table['U'].layers[0] = (simple_bezier_font_layer_t) {.size = 4, .data = {{16, 0},
+                                                                                                {16, 90},
+                                                                                                {16, 100},
+                                                                                                {50, 100}}};
+    simple_bezier_font_table['U'].layers[1] = (simple_bezier_font_layer_t) {.size = 4, .data = {{84, 0},
+                                                                                                {84, 90},
+                                                                                                {84, 100},
+                                                                                                {48, 100}}};
+}
+
+void set_bezier_data_V() {
+    simple_bezier_font_table['V'].size = 2;
+    simple_bezier_font_table['V'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{21, 0},
+                                                                                                {50, 100}}};
+    simple_bezier_font_table['V'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{50, 100},
+                                                                                                {81, 0}}};
+}
+
+void set_bezier_data_W() {
+    simple_bezier_font_table['W'].size = 4;
+    simple_bezier_font_table['W'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{10, 0},
+                                                                                                {33, 100}}};
+    simple_bezier_font_table['W'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{33, 100},
+                                                                                                {50, 21}}};
+    simple_bezier_font_table['W'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{50, 23},
+                                                                                                {66, 100}}};
+    simple_bezier_font_table['W'].layers[3] = (simple_bezier_font_layer_t) {.size = 2, .data = {{66, 99},
+                                                                                                {89, 1}}};
+}
+
+void set_bezier_data_X() {
+    simple_bezier_font_table['X'].size = 2;
+    simple_bezier_font_table['X'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{11, 0},
+                                                                                                {89, 100}}};
+    simple_bezier_font_table['X'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{90, 1},
+                                                                                                {11, 99}}};
+}
+
+void set_bezier_data_Y() {
+    simple_bezier_font_table['Y'].size = 3;
+    simple_bezier_font_table['Y'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{14, 0},
+                                                                                                {49, 50}}};
+    simple_bezier_font_table['Y'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{85, 0},
+                                                                                                {49, 50}}};
+    simple_bezier_font_table['Y'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{49, 49},
+                                                                                                {49, 100}}};
+}
+
+void set_bezier_data_Q() {
+    simple_bezier_font_table['Q'].size = 5;
+    simple_bezier_font_table['Q'].layers[0] = (simple_bezier_font_layer_t) {.size = 3, .data = {{49, 100},
+                                                                                                {90, 100},
+                                                                                                {90, 50}}};
+    simple_bezier_font_table['Q'].layers[1] = (simple_bezier_font_layer_t) {.size = 3, .data = {{90, 51},
+                                                                                                {90, 0},
+                                                                                                {50, 0}}};
+    simple_bezier_font_table['Q'].layers[2] = (simple_bezier_font_layer_t) {.size = 3, .data = {{51, 0},
+                                                                                                {10, 0},
+                                                                                                {10, 50}}};
+    simple_bezier_font_table['Q'].layers[3] = (simple_bezier_font_layer_t) {.size = 3, .data = {{10, 50},
+                                                                                                {10, 100},
+                                                                                                {50, 100}}};
+    simple_bezier_font_table['Q'].layers[4] = (simple_bezier_font_layer_t) {.size = 2, .data = {
+            {70, 70},
+            {90, 90}
+    }};
+}
+
+void set_bezier_data_91() {
+    simple_bezier_font_table['['].size = 3;
+    simple_bezier_font_table['['].layers[0] = (simple_bezier_font_layer_t) {
+            .size = 2, .data = {{67, 0},
+                                {33, 0}}
+    };
+    simple_bezier_font_table['['].layers[1] = (simple_bezier_font_layer_t) {
+            .size = 2, .data = {{34, 100},
+                                {34, 1}}
+    };
+    simple_bezier_font_table['['].layers[2] = (simple_bezier_font_layer_t) {
+            .size = 2, .data = {{34, 100},
+                                {67, 100}}
+    };
+}
+
+void set_bezier_data_93() {
+    simple_bezier_font_table[']'].size = 3;
+    simple_bezier_font_table[']'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{32, 100},
+                                                                                                {66, 100}}};
+    simple_bezier_font_table[']'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{67, 100},
+                                                                                                {67, 0}}};
+    simple_bezier_font_table[']'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{66, 0},
+                                                                                                {32, 0}}};
+}
+
+void set_bezier_data_58() {
+    simple_bezier_font_table[':'].size = 2;
+    simple_bezier_font_table[':'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{46, 31},
+                                                                                                {55, 31}}};
+    simple_bezier_font_table[':'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{46, 86},
+                                                                                                {55, 86}}};
 }

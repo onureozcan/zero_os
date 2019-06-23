@@ -4,7 +4,7 @@
 #include <canvas.h>
 #include <common.h>
 
-#define CANVAS_BEZIER_CURVE_SAMPLING 100
+#define CANVAS_BEZIER_CURVE_SAMPLING 1000
 
 void set_bezier_data_a();
 
@@ -37,6 +37,44 @@ void canvas_init() {
     set_bezier_data_s();
     set_bezier_data_v();
     set_bezier_data_g();
+    set_bezier_data_0();
+    set_bezier_data_1();
+    set_bezier_data_2();
+    set_bezier_data_3();
+    set_bezier_data_4();
+    set_bezier_data_5();
+    set_bezier_data_6();
+    set_bezier_data_7();
+    set_bezier_data_8();
+    set_bezier_data_9();
+    set_bezier_data_A();
+    set_bezier_data_B();
+    set_bezier_data_C();
+    set_bezier_data_D();
+    set_bezier_data_E();
+    set_bezier_data_F();
+    set_bezier_data_G();
+    set_bezier_data_H();
+    set_bezier_data_I();
+    set_bezier_data_J();
+    set_bezier_data_K();
+    set_bezier_data_L();
+    set_bezier_data_M();
+    set_bezier_data_N();
+    set_bezier_data_O();
+    set_bezier_data_R();
+    set_bezier_data_P();
+    set_bezier_data_S();
+    set_bezier_data_T();
+    set_bezier_data_U();
+    set_bezier_data_V();
+    set_bezier_data_W();
+    set_bezier_data_X();
+    set_bezier_data_Y();
+    set_bezier_data_Q();
+    set_bezier_data_91();
+    set_bezier_data_93();
+    set_bezier_data_58();
 }
 
 
@@ -161,7 +199,7 @@ void canvas_draw_char(canvas_t *canvas, int c, int x, int y, uint8_t r, uint8_t 
         canvas_draw_bezier_curve_scaled(canvas, x, y, (point_t *) &glyph.layers[l].data, glyph.layers[l].size,
                                         b, g, r, scale_x,
                                         h / (float) (CANVAS_SIMPLE_FONT_DEFAULT_SIZE_Y),
-                                        round(CANVAS_SIMPLE_FONT_DEFAULT_THICKNESS * scale_x) + 1);
+                                        thickness);
     }
 }
 

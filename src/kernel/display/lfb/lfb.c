@@ -18,7 +18,7 @@ static int char_width_pixels;
 static int char_height_pixels;
 static int char_pos;
 static int bkg_color = 0;
-static int lfb_available = TRUE;
+static int lfb_available = FALSE;
 // are caches initialized?
 static int caches_available;
 // a map to cache rendered font data.
@@ -31,11 +31,11 @@ static uint8_t **font_cache_map;
 #define LFB_SCREEN_PADDING_Y 5
 #define LFB_LINE_SPACING_X 1
 #define LFB_LINE_SPACING_Y 2
-#define LFB_CHAR_THICKNESS 1
+#define LFB_CHAR_THICKNESS 2
 
-#define CHAR_COLOR_R 220
-#define CHAR_COLOR_G 220
-#define CHAR_COLOR_B 220
+#define CHAR_COLOR_R 200
+#define CHAR_COLOR_G 200
+#define CHAR_COLOR_B 200
 
 #define LFB_USE_CACHE
 
@@ -90,8 +90,8 @@ static uint8_t *lfb_cache_char_alpha_map(int c, int w, int h) {
                 uint8_t *small =
                         font_cache_map[c] + (i / 2 * LFB_DEPTH_BYTES + j / 2 * LFB_DEPTH_BYTES * w);
                 *small = (*big00 + *big01 + *big10 + *big11) / 4;
-                small[1] = small[0];
-                small[2] = small[0];
+                small[1] = (big00[1] + big01[1] + big10[1] + big11[1]) / 4;
+                small[2] = (big00[2] + big01[2] + big10[2] + big11[2]) / 4;
             }
         }
     }
