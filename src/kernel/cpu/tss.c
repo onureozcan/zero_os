@@ -14,7 +14,7 @@
 
 void tss_init(uint32_t kernel_stack) {
 
-    console_log(LOG_TAG, "init called. kernel esp is %p\n", kernel_stack);
+    console_debug(LOG_TAG, "init called. kernel esp is %p\n", kernel_stack);
     // zero out the tss
     char *tss_as_char = (char *) &tss;
     for (int i = 0; i < sizeof(struct tss_entry); i++) {

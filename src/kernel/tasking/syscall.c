@@ -19,7 +19,7 @@ int syscall_dispatcher(int eax, int ebx, int ecx, int edx) {
     // we are dealing with user's data structures
     page_manager_load_kernel_pages();
     int ret = 0;
-    console_log(LOG_TAG, "called fnc %d\n", eax);
+    console_debug(LOG_TAG, "called fnc %d\n", eax);
     switch (eax) {
         case SYSCALL_EXIT:
             sys__exit(ebx);
@@ -81,11 +81,11 @@ int syscall_dispatcher(int eax, int ebx, int ecx, int edx) {
 }
 
 void sys__exit(int code) {
-    console_log(LOG_TAG, "exit %d\n", code);
+    console_debug(LOG_TAG, "exit %d\n", code);
 };
 
 int sys_close(int file) {
-    console_log(LOG_TAG, "close %d\n", file);
+    console_debug(LOG_TAG, "close %d\n", file);
     return 0;
 };
 
@@ -123,8 +123,8 @@ int sys_fstat(int file, struct stat *st, int size) {
     st_physical->st_atime = 0;
     st_physical->st_mtime = 0;
     st_physical->st_ctime = 0;
-    console_log(LOG_TAG, "fstat: fd :%d, stat: %p physical, %p virtual\n", file, st_physical, st);
-    console_log(LOG_TAG, "sizeof(stat), given sizeof(stat) : %d, %d\n", sizeof(struct stat), size);
+    console_debug(LOG_TAG, "fstat: fd :%d, stat: %p physical, %p virtual\n", file, st_physical, st);
+    console_debug(LOG_TAG, "sizeof(stat), given sizeof(stat) : %d, %d\n", sizeof(struct stat), size);
     return 0;
 };
 
@@ -157,7 +157,7 @@ int sys_read(int file, char *ptr, int len) {
 };
 
 void *sys_sbrk(int incr) {
-    console_log(LOG_TAG, "sbrk gets called :%d bytes - %d pages\n", incr, incr / PAGE_SIZE_BYTES + 1);
+    console_debug(LOG_TAG, "sbrk gets called :%d bytes - %d pages\n", incr, incr / PAGE_SIZE_BYTES + 1);
     return task_manager_sbrk(current_process, incr);
 }
 
@@ -185,7 +185,7 @@ int sys_write(int file, char *ptr, int len) {
     if (!physical) { // TODO: in such cases, we will kill the process instead of killing the whole system
         panic("write has been fed an unmapped page");
     }
-    console_log(LOG_TAG, "write called. fd:%d, virtual:%p, physical:%p , len:%p\n", file, ptr, physical, len);
+    console_debug(LOG_TAG, "write called. fd:%d, virtual:%p, physical:%p , len:%p\n", file, ptr, physical, len);
     for (int i = 0; i < len; i++) {
         console_put_char(physical[i]);
     }

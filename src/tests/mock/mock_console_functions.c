@@ -33,11 +33,11 @@ void console_printf(const char *format, ...) {
     console_put_string(buffer);
 }
 
-void console_log(const char *tag, const char *format, ...) {
+void console_debug(const char *tag, const char *fmt, ...) {
     va_list args;
-    va_start(args, format);
+    va_start(args, fmt);
     char buffer[KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE + 1] = {0};
-    vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, format, args);
+    vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, fmt, args);
     va_end(args);
     console_printf("[%s]:", tag);
     console_put_string(buffer);

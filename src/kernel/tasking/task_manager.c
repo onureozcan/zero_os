@@ -27,7 +27,7 @@ void task_manager_init() {
 uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_t args_size) {
 
     Elf32_Ehdr *elf_header = (Elf32_Ehdr *) bytes;
-    console_log(LOG_TAG, "load process %s\n", name);
+    console_debug(LOG_TAG, "load process %s\n", name);
 
     // validate elf file
     char *ident = (char *) elf_header->e_ident;
@@ -43,19 +43,19 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
                 if (os_abi == ELFOSABI_NONE) {
                     goto elf_file_valid;
                 } else {
-                    console_log(LOG_TAG, "elf os abi was not 0\n");
+                    console_debug(LOG_TAG, "elf os abi was not 0\n");
                     goto error_return;
                 }
             } else {
-                console_log(LOG_TAG, "elf machine was not i386\n");
+                console_debug(LOG_TAG, "elf machine was not i386\n");
                 goto error_return;
             }
         } else {
-            console_log(LOG_TAG, "elf type was not executable\n");
+            console_debug(LOG_TAG, "elf type was not executable\n");
             goto error_return;
         }
     } else {
-        console_log(LOG_TAG, "elf ident was broken\n");
+        console_debug(LOG_TAG, "elf ident was broken\n");
         goto error_return;
     }
 
@@ -89,7 +89,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
             process->next = process;
         }
 
-        console_log(LOG_TAG, "program image is valid, loading sections..\n");
+        console_debug(LOG_TAG, "program image is valid, loading sections..\n");
 
         Elf32_Shdr *section = (Elf32_Shdr *) (bytes + elf_header->e_shoff);
         uint32_t section_count = elf_header->e_shnum;
@@ -98,9 +98,9 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
             if (section->sh_addr) {
 
                 process->v_program_break = (void *) (section->sh_addr + section->sh_size);
-                console_log(LOG_TAG, "section %d: type: %d, address: %p. size: %d\n", i, section->sh_type,
-                            section->sh_addr,
-                            section->sh_size);
+                console_debug(LOG_TAG, "section %d: type: %d, address: %p. size: %d\n", i, section->sh_type,
+                              section->sh_addr,
+                              section->sh_size);
 
                 uint32_t current_virtual_addr = section->sh_addr;
                 uint32_t total_bytes_to_load = section->sh_size;
@@ -132,10 +132,10 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
                         physical = page_manager_virtual_to_physical(process->page_directory,
                                                                     (void *) (current_virtual_addr));
                     }
-                    console_log(LOG_TAG, "%d bytes from %p, loaded to physical %p virtual %p\n",
-                                bytes_to_load_for_page,
-                                source, physical,
-                                current_virtual_addr);
+                    console_debug(LOG_TAG, "%d bytes from %p, loaded to physical %p virtual %p\n",
+                                  bytes_to_load_for_page,
+                                  source, physical,
+                                  current_virtual_addr);
 
                     if (section->sh_type == SHT_NOBITS) {
                         for (int j = 0; j < bytes_to_load_for_page; j++) {
@@ -153,7 +153,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
         }
 
 
-        console_log(LOG_TAG, "loaded to the memory, adding main thread\n");
+        console_debug(LOG_TAG, "loaded to the memory, adding main thread\n");
         task_manager_add_thread(process, (void *) elf_header->e_entry, (void *) MAIN_THREAD_DEFAULT_SP);
 
         for (int i = 0; i < args_size; i++) {
@@ -182,7 +182,7 @@ void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint3
         void *page_aligned_virtual_address = (void *) (page_number * PAGE_SIZE_BYTES);
         page_manager_map_page(process->page_directory, page_aligned_virtual_address, memory_manager_alloc_page_frame(),
                               FALSE);
-        console_log(LOG_TAG, "adding stack frame to thread %p, %p\n", thread, thread->trap_frame.esp);
+        console_debug(LOG_TAG, "adding stack frame to thread %p, %p\n", thread, thread->trap_frame.esp);
         goto get_physical_addr;
     }
     // already mapped, then simply put
@@ -192,7 +192,7 @@ void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint3
 
 uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
 
-    console_log(LOG_TAG, "adding new thread to %d with eip %p\n", process->pid, eip);
+    console_debug(LOG_TAG, "adding new thread to %d with eip %p\n", process->pid, eip);
     thread_t *thread = (thread_t *) k_malloc(sizeof(thread_t));
     thread->state = PROCESS_STATE_ACTIVE;
     thread->pid = process->pid;
@@ -202,7 +202,7 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
     thread->next = NULL;
     thread->user_stack_size = PAGE_SIZE_BYTES * THREAD_INITIAL_STACK_FRAME_SIZE;
     for (int i = 0; i < THREAD_INITIAL_STACK_FRAME_SIZE; i++) {
-        console_log(LOG_TAG, "mapping stack frame %p\n", stack - PAGE_SIZE_BYTES * i);
+        console_debug(LOG_TAG, "mapping stack frame %p\n", stack - PAGE_SIZE_BYTES * i);
         page_manager_map_page(process->page_directory,
                               stack - PAGE_SIZE_BYTES * i,
                               memory_manager_alloc_page_frame(),
@@ -264,9 +264,9 @@ void *task_manager_sbrk(process_t *process, uint32_t inc) {
         total_bytes_to_load -= bytes_to_load_for_page;
         process->v_program_break += bytes_to_load_for_page;
     }
-    console_log(LOG_TAG, "%d bytes added process %p. new brk is %p\n",
-                total_bytes_loaded,
-                process->pid,
-                process->v_program_break);
+    console_debug(LOG_TAG, "%d bytes added process %p. new brk is %p\n",
+                  total_bytes_loaded,
+                  process->pid,
+                  process->v_program_break);
     return old_break;
 }

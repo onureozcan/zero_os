@@ -60,6 +60,6 @@ void gdt_init() {
 
     set_gdtr((uint32_t) gdt_entries, GDT_ENTRIES_SIZE * sizeof(uint64_t) - 1);
     gdt_load_kernel_selectors();
-    console_log(LOG_TAG, "loaded gdt at %p \n", gdt_entries);
+    console_debug(LOG_TAG, "loaded gdt at %p \n", gdt_entries);
 
 }

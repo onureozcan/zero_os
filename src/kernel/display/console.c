@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <tinyprintf/tinyprintf.h>
 #include <display/lfb.h>
+#include <common.h>
 
 char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;
@@ -112,11 +113,12 @@ void console_printf(const char *format, ...) {
     console_put_string(buffer);
 }
 
-void console_log(const char *tag, const char *format, ...) {
+void console_debug(const char *tag, const char *fmt, ...) {
+    if (LOG_LEVEL < LL_DEBUG) return;
     va_list args;
-    va_start(args, format);
+    va_start(args, fmt);
     char buffer[KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE + 1] = {0};
-    tfp_vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, format, args);
+    tfp_vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, fmt, args);
     va_end(args);
     console_printf("[%s]:", tag);
     console_put_string(buffer);

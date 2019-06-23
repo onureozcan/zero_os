@@ -30,7 +30,7 @@ void page_manager_map_lfb_pages(page_directory_t *page_directory) {
 }
 
 void page_manager_init(multiboot_info_t *multiboot_info_ptr) {
-    console_log(LOG_TAG, "init. identity mapping pages\n");
+    console_debug(LOG_TAG, "init. identity mapping pages\n");
     kernel_pages = page_directory_new();
     for (int i = 0; i < memory_manager_get_total_number_of_pages(); i++) {
         page_manager_map_page(kernel_pages, (void *) (i * PAGE_SIZE_BYTES),
@@ -46,7 +46,7 @@ void page_manager_init(multiboot_info_t *multiboot_info_ptr) {
 
 void page_manager_load_kernel_pages() {
     page_manager_load_page_directory(kernel_pages);
-    console_log(LOG_TAG, "loaded kernel pages at %p\n", kernel_pages);
+    console_debug(LOG_TAG, "loaded kernel pages at %p\n", kernel_pages);
 }
 
 
@@ -100,7 +100,7 @@ page_directory_t *page_directory_new() {
 }
 
 void page_manager_restore_pages() {
-    console_log(LOG_TAG, "restoring pages of latest process (%p)\n", current_process->page_directory);
+    console_debug(LOG_TAG, "restoring pages of latest process (%p)\n", current_process->page_directory);
     page_manager_load_page_directory(current_process->page_directory);
 }
 

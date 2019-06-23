@@ -123,7 +123,7 @@ void memory_manager_mmap_init(uint32_t total_memory_in_bytes, multiboot_memory_m
 
     int available_mb = (available_memory_in_bytes / (1024 * 1024));
     int total_mb = (total_memory_in_bytes / (1024 * 1024));
-    console_log(LOG_TAG, "initialized with %d mb usable and %d mb total memory\n", available_mb, total_mb);
+    console_debug(LOG_TAG, "initialized with %d mb usable and %d mb total memory\n", available_mb, total_mb);
 }
 
 void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t elf_section_header) {
@@ -140,8 +140,8 @@ void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t e
         section++;
     }
     kernel_used_memory_in_bytes = total_size;
-    console_log(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
-    console_log(LOG_TAG, "%d mb available for user space out of %d mb\n",
-                memory_manager_number_of_free_pages / 256,
-                memory_manager_total_number_of_pages / 256);
+    console_debug(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
+    console_debug(LOG_TAG, "%d mb available for user space out of %d mb\n",
+                  memory_manager_number_of_free_pages / 256,
+                  memory_manager_total_number_of_pages / 256);
 }

@@ -62,10 +62,10 @@ void idt_init() {
     idt_set_gate(&irq14, 32 + 14);
     idt_set_gate(&irq15, 32 + 15);
 
-    console_log(LOG_TAG, "loading idt at %p \n", &idt_ptr);
+    console_debug(LOG_TAG, "loading idt at %p \n", &idt_ptr);
     load_idt(&idt_ptr);
 
-    console_log(LOG_TAG, "remapping pic\n");
+    console_debug(LOG_TAG, "remapping pic\n");
     /* remapping the PIC */
     write_port(0x20, 0x11);
     write_port(0xA0, 0x11);
@@ -79,7 +79,7 @@ void idt_init() {
     write_port(0xA1, 0x0);
 
     store_interrupts();
-    console_log(LOG_TAG, "restored interrupts\n");
+    console_debug(LOG_TAG, "restored interrupts\n");
 
 }
 

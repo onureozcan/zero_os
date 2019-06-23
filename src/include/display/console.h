@@ -54,7 +54,7 @@ void console_put_string(char *str);
 
 void console_printf(const char *fmt, ...);
 
-void console_log(const char *tag, const char *fmt, ...);
+void console_debug(const char *tag, const char *fmt, ...);
 
 void console_clear();
 

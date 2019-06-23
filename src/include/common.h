@@ -8,6 +8,14 @@
 #define FALSE 0
 #define NULL 0
 
+#define LL_ERROR 1
+#define LL_WARN 2
+#define LL_INFO 3
+#define LL_DEBUG 4
+#define LL_TRACE 5
+
+#define LOG_LEVEL LL_INFO
+
 #define KERNEL_STACK_SIZE PAGE_SIZE_BYTES
 
 #define ALIGN_4(size) (((size) + (4-1)) & ~(4-1))
