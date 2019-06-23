@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Bezier Font Designer</title>
+</head>
+<body>
+<canvas id="c" style="position:fixed; top:30px; left:10px; zoom:1.5; background:black; border:1px solid" width="150" height="200"></canvas>
+<textarea id="c_code" style="position:absolute; top:400px; width:300px; height:500px"></textarea>
+<div style="position:absolute;left:305px;height:750px; width:400px; overflow:auto">
+    <h3>Layers</h3>
+    <button onclick="getCCode()"> get C Code</button>
+    <button onclick="drawFont()"> draw</button>
+    <button onclick="clearFont()"> clear</button>
+    <div id="layers_container">
+        <table>
+            <thead>
+            <th>index</th>
+            <th>data</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="char_list" style="width:50px; height:750px; overflow:auto; position:absolute; left:800px">
+
+</div>
+<script src="index.js"></script>
+</body>
+</html>
