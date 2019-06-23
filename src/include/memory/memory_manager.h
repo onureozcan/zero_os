@@ -10,7 +10,7 @@
 
 #define ZEROOS_MEMORY_MANAGER_H
 
-// 4 mb non paged area reserved for kernel use.
+// 20 mb non paged area reserved for kernel use.
 #define KERNEL_HEAP_SIZE_BYTES (1024*1024*20)
 
 char kernel_heap_area[KERNEL_HEAP_SIZE_BYTES];

@@ -4,7 +4,7 @@
 #include <canvas.h>
 #include <common.h>
 
-#define CANVAS_BEZIER_CURVE_SAMPLING 1000
+#define CANVAS_BEZIER_CURVE_SAMPLING 100
 
 void set_bezier_data_a();
 
@@ -75,6 +75,7 @@ void canvas_init() {
     set_bezier_data_91();
     set_bezier_data_93();
     set_bezier_data_58();
+    set_bezier_data_63();
 }
 
 
@@ -137,16 +138,16 @@ canvas_draw_line(canvas_t *canvas, int x, int y, int x2, int y2, uint8_t r, uint
     }
 }
 
-static point_t canvas_get_interpolated_point(point_t p1, point_t p2, int percent) {
+static point_t canvas_get_interpolated_point(point_t p1, point_t p2, float percent) {
     point_t p;
-    p.x = (p1.x + (float) percent / CANVAS_BEZIER_CURVE_SAMPLING * (p2.x - p1.x));
-    p.y = (p1.y + (float) percent / CANVAS_BEZIER_CURVE_SAMPLING * (p2.y - p1.y));
+    p.x = (p1.x + percent / 100 * (p2.x - p1.x));
+    p.y = (p1.y + percent / 100 * (p2.y - p1.y));
     return p;
 }
 
 static point_t
 canvas_draw_bezier_curve_internal(canvas_t *canvas, int x, int y, point_t points[], int size_of_points,
-                                  uint8_t b, uint8_t g, uint8_t r, int percent) {
+                                  uint8_t b, uint8_t g, uint8_t r, float percent) {
     if (size_of_points == 2) {
         return canvas_get_interpolated_point(points[0], points[1], percent);
     }
@@ -173,8 +174,9 @@ canvas_draw_bezier_curve_scaled(canvas_t *canvas, int x, int y, point_t points[]
                                 uint8_t g,
                                 uint8_t r, float scale_x, float scale_y, uint32_t thickness) {
     point_t prev_point;
-    for (int p = 0; p < CANVAS_BEZIER_CURVE_SAMPLING; p++) {
-        point_t point = canvas_draw_bezier_curve_internal(canvas, x, y, points, size_of_points, b, g, r, p);
+    for (int p = 0; p < CANVAS_BEZIER_CURVE_SAMPLING + 1; p++) {
+        point_t point = canvas_draw_bezier_curve_internal(canvas, x, y, points, size_of_points, b, g, r,
+                                                          ((float) p * 100) / CANVAS_BEZIER_CURVE_SAMPLING);
         if (p != 0)
             canvas_draw_line(canvas, round(point.x * scale_x + x), round(point.y * scale_y + y),
                              round(prev_point.x * scale_x + x), round(prev_point.y * scale_y + y),
