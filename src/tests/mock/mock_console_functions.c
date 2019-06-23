@@ -34,13 +34,19 @@ void console_printf(const char *format, ...) {
 }
 
 void console_debug(const char *tag, const char *fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    char buffer[KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE + 1] = {0};
-    vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, fmt, args);
-    va_end(args);
-    console_printf("[%s]:", tag);
-    console_put_string(buffer);
+}
+
+void console_trace(const char *tag, const char *fmt, ...) {
+}
+
+void console_info(const char *tag, const char *fmt, ...) {
+}
+
+void console_warn(const char *tag, const char *fmt, ...) {
+}
+
+
+void console_error(const char *tag, const char *fmt, ...) {
 }
 
 void console_init() {

@@ -12,7 +12,7 @@
 #undef LOG_TAG
 #endif
 
-#define LOG_TAG "M_MANAGER"
+#define LOG_TAG "MEMORY MANAGER"
 
 //! memory map bit array. Each bit represents a memory block
 static uint32_t *memory_manager_memory_map = 0;
@@ -123,11 +123,11 @@ void memory_manager_mmap_init(uint32_t total_memory_in_bytes, multiboot_memory_m
 
     int available_mb = (available_memory_in_bytes / (1024 * 1024));
     int total_mb = (total_memory_in_bytes / (1024 * 1024));
-    console_debug(LOG_TAG, "initialized with %d mb usable and %d mb total memory\n", available_mb, total_mb);
+    console_info(LOG_TAG, "initialized with %d mb usable and %d mb total memory\n", available_mb, total_mb);
 }
 
 void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t elf_section_header) {
-    Elf32_Shdr *section = elf_section_header.addr;
+    Elf32_Shdr *section = (Elf32_Shdr *) elf_section_header.addr;
     uint32_t total_size = 0;
     for (int i = 0; i < elf_section_header.num; i++) {
         total_size += section->sh_size;
@@ -140,8 +140,8 @@ void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t e
         section++;
     }
     kernel_used_memory_in_bytes = total_size;
-    console_debug(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
-    console_debug(LOG_TAG, "%d mb available for user space out of %d mb\n",
+    console_info(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
+    console_info(LOG_TAG, "%d mb available for user space out of %d mb\n",
                   memory_manager_number_of_free_pages / 256,
                   memory_manager_total_number_of_pages / 256);
 }

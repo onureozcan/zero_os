@@ -14,6 +14,8 @@ char *video_memory = (char *) VGA_TEXT_MODE_MEMORY_START_ADDRESS;
 
 void console_put_char_internal(char c);
 
+void console_log_internal(const char *tag, const char *fmt, va_list args);
+
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
     return fg | bg << 4;
 }
@@ -117,6 +119,38 @@ void console_debug(const char *tag, const char *fmt, ...) {
     if (LOG_LEVEL < LL_DEBUG) return;
     va_list args;
     va_start(args, fmt);
+    console_log_internal(tag, fmt, args);
+}
+
+void console_warn(const char *tag, const char *fmt, ...) {
+    if (LOG_LEVEL < LL_WARN) return;
+    va_list args;
+    va_start(args, fmt);
+    console_log_internal(tag, fmt, args);
+}
+
+void console_info(const char *tag, const char *fmt, ...) {
+    if (LOG_LEVEL < LL_INFO) return;
+    va_list args;
+    va_start(args, fmt);
+    console_log_internal(tag, fmt, args);
+}
+
+void console_error(const char *tag, const char *fmt, ...) {
+    if (LOG_LEVEL < LL_ERROR) return;
+    va_list args;
+    va_start(args, fmt);
+    console_log_internal(tag, fmt, args);
+}
+
+void console_trace(const char *tag, const char *fmt, ...) {
+    if (LOG_LEVEL < LL_TRACE) return;
+    va_list args;
+    va_start(args, fmt);
+    console_log_internal(tag, fmt, args);
+}
+
+void console_log_internal(const char *tag, const char *fmt, va_list args) {
     char buffer[KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE + 1] = {0};
     tfp_vsnprintf(buffer, KERNEL_CONSOLE_MAX_PRINTABLE_STRING_LENGTH_AT_ONCE, fmt, args);
     va_end(args);

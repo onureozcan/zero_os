@@ -14,7 +14,7 @@
 #define KERNEL_CONSOLE_HEIGHT 25
 #else
 #define KERNEL_CONSOLE_WIDTH 110
-#define KERNEL_CONSOLE_HEIGHT 40
+#define KERNEL_CONSOLE_HEIGHT 50
 #endif
 #define KERNEL_CONSOLE_BUFFER_SIZE (KERNEL_CONSOLE_WIDTH * KERNEL_CONSOLE_HEIGHT)
 #define VGA_TEXT_BUFFER_SIZE_CHARS (KERNEL_CONSOLE_WIDTH * KERNEL_CONSOLE_HEIGHT)
@@ -55,6 +55,14 @@ void console_put_string(char *str);
 void console_printf(const char *fmt, ...);
 
 void console_debug(const char *tag, const char *fmt, ...);
+
+void console_info(const char *tag, const char *fmt, ...);
+
+void console_error(const char *tag, const char *fmt, ...);
+
+void console_trace(const char *tag, const char *fmt, ...);
+
+void console_warn(const char *tag, const char *fmt, ...);
 
 void console_clear();
 

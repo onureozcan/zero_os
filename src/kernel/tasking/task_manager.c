@@ -27,7 +27,7 @@ void task_manager_init() {
 uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_t args_size) {
 
     Elf32_Ehdr *elf_header = (Elf32_Ehdr *) bytes;
-    console_debug(LOG_TAG, "load process %s\n", name);
+    console_info(LOG_TAG, "load process %s\n", name);
 
     // validate elf file
     char *ident = (char *) elf_header->e_ident;
