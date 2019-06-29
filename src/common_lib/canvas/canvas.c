@@ -3,10 +3,10 @@
 //
 #include <canvas.h>
 #include <common.h>
+#include <font_data.h>
 
 #define CANVAS_BEZIER_CURVE_SAMPLING 100
 
-void set_bezier_data_a();
 
 void canvas_init() {
     // init font table

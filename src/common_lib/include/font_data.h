@@ -1,0 +1,75 @@
+//
+// Created by onureozcan on 29.06.2019.
+//
+
+#ifndef ZEROOS_FONT_DATA_H
+#define ZEROOS_FONT_DATA_H
+
+void set_bezier_data_0();
+void set_bezier_data_1();
+void set_bezier_data_2();
+void set_bezier_data_3();
+void set_bezier_data_4();
+void set_bezier_data_58();
+void set_bezier_data_5();
+void set_bezier_data_63();
+void set_bezier_data_6();
+void set_bezier_data_7();
+void set_bezier_data_8();
+void set_bezier_data_91();
+void set_bezier_data_93();
+void set_bezier_data_9();
+void set_bezier_data_a();
+void set_bezier_data_A();
+void set_bezier_data_b();
+void set_bezier_data_B();
+void set_bezier_data_c();
+void set_bezier_data_C();
+void set_bezier_data_d();
+void set_bezier_data_D();
+void set_bezier_data_e();
+void set_bezier_data_E();
+void set_bezier_data_f();
+void set_bezier_data_F();
+void set_bezier_data_g();
+void set_bezier_data_G();
+void set_bezier_data_h();
+void set_bezier_data_H();
+void set_bezier_data_i();
+void set_bezier_data_I();
+void set_bezier_data_j();
+void set_bezier_data_J();
+void set_bezier_data_k();
+void set_bezier_data_K();
+void set_bezier_data_l();
+void set_bezier_data_L();
+void set_bezier_data_m();
+void set_bezier_data_M();
+void set_bezier_data_n();
+void set_bezier_data_N();
+void set_bezier_data_o();
+void set_bezier_data_O();
+void set_bezier_data_p();
+void set_bezier_data_P();
+void set_bezier_data_q();
+void set_bezier_data_Q();
+void set_bezier_data_r();
+void set_bezier_data_R();
+void set_bezier_data_s();
+void set_bezier_data_S();
+void set_bezier_data_t();
+void set_bezier_data_T();
+void set_bezier_data_u();
+void set_bezier_data_U();
+void set_bezier_data_v();
+void set_bezier_data_V();
+void set_bezier_data_w();
+void set_bezier_data_W();
+void set_bezier_data_x();
+void set_bezier_data_X();
+void set_bezier_data_y();
+void set_bezier_data_Y();
+void set_bezier_data_z();
+void set_bezier_data_Z();
+
+#endif //ZEROOS_FONT_DATA_H
