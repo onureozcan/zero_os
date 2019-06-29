@@ -76,6 +76,8 @@ void canvas_init() {
     set_bezier_data_93();
     set_bezier_data_58();
     set_bezier_data_63();
+    set_bezier_data_47();
+    set_bezier_data_46();
 }
 
 

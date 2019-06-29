@@ -71,5 +71,7 @@ void set_bezier_data_y();
 void set_bezier_data_Y();
 void set_bezier_data_z();
 void set_bezier_data_Z();
+void set_bezier_data_47();
+void set_bezier_data_46();
 
 #endif //ZEROOS_FONT_DATA_H

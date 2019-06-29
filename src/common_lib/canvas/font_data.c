@@ -269,7 +269,7 @@ void set_bezier_data_f() {
                                                                                                 {46, 40}}};
     simple_bezier_font_table['f'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{45, 40},
                                                                                                 {45, 100}}};
-    simple_bezier_font_table['f'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{20,  40},
+    simple_bezier_font_table['f'].layers[2] = (simple_bezier_font_layer_t) {.size = 2, .data = {{20, 40},
                                                                                                 {80, 40}}};
 }
 
@@ -874,4 +874,20 @@ void set_bezier_data_63() {
                                                                                                 {46,  78}}};
     simple_bezier_font_table['?'].layers[1] = (simple_bezier_font_layer_t) {.size = 2, .data = {{45, 86},
                                                                                                 {45, 100}}};
+}
+
+void set_bezier_data_47() {
+    simple_bezier_font_table['/'].size = 1;
+    simple_bezier_font_table['/'].layers[0] = (simple_bezier_font_layer_t) {.size = 2, .data = {{31, 100},
+                                                                                                {72, 1}}};
+}
+
+void set_bezier_data_46() {
+    simple_bezier_font_table['.'].size = 1;
+    simple_bezier_font_table['.'].layers[0] = (simple_bezier_font_layer_t) {.size = 6, .data = {{48, 89},
+                                                                                                {53, 90},
+                                                                                                {58, 100},
+                                                                                                {46, 102},
+                                                                                                {38, 94},
+                                                                                                {49, 88}}};
 }
