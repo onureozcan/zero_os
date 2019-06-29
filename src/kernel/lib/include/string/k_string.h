@@ -10,6 +10,8 @@ void* memcpy(void *dest, const void *src, size_t size);
 
 void *memset(void *b, int c, size_t len);
 
+int strcmp(char* s1, char* s2);
+
 #define ZEROOS_STRING_H
 
 #endif //ZEROOS_STRING_H

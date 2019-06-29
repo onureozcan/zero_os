@@ -3,6 +3,7 @@
 //
 #include <stddef.h>
 #include <stdint-gcc.h>
+#include <common.h>
 
 void *memcpy(void *dest, void *src, size_t n) {
     uint32_t num_dwords = n / 4;
@@ -28,4 +29,10 @@ void *memset(void *b, int c, size_t len) {
     while (len--)
         *s++ = c;
     return b;
+}
+
+int strcmp(char *s1, char *s2) {
+    while (*s1++ && (*s1 == *s2++)) {
+    }
+    return *s1 - *s2;
 }
