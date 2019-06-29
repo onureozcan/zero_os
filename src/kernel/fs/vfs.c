@@ -68,6 +68,12 @@ vfs_mount_point_t *vfs_get_mount_point_by_path(char *path) {
 }
 
 int vfs_register_mount_point(vfs_mount_point_t *mount_point) {
+    if (mount_point->volume == NULL) {
+        return VFS_ERROR_NO_SUCH_VOLUME;
+    }
+    if (mount_point->fs == NULL) {
+        return VFS_ERROR_NO_SUCH_FS;
+    }
     mount_point->next = NULL;
     if (mount_points == NULL) {
         mount_points = mount_point;
@@ -87,11 +93,17 @@ int vfs_register_mount_point(vfs_mount_point_t *mount_point) {
 
 void vfs_init() {
     console_debug(LOG_TAG, "initializing vfs\n");
-    vfs_mount_point_t *mount_point = (vfs_mount_point_t *) (k_malloc(sizeof(vfs_mount_point_t)));
-    mount_point->absolute_path = "/";
-    mount_point->volume = volumes; // null volume
-    mount_point->fs = file_systems; // root fs
-    vfs_register_mount_point(mount_point);
+}
+
+vfs_volume_t *vfs_find_volume_by_label(char *label) {
+    vfs_volume_t *current = volumes;
+    while (current != NULL) {
+        if (strcmp(current->label, label) == 0) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
 }
 
 vfs_node_t *vfs_open(char *full_path, int flags) {

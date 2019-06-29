@@ -13,6 +13,9 @@
 
 #define VFS_ERROR_DEVICE_WAS_NULL 0
 #define VFS_ERROR_NO_SUCH_FILE 1
+#define VFS_ERROR_NO_SUCH_VOLUME 2
+#define VFS_ERROR_NO_SUCH_FS 3
+
 #define VFS_MAX_FILE_NAME 100
 #define VFS_FILE_SEPARATOR '/'
 
@@ -90,6 +93,8 @@ vfs_mount_point_t* mount_points;
 int vfs_register_mount_point(vfs_mount_point_t* mount_point);
 
 vfs_mount_point_t* vfs_get_mount_point_by_path(char* path);
+
+vfs_volume_t* vfs_find_volume_by_label(char* label);
 
 int vfs_register_volume(vfs_volume_t *vol);
 
