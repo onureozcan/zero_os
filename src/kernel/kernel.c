@@ -18,6 +18,7 @@
 #include <device/device.h>
 #include <device/null/null.h>
 #include <fs/volume/null/null.h>
+#include <fs/root_fs/root_fs.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -52,10 +53,9 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
 
     // device layer and vfs layer
     device_init();
-
     null_device_register();
     null_volume_register();
-
+    root_fs_init();
     vfs_init();
 
     // after page manager initializes identity paging, we cannot be sure that boot modules are untouched

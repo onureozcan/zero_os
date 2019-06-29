@@ -21,9 +21,8 @@ void device_init() {
 
 device_t *device_find_by_name(char *name) {
     device_t *current = devices;
-    if (current == NULL) return NULL;
-    while (current->next != NULL) {
-        if (strcmp(current->device_name,name)==0) {
+    while (current != NULL) {
+        if (strcmp(current->device_name, name) == 0) {
             return current;
         }
         current = current->next;

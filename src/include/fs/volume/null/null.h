@@ -2,8 +2,8 @@
 // Created by onureozcan on 29.06.2019.
 //
 
-#ifndef ZEROOS_NULL_H
-#define ZEROOS_NULL_H
+#ifndef ZEROOS_NULL_VOLUME_H
+#define ZEROOS_NULL_VOLUME_H
 
 void null_volume_register();
 

@@ -12,12 +12,15 @@
 #define ZEROOS_VFS_H
 
 #define VFS_ERROR_DEVICE_WAS_NULL 0
+#define VFS_ERROR_NO_SUCH_FILE 1
+#define VFS_MAX_FILE_NAME 100
+#define VFS_FILE_SEPARATOR '/'
 
 typedef struct vfs_volume {
     uint64_t volume_id;
-    struct vfs_volume* next;
-    char* label;
-    device_t* device;
+    struct vfs_volume *next;
+    char *label;
+    device_t *device;
     uint64_t offset;
     uint64_t size;
 } vfs_volume_t;
@@ -26,21 +29,23 @@ typedef struct vfs_node {
     struct vfs_node *parent;
     char *name;
     int flags;
+    vfs_volume_t *volume;
     void *fs_available;
 } vfs_node_t;
 
 typedef struct file_system {
     const char *name;
-    struct file_system* next;
+    struct file_system *next;
+
     /**
      * opens a file in a given parent.
-     * @param parent folder in which the file is located.
-     * @param name name of the file.
+     * parent can be obtained from {@link vfs_node#parent}
+     * name of the file can be obtained from {@link vfs_node#name}
      * @param flags flags.
      * @param file pre-allocated vfs node. fs will fill it in.     *
      * @return 0 if operation is successful, error code if not.
      */
-    int (*open)(vfs_node_t *parent, vfs_node_t *file, char *name, int flags);
+    int (*open)(vfs_node_t *file, int flags);
 
     /**
      * reads from a file.
@@ -70,11 +75,34 @@ typedef struct file_system {
     int (*close)(vfs_node_t *file);
 } file_system_t;
 
-vfs_volume_t* volumes;
-vfs_volume_t* file_systems;
 
-int vfs_register_volume(vfs_volume_t* vol);
+typedef struct vfs_mount_point {
+    struct vfs_mount_point* next;
+    char *absolute_path;
+    vfs_volume_t *volume;
+    file_system_t *fs;
+} vfs_mount_point_t;
+
+vfs_volume_t *volumes;
+file_system_t *file_systems;
+vfs_mount_point_t* mount_points;
+
+int vfs_register_mount_point(vfs_mount_point_t* mount_point);
+
+vfs_mount_point_t* vfs_get_mount_point_by_path(char* path);
+
+int vfs_register_volume(vfs_volume_t *vol);
+
+int vfs_register_fs(file_system_t *fs);
 
 void vfs_init();
+
+vfs_node_t *vfs_open(char *full_path, int flags);
+
+int vfs_read(vfs_node_t *file, char *buffer, int size, int offset);
+
+int vfs_write(vfs_node_t *file, char *buffer, int size, int offset);
+
+int vfs_close(vfs_node_t *file);
 
 #endif //ZEROOS_VFS_H
