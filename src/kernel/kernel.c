@@ -14,6 +14,10 @@
 #include <tasking/task_manager.h>
 #include <tasking/init.h>
 #include <display/lfb.h>
+#include <fs/vfs.h>
+#include <device/device.h>
+#include <device/null/null.h>
+#include <fs/volume/null/null.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -38,15 +42,25 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
         return;
     }
     memory_manager_malloc_init();
+
+    // notify lfb that from now on it can malloc and free
     lfb_set_malloc_available();
     memory_manager_mmap_init((multiboot_info_ptr->mem_upper + multiboot_info_ptr->mem_lower) * 1024,
                              (multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr,
                              multiboot_info_ptr->mmap_length);
     memory_manager_set_kernel_used_areas(multiboot_info_ptr->u.elf_sec);
 
+    // device layer and vfs layer
+    device_init();
+
+    null_device_register();
+    null_volume_register();
+
+    vfs_init();
+
     // after page manager initializes identity paging, we cannot be sure that boot modules are untouched
     // it only guarantees not to touch kernel, not boot modules
-    // this is the reason we must get a copy of initial boot modules
+    // this function marks those areas as used in memory manager
     init_gather_user_programs_from_boot_modules(multiboot_info_ptr);
     page_manager_init(multiboot_info_ptr);
     idt_init();

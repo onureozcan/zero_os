@@ -10,8 +10,10 @@ include_directories(src/include)
 include_directories(src/kernel/lib/include)
 include_directories(src/common_lib/include)
 
+set(OPTIMIZATION_FLAG O0)
+
 add_library(canvas src/common_lib/canvas/canvas.c src/common_lib/canvas/font_data.c)
-set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector")
+set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector -${OPTIMIZATION_FLAG}")
 
 add_executable(kernel
         src/kernel/kernel.c
@@ -36,10 +38,14 @@ add_executable(kernel
         src/kernel/cpu/usermode.asm
         src/kernel/tasking/task_manager.c
         src/kernel/tasking/task_manager.asm
-        src/kernel/tasking/init.c src/kernel/tasking/syscall.c src/include/tasking/syscall.h)
+        src/kernel/tasking/init.c src/kernel/tasking/syscall.c
+        src/kernel/device/device.c
+        src/kernel/device/null/null.c
+        src/kernel/fs/volume/null/null.c
+        src/kernel/fs/vfs.c)
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
-set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -nostdlib -g -Wall")
+set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -${OPTIMIZATION_FLAG} -nostdlib -g -Wall")
 
 target_link_libraries(kernel libgcc.a canvas)
 
