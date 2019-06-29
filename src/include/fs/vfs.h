@@ -31,8 +31,11 @@ typedef struct vfs_volume {
 typedef struct vfs_node {
     struct vfs_node *parent;
     char *name;
+    char *full_path;
     int flags;
+    uint64_t size_bytes;
     vfs_volume_t *volume;
+    void* fs;
     void *fs_available;
 } vfs_node_t;
 

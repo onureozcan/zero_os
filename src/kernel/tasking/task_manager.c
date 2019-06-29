@@ -72,7 +72,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
         process->pid = (uint32_t) process; // this is silly
         process->state = PROCESS_STATE_ACTIVE;
         process->page_directory = page_directory_new();
-
+        process->current_thread = NULL;
         // map kernel pages to newly initialized directory
         // 256 for 0-1MB
         int kernel_page_count = kernel_used_memory_in_bytes / PAGE_SIZE_BYTES + 1 + 256;
@@ -164,9 +164,11 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
         task_manager_push_to_user_stack(process, process->current_thread, (uint32_t) args_size); // argsc
 
         store_interrupts();
+        console_debug(LOG_TAG, "loaded %p\n", process->pid);
         return process->pid;
     }
     error_return:
+    panic("could not load process\n");
     return 0;
 }
 
@@ -202,7 +204,7 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
     thread->next = NULL;
     thread->user_stack_size = PAGE_SIZE_BYTES * THREAD_INITIAL_STACK_FRAME_SIZE;
     for (int i = 0; i < THREAD_INITIAL_STACK_FRAME_SIZE; i++) {
-        console_debug(LOG_TAG, "mapping stack frame %p\n", stack - PAGE_SIZE_BYTES * i);
+        console_trace(LOG_TAG, "mapping stack frame %p\n", stack - PAGE_SIZE_BYTES * i);
         page_manager_map_page(process->page_directory,
                               stack - PAGE_SIZE_BYTES * i,
                               memory_manager_alloc_page_frame(),
@@ -222,10 +224,7 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
 }
 
 void task_manager_next_task() {
-    //console_log(LOG_TAG, "schedule\n");
-    // TODO: write a scheduler. this is just mocking
-    // Considerations: what if no running process exists? need to have a null process or something
-    current_thread = current_process->current_thread;
+    current_thread = current_process->current_thread->next;
     page_manager_load_page_directory(current_process->page_directory);
 }
 

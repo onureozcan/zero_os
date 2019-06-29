@@ -19,6 +19,7 @@
 #include <device/null/null.h>
 #include <fs/volume/null/null.h>
 #include <fs/root_fs/root_fs.h>
+#include <fs/boot_fs/boot_fs.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -56,12 +57,9 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     null_device_register();
     null_volume_register();
     root_fs_init();
+    boot_fs_init(multiboot_info_ptr);
     vfs_init();
 
-    // after page manager initializes identity paging, we cannot be sure that boot modules are untouched
-    // it only guarantees not to touch kernel, not boot modules
-    // this function marks those areas as used in memory manager
-    init_gather_user_programs_from_boot_modules(multiboot_info_ptr);
     page_manager_init(multiboot_info_ptr);
     idt_init();
 

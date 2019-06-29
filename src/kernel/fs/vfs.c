@@ -107,16 +107,19 @@ vfs_volume_t *vfs_find_volume_by_label(char *label) {
 }
 
 vfs_node_t *vfs_open(char *full_path, int flags) {
-    console_debug(LOG_TAG, "vfs_read %s\n", full_path);
+    console_debug(LOG_TAG, "vfs_open %s\n", full_path);
     vfs_mount_point_t *mount_point = vfs_get_mount_point_by_path("/");
     vfs_node_t *ret = (vfs_node_t *) (k_malloc(sizeof(vfs_node_t)));
     vfs_node_t parent = {0};
     vfs_node_t current = {
             .parent = NULL,
-            .volume = mount_point->volume
+            .volume = mount_point->volume,
+            .fs = mount_point->fs,
+            .full_path = full_path
     };
     char file_name_buffer[VFS_MAX_FILE_NAME] = {0};
     int file_name_pos = 1;
+    int done_finding = 0;
     read_path_portion:
     {
         int i = 0;
@@ -129,23 +132,24 @@ vfs_node_t *vfs_open(char *full_path, int flags) {
             file_name_buffer[i] = c;
             i++;
             if (full_path[file_name_pos + i] == 0) {
-                goto done;
+                done_finding = TRUE;
+                goto try_read;
             }
         }
         console_debug(LOG_TAG, "path_portion: %s\n", file_name_buffer);
         current.name = file_name_buffer;
-        int try_count = 0;
+
+        file_name_pos += i + 1;
+
         int resp;
-        try_open:
-        {
-            if (try_count > 2) {
+        try_read:
+        resp = mount_point->fs->open(&current, flags);
+        if (resp == VFS_ERROR_NO_SUCH_FILE) {
+            if (done_finding) {
                 return NULL;
             }
-            resp = mount_point->fs->open(&current, flags);
-            try_count++;
-        };
-        if (resp == VFS_ERROR_NO_SUCH_FILE) {
             // search for a mount point. if no, then the file is actually absent.
+            // todo: if O_CREAT flag is present, create that file
             char *path_to_search_for_a_mount_point = (char *) k_malloc(file_name_pos);
             memcpy(path_to_search_for_a_mount_point, full_path, file_name_pos - 1);
             console_debug(LOG_TAG, "file not found, searching for a mount point at %s ..\n",
@@ -153,17 +157,18 @@ vfs_node_t *vfs_open(char *full_path, int flags) {
             mount_point = vfs_get_mount_point_by_path(path_to_search_for_a_mount_point);
             k_free(path_to_search_for_a_mount_point);
             if (mount_point == NULL) {
-                console_debug(LOG_TAG, "no mount points also, file not found\n");
+                console_debug(LOG_TAG, "no mount points also. file not found\n");
                 return NULL;
             } else {
-                // open the file with fresh fs and device
-                goto try_open;
+                current.fs = mount_point->fs;
+                current.volume = mount_point->volume;
             }
-        } else {
-            // parent = current
-            memcpy((void *) &parent, &current, sizeof(vfs_node_t));
         }
-        file_name_pos += i + 1;
+        // parent = current
+        memcpy((void *) &parent, &current, sizeof(vfs_node_t));
+        if (done_finding) {
+            goto done;
+        }
         goto read_path_portion;
     };
     done:
@@ -173,4 +178,8 @@ vfs_node_t *vfs_open(char *full_path, int flags) {
         return ret;
     };
 
+}
+// TODO: check for out of boundary access
+int vfs_read(vfs_node_t *file, char *buffer, int size, int offset) {
+    return ((file_system_t *) file->fs)->read(file, buffer, size, offset);
 }
