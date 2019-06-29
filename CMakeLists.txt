@@ -3,17 +3,19 @@ project(ZeroOs C)
 set(CMAKE_C_STANDARD 11)
 enable_language(ASM_NASM)
 
-set(CMAKE_C_FLAGS "-m32 -Wall -g")
+set(OPTIMIZATION_FLAG "")
+set(DEBUG_FLAG "-g")
+set(CMAKE_C_FLAGS "-m32 -Wall ${DEBUG_FLAG}")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f elf32 -o <OBJECT> <SOURCE>")
 
 include_directories(src/include)
 include_directories(src/kernel/lib/include)
 include_directories(src/common_lib/include)
 
-set(OPTIMIZATION_FLAG O0)
+
 
 add_library(canvas src/common_lib/canvas/canvas.c src/common_lib/canvas/font_data.c)
-set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector -${OPTIMIZATION_FLAG}")
+set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector ${OPTIMIZATION_FLAG}")
 
 add_executable(kernel
         src/kernel/kernel.c
@@ -42,10 +44,11 @@ add_executable(kernel
         src/kernel/device/device.c
         src/kernel/device/null/null.c
         src/kernel/fs/volume/null/null.c
-        src/kernel/fs/vfs.c)
+        src/kernel/fs/vfs.c
+        src/kernel/fs/root_fs/root_fs.c)
 
-set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf -g -nostdlib")
-set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel -${OPTIMIZATION_FLAG} -nostdlib -g -Wall")
+set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf ${DEBUG_FLAG} -nostdlib")
+set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel ${OPTIMIZATION_FLAG} -nostdlib ${DEBUG_FLAG} -Wall")
 
 target_link_libraries(kernel libgcc.a canvas)
 
@@ -79,7 +82,7 @@ add_executable(hello_world
         )
 
 set_target_properties(hello_world PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
-set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 -g -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
+set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
 
 target_link_libraries(hello_world PUBLIC libc.a syscalls_wrapper)
 
