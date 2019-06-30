@@ -73,6 +73,9 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
         process->state = PROCESS_STATE_ACTIVE;
         process->page_directory = page_directory_new();
         process->current_thread = NULL;
+        for (int i = 0; i < PROCESS_MAX_FILES_ALLOWED; i++) {
+            process->files[i] = NULL;
+        }
         // map kernel pages to newly initialized directory
         // 256 for 0-1MB
         int kernel_page_count = kernel_used_memory_in_bytes / PAGE_SIZE_BYTES + 1 + 256;
@@ -268,4 +271,14 @@ void *task_manager_sbrk(process_t *process, uint32_t inc) {
                   process->pid,
                   process->v_program_break);
     return old_break;
+}
+
+int task_manager_get_file_handle(process_t *process) {
+    // starts from 3 because first 3 are std io
+    for (int i = 3; i < PROCESS_MAX_FILES_ALLOWED; i++) {
+        if (process->files[i] == NULL) {
+            return i;
+        }
+    }
+    return -1;
 }

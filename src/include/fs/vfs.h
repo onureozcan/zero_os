@@ -34,6 +34,7 @@ typedef struct vfs_node {
     char *full_path;
     int flags;
     uint64_t size_bytes;
+    uint64_t offset_bytes;
     vfs_volume_t *volume;
     void* fs;
     void *fs_available;

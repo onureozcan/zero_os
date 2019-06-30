@@ -149,15 +149,49 @@ int sys_lseek(int file, int ptr, int dir) {
 };
 
 int sys_open(const char *name, int flags, ...) {
-    return 0;
+    char *physical = page_manager_virtual_to_physical(
+            current_process->page_directory,
+            (void *) name
+    );
+    console_debug(LOG_TAG, "open: %s\n", physical);
+    int index = task_manager_get_file_handle(current_process);
+    if (index != -1) {
+        vfs_node_t *handle = vfs_open(physical, flags);
+        if (handle) {
+            current_process->files[index] = handle;
+            return index;
+        } else {
+            // no such file
+            console_error(LOG_TAG, "process %d tried to open %s but file was missing\n", current_process, physical);
+            return -1;
+        }
+    } else {
+        // this process used all of the allowed file slots
+        return -1;
+    }
 };
 
-int sys_read(int file, char *ptr, int len) {
-    return 0;
+int sys_read(int file, char *buffer, int len) {
+    vfs_node_t *node = current_process->files[file];
+    char *buffer_physical = page_manager_virtual_to_physical(
+            current_process->page_directory,
+            (void *) buffer
+    );
+    if (node == NULL) {
+        console_error(LOG_TAG, "process %d tried to read a non-existent file handle\n", current_process->pid);
+        return -1;
+    }
+    if (len > node->size_bytes) {
+        len = node->size_bytes;
+    }
+    console_debug(LOG_TAG, "read %d bytes from offset %d\n", len, node->offset_bytes);
+    vfs_read(node, buffer_physical, len, node->offset_bytes);
+    node->offset_bytes += len;
+    return len;
 };
 
 void *sys_sbrk(int incr) {
-    console_debug(LOG_TAG, "sbrk gets called :%d bytes - %d pages\n", incr, incr / PAGE_SIZE_BYTES + 1);
+    console_debug(LOG_TAG, "sbrk gets called :%d bytes (%d pages)\n", incr, incr / PAGE_SIZE_BYTES + 1);
     return task_manager_sbrk(current_process, incr);
 }
 

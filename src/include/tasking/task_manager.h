@@ -9,9 +9,12 @@
 #include <stdint-gcc.h>
 #include <common.h>
 #include <display/console.h>
+#include <fs/vfs.h>
 
 #define PROCESS_STATE_SLEEP  0
 #define PROCESS_STATE_ACTIVE 1
+
+#define PROCESS_MAX_FILES_ALLOWED 128
 
 #define MAIN_THREAD_DEFAULT_SP 0xFFFFFFFF
 #define THREAD_INITIAL_STACK_FRAME_SIZE 128 // looks like newlib likes to use stack
@@ -46,11 +49,7 @@ typedef struct process {
     char *name;
     int state;
     thread_t *current_thread;
-    struct { // these will have meaning once vfs is implemented
-        uint32_t stdin;
-        uint32_t stderr;
-        uint32_t stdout;
-    };
+    vfs_node_t *files[PROCESS_MAX_FILES_ALLOWED];
     page_directory_t *page_directory;
     void *v_program_break;
 } process_t;
@@ -95,4 +94,10 @@ extern void task_manager_task_switch();
 
 void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint32_t value);
 
+/**
+ * returns an index in the files list of process.
+ * @param process process.
+ * @return an index in the files array, -1 otherwise.
+ */
+int task_manager_get_file_handle(process_t* process);
 #endif //ZEROOS_TASK_MANAGER_H

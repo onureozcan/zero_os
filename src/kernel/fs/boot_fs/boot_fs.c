@@ -32,11 +32,18 @@ static void boot_fs_get_boot_module_at(int index, int *size, uint32_t *start) {
 int boot_fs_open(vfs_node_t *file, int flags) {
     char *name = file->name;
     console_debug(LOG_TAG, "open:%s\n", name);
+    int index = -1;
     if (strcmp(name, "hello") == 0) {
         // load hello world
+        index = 0;
+    } else if (strcmp(name, "test.txt") == 0) {
+        // load test file
+        index = 1;
+    }
+    if (index != -1) {
         int size = 0;
         uint32_t start = 0;
-        boot_fs_get_boot_module_at(0, &size, &start);
+        boot_fs_get_boot_module_at(index, &size, &start);
         file->fs_available = (void *) start; // fs available is start address
         file->size_bytes = size;
         return 0;

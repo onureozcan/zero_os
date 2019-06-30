@@ -31,8 +31,10 @@ void *memset(void *b, int c, size_t len) {
     return b;
 }
 
-int strcmp(char *s1, char *s2) {
-    while (*s1++ && (*s1 == *s2++)) {
+int strcmp(char *s1, char *s2) {  // from stackoverflow
+    while (*s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
     }
-    return *s1 - *s2;
+    return *(uint8_t *) s1 - *(uint8_t *) s2;
 }

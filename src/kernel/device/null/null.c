@@ -32,6 +32,6 @@ void null_device_register() {
     dev->read = null_device_read;
     dev->write = null_device_write;
     device_register(dev);
-    console_debug(LOG_TAG, "registered null device\n");
+    console_info(LOG_TAG, "registered null device\n");
 
 }
