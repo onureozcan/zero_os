@@ -16,6 +16,7 @@
 #endif
 
 #define LOG_TAG "TASK_MANAGER"
+#define PROCESS_RR_COUNT 5
 
 void task_manager_init() {
     clear_interrupts();
@@ -227,7 +228,14 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
 }
 
 void task_manager_next_task() {
-    current_thread = current_process->current_thread->next;
+    if (current_process->rr_count > PROCESS_RR_COUNT) {
+        current_process->rr_count = 0;
+        current_process = current_process->next;
+        current_process->rr_count = 0;
+    }
+    current_process->current_thread = current_process->current_thread->next;
+    current_thread = current_process->current_thread;
+    current_process->rr_count++;
     page_manager_load_page_directory(current_process->page_directory);
 }
 

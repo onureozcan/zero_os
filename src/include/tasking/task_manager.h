@@ -48,6 +48,7 @@ typedef struct process {
     uint32_t pid;
     char *name;
     int state;
+    int rr_count; // round robin count
     thread_t *current_thread;
     vfs_node_t *files[PROCESS_MAX_FILES_ALLOWED];
     page_directory_t *page_directory;
