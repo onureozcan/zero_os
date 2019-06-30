@@ -7,7 +7,8 @@ Has multitasking and multithreading.
 Uses newlib in user applications. 
 17 syscalls required by newlib are placed in syscall interface. 
 Some of them has implementations and some are empty.  
-No filesystem driver and virtual file system yet.  
+Virtual file system is implemented and supports mount point lists. 
+However no known filesystems are implemented, only an imaginary file system called boot fs for reading files from GRUB kernel modules exists.   
 Uses VBE linear frame buffer but does not have a gui yet. Uses sequences of simple bezier curves for drawing fonts rather than standard formats like otf, ttf etc.
 
 It is still too young and I am implementing core features one by one. 
@@ -15,7 +16,7 @@ As new features are added, will amend this file also.
 
 **How to build**:
 
-Build environment and dependencies are intended to be provided by dockerfiles. 
+Build environment and dependencies are intended to be provided by dockerfiles.
 Host environment just needs docker for building and qemu for testing.
 
 Before building iso image, building newlib is a must. User apps depend on it.
@@ -24,6 +25,8 @@ This will download newlib and build.
 The resulting libc.a will only be used to link against user apps so building newlib just once is enough as long as you do not want to change newlib version or build flags or so.
 
 Secondly, run `build_iso_using_docker` in that folder. It builds both kernel and user apps, creates `dist/os.iso` and runs it on qemu as well.
+
+build ... using docker files are bash scripts but they do nothing fancy apart from triggering docker builds so that converting them to windows equivalents should be easy.
 
 **Running on emulator**:
  
@@ -38,13 +41,12 @@ Secondly, run `build_iso_using_docker` in that folder. It builds both kernel and
  Symbol files will appear inside iso folder after build. You can configure your ide to debug user apps or kernel image.
  
  **Screenshots**
+  
+ (30.06.2019) use app reads a file via syscall  
+ ![image](https://user-images.githubusercontent.com/21360651/60397265-9e2f4680-9b53-11e9-9a9f-15ce2c7620ff.png) 
  
- (newest to oldest)
- 
- ![image](https://user-images.githubusercontent.com/21360651/59981304-f0c7aa80-9609-11e9-88d9-30ec048bcee5.png)
-
- 
+ (06.06.2019) can load user programs and syscall interface working   
  ![image](https://user-images.githubusercontent.com/21360651/59148391-25841100-8a11-11e9-98bb-dfdefec6eca3.png)
-
+ 
  
  
