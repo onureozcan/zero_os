@@ -20,6 +20,8 @@
 #include <fs/volume/null/null.h>
 #include <fs/root_fs/root_fs.h>
 #include <fs/boot_fs/boot_fs.h>
+#include <fs/dev_fs/dev_fs.h>
+#include <device/framebuffer/framebuffer.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -54,10 +56,14 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
 
     // device layer and vfs layer
     device_init();
+    framebuffer_device_register(multiboot_info_ptr->framebuffer_height * multiboot_info_ptr->framebuffer_width *
+                                multiboot_info_ptr->framebuffer_bpp,
+                                (void *) ((uint32_t) multiboot_info_ptr->framebuffer_addr));
     null_device_register();
     null_volume_register();
     root_fs_init();
     boot_fs_init(multiboot_info_ptr);
+    dev_fs_init();
     vfs_init();
 
     page_manager_init(multiboot_info_ptr);
