@@ -13,7 +13,6 @@ include_directories(src/kernel/lib/include)
 include_directories(src/common_lib/include)
 
 
-
 add_library(canvas src/common_lib/canvas/canvas.c src/common_lib/canvas/font_data.c)
 set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector ${OPTIMIZATION_FLAG}")
 
@@ -89,6 +88,13 @@ set_target_properties(hello_world PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} -
 
 target_link_libraries(hello_world PUBLIC libc.a syscalls_wrapper)
 
+add_executable(window_manager
+        src/user/window_manager/src/window_manager.c
+        )
+set_target_properties(window_manager PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
+set_target_properties(window_manager PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
+
+target_link_libraries(window_manager PUBLIC libc.a syscalls_wrapper)
 
 
 

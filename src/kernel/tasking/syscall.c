@@ -222,6 +222,7 @@ int sys_write(int file, char *ptr, int len) {
     // stdin redirection not yet implemented
     if (file < 3) {
         console_debug(LOG_TAG, "write called. fd:%d, virtual:%p, physical:%p , len:%p\n", file, ptr, physical, len);
+        console_printf("[%s]:", current_process->name);
         for (int i = 0; i < len; i++) {
             console_put_char(physical[i]);
         }

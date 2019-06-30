@@ -39,6 +39,9 @@ int boot_fs_open(vfs_node_t *file, int flags) {
     } else if (strcmp(name, "test.txt") == 0) {
         // load test file
         index = 1;
+    } else if (strcmp(name, "window_manager") == 0) {
+        // load test file
+        index = 2;
     }
     if (index != -1) {
         int size = 0;

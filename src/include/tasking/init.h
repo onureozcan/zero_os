@@ -10,4 +10,9 @@
  */
 void init_load_hello();
 
+/**
+ * loads the window manager.
+ */
+void init_load_window_manager(int lfb_w, int lfb_h, int lfb_depth);
+
 #endif //ZEROOS_INIT_H

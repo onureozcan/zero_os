@@ -164,7 +164,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
             task_manager_push_to_user_stack(process, process->current_thread, (uint32_t) args[i]);
         }
         task_manager_push_to_user_stack(process, process->current_thread,
-                                        (uint32_t) (MAIN_THREAD_DEFAULT_SP - 4)); // argsv
+                                        (uint32_t) (MAIN_THREAD_DEFAULT_SP - args_size * 4)); // argsv
         task_manager_push_to_user_stack(process, process->current_thread, (uint32_t) args_size); // argsc
 
         store_interrupts();

@@ -75,6 +75,10 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // load the hello program. if lucky, we will se a hello world in the screen printed by the user program
     init_load_hello();
 
+    // load window manager
+    init_load_window_manager(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
+                             multiboot_info_ptr->framebuffer_bpp);
+
 
     // enter user mode was just a test if we can go into the user mode or not.
     // since we proved that, no need to call it.

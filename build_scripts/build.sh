@@ -22,6 +22,7 @@ function download_external_file() {
 && cp kernel ../iso/boot \
 && mkdir -p ../iso/user \
 && cp hello_world ../iso/user \
+&& cp window_manager ../iso/user \
 && mkdir -p ../dist \
 && chmod 777 ../dist \
 && grub-mkrescue -o ../dist/os.iso ../iso \
@@ -32,4 +33,6 @@ function download_external_file() {
 && cd ../user \
 && objcopy --only-keep-debug hello_world hello.sym \
 && objcopy --strip-debug hello_world \
+&& objcopy --only-keep-debug window_manager window_manager.sym \
+&& objcopy --strip-debug window_manager
 
