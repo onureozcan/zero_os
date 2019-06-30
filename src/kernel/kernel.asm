@@ -15,7 +15,7 @@ section .text
         dd 0 ; lfb
         dd 1280 ; width pixels
         dd 768 ; height pixels
-        dd 24 ; depth
+        dd 32 ; depth
 
 global start
 global kernel_esp

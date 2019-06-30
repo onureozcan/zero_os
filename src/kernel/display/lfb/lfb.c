@@ -38,7 +38,7 @@ static uint8_t **font_cache_map;
 
 #define LFB_USE_CACHE
 
-#define LFB_AA_SUPER_SAMPLING_RATE 16
+#define LFB_AA_SUPER_SAMPLING_RATE 4
 #define LFB_CHAR_THICKNESS (1 * LFB_AA_SUPER_SAMPLING_RATE)
 
 canvas_t canvas;
@@ -80,12 +80,12 @@ static uint8_t *lfb_cache_char_alpha_map(int c, int w, int h) {
         temp_canvas.height = h * LFB_AA_SUPER_SAMPLING_RATE;
         temp_canvas.width = w * LFB_AA_SUPER_SAMPLING_RATE;
         temp_canvas.depth = LFB_DEPTH_BYTES;
-        temp_canvas.buffer = aa_atlas;
+        temp_canvas.buffer = (char *) aa_atlas;
         memset(temp_canvas.buffer, 0,
                h * LFB_AA_SUPER_SAMPLING_RATE * w * LFB_AA_SUPER_SAMPLING_RATE * LFB_DEPTH_BYTES);
         canvas_draw_char(&temp_canvas, c, 1, 1, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
-                         temp_canvas.height - 1 - LFB_LINE_SPACING_Y,
-                         temp_canvas.width - 1 - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
+                         temp_canvas.height - 1 - LFB_CHAR_THICKNESS - LFB_LINE_SPACING_Y,
+                         temp_canvas.width - 1 - LFB_CHAR_THICKNESS - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
         for (int j = 0; j < temp_canvas.height; j += LFB_AA_SUPER_SAMPLING_RATE) {
             for (int i = 0; i < temp_canvas.width; i += LFB_AA_SUPER_SAMPLING_RATE) {
                 uint32_t sum_r = 0;
@@ -144,20 +144,22 @@ void lfb_set_malloc_available() {
 #ifdef LFB_USE_CACHE
     init_font_cache_data();
     caches_available = TRUE;
+#else
+    lfb_available = TRUE;
 #endif
 }
 
 void lfb_init(int height, int width, void *lfb_buffer) {
     lfb_width = width;
     lfb_height = height;
-    framebuffer = (char *) lfb_buffer;
+    framebuffer = (uint8_t *) lfb_buffer;
     buffer_size = lfb_width * lfb_height * LFB_DEPTH_BYTES;
     lfb_clear();
     char_height_pixels = (height - LFB_SCREEN_PADDING_Y) / KERNEL_CONSOLE_HEIGHT;
     char_width_pixels = (width - LFB_SCREEN_PADDING_X) / KERNEL_CONSOLE_WIDTH;
     canvas_init();
     canvas.depth = LFB_DEPTH_BYTES;
-    canvas.buffer = back_buffer;
+    canvas.buffer = (char *) back_buffer;
     canvas.height = height;
     canvas.width = width;
 }
