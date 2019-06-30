@@ -89,7 +89,7 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack);
 
 void task_manager_next_task();
 
-void *task_manager_sbrk(process_t *process, uint32_t size);
+void *task_manager_sbrk(process_t *process, int size);
 
 extern void task_manager_task_switch();
 

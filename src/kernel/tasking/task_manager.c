@@ -239,14 +239,15 @@ void task_manager_next_task() {
     page_manager_load_page_directory(current_process->page_directory);
 }
 
-void *task_manager_sbrk(process_t *process, uint32_t inc) {
+void *task_manager_sbrk(process_t *process, int inc) {
 
+    console_debug(LOG_TAG,"sbrk: %p requested %d bytes\n",process, inc);
     void *old_break = process->v_program_break;
     uint32_t current_virtual_addr = (uint32_t) process->v_program_break;
-    uint32_t total_bytes_to_load = inc;
-    uint32_t total_bytes_loaded = 0;
+    int total_bytes_to_load = inc;
+    int total_bytes_loaded = 0;
 
-    while (total_bytes_loaded < total_bytes_to_load) {
+    while (total_bytes_loaded < inc) {
 
         uint32_t virtual_page_number_lower = current_virtual_addr / PAGE_SIZE_BYTES;
         uint32_t virtual_page_number_upper = virtual_page_number_lower + 1;
@@ -254,7 +255,7 @@ void *task_manager_sbrk(process_t *process, uint32_t inc) {
         uint32_t virtual_page_boundary_upper = virtual_page_number_upper * PAGE_SIZE_BYTES;
         uint32_t virtual_page_boundary_lower = virtual_page_number_lower * PAGE_SIZE_BYTES;
 
-        uint32_t bytes_to_load_for_page = virtual_page_boundary_upper - current_virtual_addr;
+        int bytes_to_load_for_page = virtual_page_boundary_upper - current_virtual_addr;
 
         if (total_bytes_to_load < bytes_to_load_for_page) {
             bytes_to_load_for_page = total_bytes_to_load;
