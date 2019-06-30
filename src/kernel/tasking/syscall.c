@@ -219,10 +219,22 @@ int sys_write(int file, char *ptr, int len) {
     if (!physical) { // TODO: in such cases, we will kill the process instead of killing the whole system
         panic("write has been fed an unmapped page");
     }
-    console_debug(LOG_TAG, "write called. fd:%d, virtual:%p, physical:%p , len:%p\n", file, ptr, physical, len);
-    for (int i = 0; i < len; i++) {
-        console_put_char(physical[i]);
+    // stdin redirection not yet implemented
+    if (file < 3) {
+        console_debug(LOG_TAG, "write called. fd:%d, virtual:%p, physical:%p , len:%p\n", file, ptr, physical, len);
+        for (int i = 0; i < len; i++) {
+            console_put_char(physical[i]);
+        }
+        console_repaint();
+        return len;
+    } else {
+        vfs_node_t *node = current_process->files[file];
+        int ret = vfs_write(node, physical, len, node->offset_bytes);
+        if (ret) {
+            // TODO: set errno
+            return -1;
+        }
+        // TODO: vfs interface does not have a way to tell how many bytes are written successfully.
+        return len;
     }
-    console_repaint();
-    return len;
 };

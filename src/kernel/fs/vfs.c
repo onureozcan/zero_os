@@ -183,3 +183,7 @@ vfs_node_t *vfs_open(char *full_path, int flags) {
 int vfs_read(vfs_node_t *file, char *buffer, int size, int offset) {
     return ((file_system_t *) file->fs)->read(file, buffer, size, offset);
 }
+
+int vfs_write(vfs_node_t *file, char *buffer, int size, int offset) {
+    return ((file_system_t *) file->fs)->write(file, buffer, size, offset);
+}
