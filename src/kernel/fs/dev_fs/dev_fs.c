@@ -19,6 +19,8 @@ int dev_fs_open(vfs_node_t *file, int flags) {
     char *name = file->name;
     console_debug(LOG_TAG, "open:%s\n", name);
     device_t *device = device_find_by_name(name);
+    file->offset_bytes = 0;
+    file->size_bytes = 0;
     if (device != NULL && device->type == DEVICE_TYPE_BLOCK) {
         file->fs_available = (void *) device;
         return 0;
@@ -33,7 +35,7 @@ int dev_fs_read(vfs_node_t *file, char *buffer, int size, int offset) {
 
 int dev_fs_write(vfs_node_t *file, char *buffer, int size, int offset) {
     device_t *device = (device_t *) file->fs_available;
-    return device->read(buffer, size, offset);
+    return device->write(buffer, size, offset);
 }
 
 int dev_fs_close(vfs_node_t *file) {
