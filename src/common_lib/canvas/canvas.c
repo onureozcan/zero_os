@@ -125,7 +125,7 @@ canvas_draw_line(canvas_t *canvas, int x, int y, int x2, int y2, uint8_t r, uint
     int err = (dx > dy ? dx : -dy) / 2, e2;
 
     while (1) {
-        canvas_fill_rect_xy(canvas, x, y, r, g, b, thickness, thickness);
+        canvas_fill_rect_xy(canvas, x, y, r, g, b, (uint8_t) (thickness * 1.5f), thickness);
         if (x == x2 && y == y2)
             break;
         e2 = err;
