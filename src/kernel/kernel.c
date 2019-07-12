@@ -35,6 +35,7 @@ char kernel_stack[KERNEL_STACK_SIZE] = {0};
 
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
 
+    memory_manager_malloc_init();
     lfb_init(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
              (void *) ((uint32_t) multiboot_info_ptr->framebuffer_addr));
     console_init();
@@ -45,10 +46,7 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
         panic("ERROR: multiboot magic bytes was corrupted.");
         return;
     }
-    memory_manager_malloc_init();
 
-    // notify lfb that from now on it can malloc and free
-    lfb_set_malloc_available();
     memory_manager_mmap_init((multiboot_info_ptr->mem_upper + multiboot_info_ptr->mem_lower) * 1024,
                              (multiboot_memory_map_t *) multiboot_info_ptr->mmap_addr,
                              multiboot_info_ptr->mmap_length);

@@ -140,14 +140,6 @@ static void lfb_blend_addition(int x, int y, int width, int height, uint8_t *dat
 }
 
 /***********API METHODS***********/
-void lfb_set_malloc_available() {
-#ifdef LFB_USE_CACHE
-    init_font_cache_data();
-    caches_available = TRUE;
-#else
-    lfb_available = TRUE;
-#endif
-}
 
 void lfb_init(int height, int width, void *lfb_buffer) {
     lfb_width = width;
@@ -162,6 +154,12 @@ void lfb_init(int height, int width, void *lfb_buffer) {
     canvas.buffer = (char *) back_buffer;
     canvas.height = height;
     canvas.width = width;
+#ifdef LFB_USE_CACHE
+    init_font_cache_data();
+    caches_available = TRUE;
+#else
+    lfb_available = TRUE;
+#endif
 }
 
 void lfb_put_char(char c) {

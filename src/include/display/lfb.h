@@ -39,12 +39,6 @@ void lfb_repaint();
 void lfb_put_char(char c);
 
 /**
- * lfb needs k_malloc to cache fonr data.
- * this function tells it that kmalloc is initialized.
- */
-void lfb_set_malloc_available();
-
-/**
  * kernel does not directly modify lfb.
  */
 void lfb_disable();
