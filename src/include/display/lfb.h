@@ -44,4 +44,9 @@ void lfb_put_char(char c);
  */
 void lfb_set_malloc_available();
 
+/**
+ * kernel does not directly modify lfb.
+ */
+void lfb_disable();
+
 #endif //ZEROOS_LFB_H

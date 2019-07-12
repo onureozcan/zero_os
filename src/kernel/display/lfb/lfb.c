@@ -203,3 +203,6 @@ void lfb_repaint() {
     lfb_clear();
 }
 
+void lfb_disable() {
+    lfb_available = FALSE;
+}
