@@ -7,8 +7,8 @@
  * Device file system maps devices to file system and will redirect read write requests to them.
  */
 
-#ifndef ZEROOS_BOOT_FS_H
-#define ZEROOS_BOOT_FS_H
+#ifndef ZEROOS_DEV_FS_H
+#define ZEROOS_DEV_FS_H
 
 #define DEV_FS_MOUNT_POINT "/dev"
 
