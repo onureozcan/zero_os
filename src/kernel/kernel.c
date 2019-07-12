@@ -22,6 +22,7 @@
 #include <fs/boot_fs/boot_fs.h>
 #include <fs/dev_fs/dev_fs.h>
 #include <device/framebuffer/framebuffer.h>
+#include <keyboard/keyboard.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -38,6 +39,7 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     memory_manager_malloc_init();
     lfb_init(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
              (void *) ((uint32_t) multiboot_info_ptr->framebuffer_addr));
+    keyboard_init();
     console_init();
     console_put_string("initializing Zero Os ...\n");
     console_printf("multiboot info is located at %p. magic: %p\n", multiboot_info_ptr, magic);

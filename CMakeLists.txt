@@ -47,7 +47,9 @@ add_executable(kernel
         src/kernel/fs/vfs.c
         src/kernel/fs/root_fs/root_fs.c
         src/kernel/fs/boot_fs/boot_fs.c
-        src/kernel/fs/dev_fs/dev_fs.c)
+        src/kernel/fs/dev_fs/dev_fs.c
+        src/kernel/event/event.c
+        src/kernel/keyboard/keyboard.c)
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf ${DEBUG_FLAG} -nostdlib")
 set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel ${OPTIMIZATION_FLAG} -nostdlib ${DEBUG_FLAG} -Wall")

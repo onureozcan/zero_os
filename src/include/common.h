@@ -23,6 +23,9 @@
 
 #define ALIGN_4K(size) (((size) + (4096-1)) & ~(4096-1))
 
+#define EVENT_KEY_PRESS 1
+#define EVENT_TIMER_TICK 2
+
 void panic(char* reason);
 
 extern void write_port(uint32_t port,uint32_t data);
