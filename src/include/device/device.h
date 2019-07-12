@@ -17,7 +17,7 @@ typedef struct device {
     struct device* next;
     uint64_t device_id;
     char *device_name;
-    int type;
+    uint32_t type;
     /**
      * read from a device.
      * @param buffer buffer to write the data.
@@ -35,7 +35,16 @@ typedef struct device {
      * @return 0 if successful, error code otherwise.
      */
     int (*write)(char *buffer, int size, int offset);
-
+    /**
+     * enable this device
+     * @return 0 if successful, error code otherwise.
+     */
+    int (*enable)();
+    /**
+     * disable this device
+     * @return 0 if successful, error code otherwise.
+     */
+    int (*disable)();
     union {
         struct {
             uint64_t size_bytes;

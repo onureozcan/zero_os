@@ -23,6 +23,14 @@ static int null_device_write(char *buffer, int size, int offset) {
     return 0;
 }
 
+static int null_device_enable() {
+    return 0;
+}
+
+static int null_device_disable() {
+    return 0;
+}
+
 void null_device_register() {
 
     device_t *dev = (device_t *) (k_malloc(sizeof(device_t)));
@@ -30,6 +38,8 @@ void null_device_register() {
     dev->block_device_props.size_bytes = 0;
     dev->device_name = "null";
     dev->read = null_device_read;
+    dev->enable = null_device_enable;
+    dev->disable = null_device_disable;
     dev->write = null_device_write;
     device_register(dev);
     console_info(LOG_TAG, "registered null device\n");
