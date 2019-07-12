@@ -87,6 +87,7 @@ static void console_buffer_scroll_by_n_chars(int n) {
 }
 
 void console_put_char_internal(char c) {
+    if (c < 31) return; // this is a control character. nothing to display
     kernel_console_buffer[console_buffer_pos] = c;
     console_buffer_pos++;
     // scroll if necessary

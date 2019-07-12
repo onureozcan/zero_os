@@ -16,6 +16,10 @@ typedef struct event_payload {
         int8_t char_val;
         int16_t short_val;
         int64_t long_val;
+        uint32_t uint_val;
+        uint8_t uchar_val;
+        uint16_t ushort_val;
+        uint64_t ulong_val;
     } data;
 } event_payload_t;
 

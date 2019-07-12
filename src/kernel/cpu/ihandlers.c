@@ -31,6 +31,10 @@ void page_fault_handler(uint32_t virtual_address) {
 
 /* TIMER */
 void irq0_handler(void) {
+    // publish key event
+    event_publish((event_payload_t) {
+            .code = EVENT_TIMER_TICK
+    });
     write_port(0x20, 0x20); //EOI
 }
 
@@ -45,8 +49,8 @@ void irq1_handler(void) {
 
     // publish key event
     event_publish((event_payload_t) {
-            .code = EVENT_KEY_PRESS,
-            .data.char_val = scancode
+            .code = EVENT_KEYBOARD_EVENT,
+            .data.uchar_val = scancode
     });
     write_port(0x20, 0x20); //EOI
     page_manager_restore_pages();

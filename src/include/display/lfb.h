@@ -43,4 +43,9 @@ void lfb_put_char(char c);
  */
 void lfb_disable();
 
+/**
+ * kernel does directly modify lfb.
+ */
+void lfb_enable();
+
 #endif //ZEROOS_LFB_H

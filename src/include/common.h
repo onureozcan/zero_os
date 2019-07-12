@@ -23,8 +23,9 @@
 
 #define ALIGN_4K(size) (((size) + (4096-1)) & ~(4096-1))
 
-#define EVENT_KEY_PRESS 1
+#define EVENT_KEYBOARD_EVENT 1
 #define EVENT_TIMER_TICK 2
+#define EVENT_GUI_CONSOLE_SWITCH 3
 
 void panic(char* reason);
 

@@ -204,3 +204,7 @@ void lfb_repaint() {
 void lfb_disable() {
     lfb_available = FALSE;
 }
+
+void lfb_enable() {
+    lfb_available = TRUE;
+}

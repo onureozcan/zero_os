@@ -9,6 +9,9 @@
 #ifndef ZEROOS_FRAMEBUFFER_H
 #define ZEROOS_FRAMEBUFFER_H
 
+int fb_device_enable();
+int fb_device_disable();
+
 void framebuffer_device_register(int size, void *buffer_addr);
 
 #endif //ZEROOS_FRAMEBUFFER_H

@@ -38,7 +38,8 @@ int main(int argc, char **argv) {
         printf("could not malloc memory\n");
         return -1;
     }
-    int color = 250;
+    int color = 0;
+    // dummy loop to make sure that it actually updates the screen
     while(1) {
         memset(back_buffer, color, width * height * depth);
         fwrite(back_buffer, width * height * depth, 1, lfb);

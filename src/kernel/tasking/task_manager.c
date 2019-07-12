@@ -16,7 +16,7 @@
 #endif
 
 #define LOG_TAG "TASK_MANAGER"
-#define PROCESS_RR_COUNT 5
+#define PROCESS_RR_COUNT 1
 
 void task_manager_init() {
     clear_interrupts();

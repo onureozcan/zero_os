@@ -23,6 +23,7 @@
 #include <fs/dev_fs/dev_fs.h>
 #include <device/framebuffer/framebuffer.h>
 #include <keyboard/keyboard.h>
+#include <event/event.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -33,12 +34,37 @@ void panic(char *reason) {
 }
 
 char kernel_stack[KERNEL_STACK_SIZE] = {0};
+int gui_available;
+
+static void kernel_on_event(event_payload_t payload) {
+    if (payload.code == EVENT_GUI_CONSOLE_SWITCH) {
+        gui_available = !gui_available;
+        if (gui_available) {
+            lfb_disable();
+            fb_device_enable();
+        } else {
+            fb_device_disable();
+            lfb_enable();
+            // to trigger a repaint
+            console_printf(".\b");
+        }
+    }
+}
 
 void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
+
+    // register event for gui - console switch
+    event_subscribe((event_handler_t) kernel_on_event);
 
     memory_manager_malloc_init();
     lfb_init(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
              (void *) ((uint32_t) multiboot_info_ptr->framebuffer_addr));
+
+    // start in gui mode by default
+    event_publish((event_payload_t) {
+            .code = EVENT_GUI_CONSOLE_SWITCH
+    });
+
     keyboard_init();
     console_init();
     console_put_string("initializing Zero Os ...\n");
@@ -78,7 +104,6 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // load window manager
     init_load_window_manager(multiboot_info_ptr->framebuffer_height, multiboot_info_ptr->framebuffer_width,
                              multiboot_info_ptr->framebuffer_bpp);
-
 
     // enter user mode was just a test if we can go into the user mode or not.
     // since we proved that, no need to call it.

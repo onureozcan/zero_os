@@ -31,12 +31,12 @@ static int fb_device_write(char *buffer, int size, int offset) {
     return 0;
 }
 
-static int fb_device_enable() {
+int fb_device_enable() {
     enabled = TRUE;
     return 0;
 }
 
-static int fb_device_disable() {
+int fb_device_disable() {
     enabled = FALSE;
     return 0;
 }
