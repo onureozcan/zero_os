@@ -17,12 +17,12 @@ static char *lfb;
 static int fb_size;
 static int enabled = FALSE;
 
-static int fb_device_read(char *buffer, int size, int offset) {
+static int fb_device_read(struct device* device, char *buffer, int size, int offset) {
     memcpy(buffer, lfb + offset, size);
     return 0;
 }
 
-static int fb_device_write(char *buffer, int size, int offset) {
+static int fb_device_write(struct device* device, char *buffer, int size, int offset) {
     if (!enabled) return VFS_ERROR_DEVICE_NOT_ENABLED;
     if (size > fb_size) {
         size = fb_size;
@@ -31,12 +31,12 @@ static int fb_device_write(char *buffer, int size, int offset) {
     return 0;
 }
 
-int fb_device_enable() {
+int fb_device_enable(struct device* device) {
     enabled = TRUE;
     return 0;
 }
 
-int fb_device_disable() {
+int fb_device_disable(struct device* device) {
     enabled = FALSE;
     return 0;
 }

@@ -14,20 +14,20 @@
 
 #define LOG_TAG "NULL DEVICE"
 
-static int null_device_read(char *buffer, int size, int offset) {
+static int null_device_read(struct device *device, char *buffer, int size, int offset) {
     memset(buffer, 0, size);
     return 0;
 }
 
-static int null_device_write(char *buffer, int size, int offset) {
+static int null_device_write(struct device *device, char *buffer, int size, int offset) {
     return 0;
 }
 
-static int null_device_enable() {
+static int null_device_enable(struct device *device) {
     return 0;
 }
 
-static int null_device_disable() {
+static int null_device_disable(struct device *device) {
     return 0;
 }
 

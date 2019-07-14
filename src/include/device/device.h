@@ -14,10 +14,11 @@
 #define DEVICE_TYPE_BLOCK 1
 
 typedef struct device {
-    struct device* next;
+    struct device *next;
     uint64_t device_id;
     char *device_name;
     uint32_t type;
+
     /**
      * read from a device.
      * @param buffer buffer to write the data.
@@ -25,7 +26,7 @@ typedef struct device {
      * @param offset offset to start reading from.
      * @return 0 if successful, error code otherwise.
      */
-    int (*read)(char *buffer, int size, int offset);
+    int (*read)(struct device *device, char *buffer, int size, int offset);
 
     /**
      * write to a device.
@@ -34,17 +35,20 @@ typedef struct device {
      * @param offset offset to start writing from.
      * @return 0 if successful, error code otherwise.
      */
-    int (*write)(char *buffer, int size, int offset);
+    int (*write)(struct device *device, char *buffer, int size, int offset);
+
     /**
      * enable this device
      * @return 0 if successful, error code otherwise.
      */
-    int (*enable)();
+    int (*enable)(struct device *device);
+
     /**
      * disable this device
      * @return 0 if successful, error code otherwise.
      */
-    int (*disable)();
+    int (*disable)(struct device *device);
+
     union {
         struct {
             uint64_t size_bytes;
@@ -65,15 +69,15 @@ int device_register(device_t *);
  * @param device_id device id.
  * @return pointer to that device_t.
  */
-device_t* device_find(uint64_t device_id);
+device_t *device_find(uint64_t device_id);
 
 /**
  * find a device by its name.
  * @param device_name device name.
  * @return pointer to that device_t.
  */
-device_t* device_find_by_name(char *device_name);
+device_t *device_find_by_name(char *device_name);
 
-device_t* devices;
+device_t *devices;
 
 #endif //ZEROOS_DEVICE_H

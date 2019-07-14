@@ -30,12 +30,12 @@ int dev_fs_open(vfs_node_t *file, int flags) {
 
 int dev_fs_read(vfs_node_t *file, char *buffer, int size, int offset) {
     device_t *device = (device_t *) file->fs_available;
-    return device->read(buffer, size, offset);
+    return device->read((struct device *) device, buffer, size, offset);
 }
 
 int dev_fs_write(vfs_node_t *file, char *buffer, int size, int offset) {
     device_t *device = (device_t *) file->fs_available;
-    return device->write(buffer, size, offset);
+    return device->write((struct device *) device, buffer, size, offset);
 }
 
 int dev_fs_close(vfs_node_t *file) {
