@@ -8,6 +8,7 @@
 #include <tasking/task_manager.h>
 #include <tasking/syscall.h>
 #include <memory/memory_manager.h>
+#include <stdio.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -144,8 +145,21 @@ int sys_link(char *old, char *new) {
     return 0;
 };
 
-int sys_lseek(int file, int ptr, int dir) {
-    return 0;
+int sys_lseek(int file, int offset, int whence) {
+    vfs_node_t *node = current_process->files[file];
+    if (node) {
+        if (whence == SEEK_SET) {
+            node->offset_bytes = offset;
+        } else if (whence == SEEK_CUR) {
+            node->offset_bytes += offset;
+        } else if (whence == SEEK_END) {
+            node->offset_bytes = node->size_bytes + offset;
+        } else {
+            return -1;
+        }
+        return node->offset_bytes;
+    }
+    return -1;
 };
 
 int sys_open(const char *name, int flags, ...) {

@@ -24,6 +24,7 @@
 #include <device/framebuffer/framebuffer.h>
 #include <keyboard/keyboard.h>
 #include <event/event.h>
+#include <device/mouse/mouse.h>
 
 // TODO: should it be here?
 void panic(char *reason) {
@@ -83,7 +84,7 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     // device layer and vfs layer
     device_init();
     framebuffer_device_register(multiboot_info_ptr->framebuffer_height * multiboot_info_ptr->framebuffer_width *
-                                multiboot_info_ptr->framebuffer_bpp,
+                                LFB_DEPTH_BYTES,
                                 (void *) ((uint32_t) multiboot_info_ptr->framebuffer_addr));
     null_device_register();
     null_volume_register();
@@ -91,6 +92,7 @@ void kmain(multiboot_info_t *multiboot_info_ptr, uint32_t magic) {
     boot_fs_init(multiboot_info_ptr);
     dev_fs_init();
     vfs_init();
+    mouse_init();
 
     page_manager_init(multiboot_info_ptr);
     idt_init();

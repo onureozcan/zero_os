@@ -7,6 +7,7 @@
 #include <common.h>
 #include <memory/memory_manager.h>
 #include <fs/dev_fs/dev_fs.h>
+#include <device/device.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -20,9 +21,9 @@ int dev_fs_open(vfs_node_t *file, int flags) {
     console_debug(LOG_TAG, "open:%s\n", name);
     device_t *device = device_find_by_name(name);
     file->offset_bytes = 0;
-    file->size_bytes = 0;
     if (device != NULL && device->type == DEVICE_TYPE_BLOCK) {
         file->fs_available = (void *) device;
+        file->size_bytes = device->block_device_props.size_bytes;
         return 0;
     }
     return VFS_ERROR_NO_SUCH_FILE;

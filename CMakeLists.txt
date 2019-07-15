@@ -3,7 +3,7 @@ project(ZeroOs C)
 set(CMAKE_C_STANDARD 11)
 enable_language(ASM_NASM)
 
-set(OPTIMIZATION_FLAG "-O2")
+set(OPTIMIZATION_FLAG "")
 set(DEBUG_FLAG "-g")
 set(CMAKE_C_FLAGS "-m32 -Wall ${DEBUG_FLAG}")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f elf32 -o <OBJECT> <SOURCE>")
@@ -49,7 +49,8 @@ add_executable(kernel
         src/kernel/fs/boot_fs/boot_fs.c
         src/kernel/fs/dev_fs/dev_fs.c
         src/kernel/event/event.c
-        src/kernel/keyboard/keyboard.c)
+        src/kernel/keyboard/keyboard.c
+        src/kernel/device/mouse/mouse.c)
 
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf ${DEBUG_FLAG} -nostdlib")
 set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel ${OPTIMIZATION_FLAG} -nostdlib ${DEBUG_FLAG} -Wall")

@@ -12,6 +12,7 @@
 #include <common.h>
 #include <memory/page_manager.h>
 #include <event/event.h>
+#include <device/mouse/mouse.h>
 
 /*GPF*/
 void gpf_handler(uint32_t error_code) {
@@ -101,8 +102,11 @@ void irq11_handler(void) {
 }
 
 void irq12_handler(void) {
+    page_manager_load_kernel_pages();
+    mouse_handler();
     write_port(0xA0, 0x20);
     write_port(0x20, 0x20); //EOI
+    page_manager_restore_pages();
 }
 
 void irq13_handler(void) {
