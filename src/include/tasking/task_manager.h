@@ -17,7 +17,7 @@
 #define PROCESS_MAX_FILES_ALLOWED 128
 
 #define MAIN_THREAD_DEFAULT_SP 0xFFFFFFFF
-#define THREAD_INITIAL_STACK_FRAME_SIZE 128 // looks like newlib likes to use stack
+#define THREAD_INITIAL_STACK_FRAME_SIZE 4
 
 typedef struct trap_frame {
     void *esp;

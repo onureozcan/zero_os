@@ -25,6 +25,10 @@ void task_manager_init() {
     task_manager_task_switch();
 }
 
+static void task_manager_align_break(process_t *process) {
+    process->v_program_break = (void *) (((uint32_t) process->v_program_break + (4096 - 1)) & -4096);
+}
+
 uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_t args_size) {
 
     Elf32_Ehdr *elf_header = (Elf32_Ehdr *) bytes;
@@ -155,7 +159,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
             }
             section++;
         }
-
+        task_manager_align_break(process);
 
         console_debug(LOG_TAG, "loaded to the memory, adding main thread\n");
         task_manager_add_thread(process, (void *) elf_header->e_entry, (void *) MAIN_THREAD_DEFAULT_SP);
@@ -208,11 +212,12 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
     thread->next = NULL;
     thread->user_stack_size = PAGE_SIZE_BYTES * THREAD_INITIAL_STACK_FRAME_SIZE;
     for (int i = 0; i < THREAD_INITIAL_STACK_FRAME_SIZE; i++) {
-        console_trace(LOG_TAG, "mapping stack frame %p\n", stack - PAGE_SIZE_BYTES * i);
+        void *address = memory_manager_alloc_page_frame();
         page_manager_map_page(process->page_directory,
                               stack - PAGE_SIZE_BYTES * i,
-                              memory_manager_alloc_page_frame(),
+                              address,
                               FALSE);
+        console_trace(LOG_TAG, "mapping stack frame %p, physical %p\n", stack - PAGE_SIZE_BYTES * i, address);
     }
     // if not the first thread
     if (process->current_thread) {
@@ -273,9 +278,9 @@ void *task_manager_sbrk(process_t *process, int inc) {
         current_virtual_addr += bytes_to_load_for_page;
         total_bytes_loaded += bytes_to_load_for_page;
         total_bytes_to_load -= bytes_to_load_for_page;
-        process->v_program_break += bytes_to_load_for_page;
     }
-    console_debug(LOG_TAG, "%d bytes added process %p. new brk is %p\n",
+    process->v_program_break += total_bytes_loaded;
+    console_info(LOG_TAG, "%d bytes added process %p. new brk is %p\n",
                   total_bytes_loaded,
                   process->pid,
                   process->v_program_break);
