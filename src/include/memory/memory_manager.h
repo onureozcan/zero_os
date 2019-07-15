@@ -41,7 +41,7 @@ void memory_manager_malloc_init();
  * This function takes elf section table and marks specific areas as as used by the kernel
  * so that these sections will never be given to a user program
  * */
-void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t);
+void memory_manager_set_kernel_used_areas(multiboot_info_t*);
 
 /* allocates a 4K aligned page frame */
 void *memory_manager_alloc_page_frame();

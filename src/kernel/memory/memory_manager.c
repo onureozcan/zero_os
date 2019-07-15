@@ -7,6 +7,7 @@
 #include <memory/memory_manager.h>
 #include <elf.h>
 #include <common.h>
+#include <display/lfb.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -126,7 +127,8 @@ void memory_manager_mmap_init(uint32_t total_memory_in_bytes, multiboot_memory_m
     console_info(LOG_TAG, "initialized with %d mb usable and %d mb total memory\n", available_mb, total_mb);
 }
 
-void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t elf_section_header) {
+void memory_manager_set_kernel_used_areas(multiboot_info_t *multiboot_info_ptr) {
+    multiboot_elf_section_header_table_t elf_section_header = multiboot_info_ptr->u.elf_sec;
     Elf32_Shdr *section = (Elf32_Shdr *) elf_section_header.addr;
     uint32_t total_size = 0;
     for (int i = 0; i < elf_section_header.num; i++) {
@@ -142,6 +144,18 @@ void memory_manager_set_kernel_used_areas(multiboot_elf_section_header_table_t e
     kernel_used_memory_in_bytes = total_size;
     console_info(LOG_TAG, "kernel reserved:%d mb\n", total_size / (1024 * 1024));
     console_info(LOG_TAG, "%d mb available for user space out of %d mb\n",
-                  memory_manager_number_of_free_pages / 256,
-                  memory_manager_total_number_of_pages / 256);
+                 memory_manager_number_of_free_pages / 256,
+                 memory_manager_total_number_of_pages / 256);
+
+    // alloc lfb pages
+    void *lfb_start = (void *) multiboot_info_ptr->framebuffer_addr;
+    uint32_t lfb_size = (multiboot_info_ptr->framebuffer_width * multiboot_info_ptr->framebuffer_height *
+                         multiboot_info_ptr->framebuffer_bpp / LFB_DEPTH_BYTES);
+    uint32_t lfb_page_start = memory_manager_get_page_number_from_address((uint32_t) lfb_start);
+    uint32_t lfb_page_end = memory_manager_get_page_number_from_address((uint32_t) lfb_start + lfb_size);
+    if (memory_manager_get_total_number_of_pages() >= lfb_page_start) {
+        for (int i = lfb_page_start; i < lfb_page_end; i++) {
+            memory_manager_mark_page_used(i);
+        }
+    }
 }
