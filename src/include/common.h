@@ -27,6 +27,10 @@
 #define EVENT_TIMER_TICK 2
 #define EVENT_GUI_CONSOLE_SWITCH 3
 
+#define BIT_CHECK(value, index) ((value & (1 << index)) != 0)
+#define BIT_SET(value, index) (value |= (1 << index))
+#define BIT_CLEAR(value, index) value &= ~(1 << index)
+
 #define __nullable
 
 void panic(char* reason);

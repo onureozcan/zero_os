@@ -62,7 +62,7 @@ void update_screen_loop() {
     repaint:
     {
         update_mouse_pos();
-        background_object->repaint(background_object);
+        screen_object_repaint(background_object);
         fwrite(background_object->buffer, screen_size_bytes, 1, lfb);
         goto repaint;
     }

@@ -5,6 +5,12 @@
 #ifndef ZEROOS_SCREEN_OBJECT_H
 #define ZEROOS_SCREEN_OBJECT_H
 
+#define SCREEN_OBJ_DIRTY 0
+
+#define IS_DIRTY(obj) BIT_CHECK(obj->flags, SCREEN_OBJ_DIRTY)
+#define SET_DIRTY(obj) BIT_SET(obj->flags, SCREEN_OBJ_DIRTY)
+#define CLEAR_DIRTY(obj) BIT_CLEAR(obj->flags, SCREEN_OBJ_DIRTY)
+
 #include <common.h>
 
 typedef struct screen_object {
@@ -20,8 +26,9 @@ typedef struct screen_object {
     void (*repaint)(struct screen_object*);
 } screen_object_t;
 
-screen_object_t* screen_object_new(__nullable struct screen_object* parent, int width, int height, int depth);
+screen_object_t* screen_object_new(__nullable screen_object_t* parent, int width, int height, int depth);
 
+void screen_object_repaint(screen_object_t* obj);
 
 
 

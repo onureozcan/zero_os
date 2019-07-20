@@ -7,12 +7,13 @@
 #include <screen_object.h>
 #include <common.h>
 
-static char color;
+static char color = 250;
 static int memset_size;
 
 static void repaint(screen_object_t *bkg_object) {
 
-    memset(bkg_object->buffer, ++color, memset_size);
+    CLEAR_DIRTY(bkg_object);
+    memset(bkg_object->buffer, color, memset_size);
 }
 
 screen_object_t *background_object_init(int width, int height, int depth) {
