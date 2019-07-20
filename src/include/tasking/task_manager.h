@@ -58,6 +58,9 @@ typedef struct process {
 // linked list of all process
 process_t *current_process;
 
+// we use a pointer to the window manager to give control to it in case of mouse movement
+process_t *window_manager;
+
 thread_t *current_thread;
 
 int tasking_enabled;
@@ -87,6 +90,14 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
  */
 uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack);
 
+process_t *task_manager_find_process_by_id(uint32_t pid);
+
+/**
+ * switches the next process with the given process.
+ * @param process
+ */
+void task_manager_set_next_process(process_t* process);
+
 void task_manager_next_task();
 
 void *task_manager_sbrk(process_t *process, int size);
@@ -100,5 +111,6 @@ void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint3
  * @param process process.
  * @return an index in the files array, -1 otherwise.
  */
-int task_manager_get_file_handle(process_t* process);
+int task_manager_get_file_handle(process_t *process);
+
 #endif //ZEROOS_TASK_MANAGER_H

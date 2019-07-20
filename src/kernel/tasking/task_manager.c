@@ -18,6 +18,8 @@
 #define LOG_TAG "TASK_MANAGER"
 #define PROCESS_RR_COUNT 1
 
+static int task_manager_process_count = 0;
+
 void task_manager_init() {
     clear_interrupts();
     tasking_enabled = TRUE;
@@ -173,6 +175,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
 
         store_interrupts();
         console_debug(LOG_TAG, "loaded %p\n", process->pid);
+        task_manager_process_count++;
         return process->pid;
     }
     error_return:
@@ -246,7 +249,7 @@ void task_manager_next_task() {
 
 void *task_manager_sbrk(process_t *process, int inc) {
 
-    console_debug(LOG_TAG,"sbrk: %p requested %d bytes\n",process, inc);
+    console_debug(LOG_TAG, "sbrk: %p requested %d bytes\n", process, inc);
     void *old_break = process->v_program_break;
     uint32_t current_virtual_addr = (uint32_t) process->v_program_break;
     int total_bytes_to_load = inc;
@@ -281,10 +284,28 @@ void *task_manager_sbrk(process_t *process, int inc) {
     }
     process->v_program_break += total_bytes_loaded;
     console_info(LOG_TAG, "%d bytes added process %p. new brk is %p\n",
-                  total_bytes_loaded,
-                  process->pid,
-                  process->v_program_break);
+                 total_bytes_loaded,
+                 process->pid,
+                 process->v_program_break);
     return old_break;
+}
+
+void task_manager_set_next_process(process_t* process) {
+    current_process->next->next = process->next;
+    process->next = current_process->next;
+    current_process->next = process;
+    current_process->rr_count = PROCESS_RR_COUNT;
+}
+
+process_t *task_manager_find_process_by_id(uint32_t pid) {
+    process_t *current = current_process;
+    for (int i = 0; i < task_manager_process_count; i++) {
+        if (current->pid == pid) {
+            return current;
+        }
+        current = current->next;
+    }
+    return current;
 }
 
 int task_manager_get_file_handle(process_t *process) {

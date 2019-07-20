@@ -9,6 +9,7 @@
 #include <memory/memory_manager.h>
 #include <display/console.h>
 #include <device/mouse/mouse.h>
+#include <tasking/task_manager.h>
 
 #define MOUSE_PORT 0x60
 #define MOUSE_STATUS 0x64
@@ -147,6 +148,8 @@ void mouse_handler() {
             mouse_pos_y -= mouse_y;
             break;
     }
+    // set next process window manager so that mouse cursor updates will be flawless
+    task_manager_set_next_process(window_manager);
 }
 
 void mouse_init() {

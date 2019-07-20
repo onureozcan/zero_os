@@ -80,7 +80,7 @@ add_library(syscalls_wrapper
         src/user/userlib/crt0.asm
         )
 
-set_target_properties(syscalls_wrapper PROPERTIES COMPILE_FLAGS "-fno-stack-protector -I${NEWLIB_INCLUDE_DIR}")
+set_target_properties(syscalls_wrapper PROPERTIES COMPILE_FLAGS "-fno-stack-protector -I${NEWLIB_INCLUDE_DIR} ${OPTIMIZATION_FLAG}")
 
 add_executable(hello_world
         src/user/hello_world/hello.c
@@ -98,7 +98,7 @@ add_executable(window_manager
         src/user/window_manager/src/screen_objects/mouse_object.c
         )
 set_target_properties(window_manager PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
-set_target_properties(window_manager PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
+set_target_properties(window_manager PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} ${OPTIMIZATION_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
 
 target_include_directories(window_manager PRIVATE src/user/window_manager/include)
 target_link_libraries(window_manager PUBLIC libc.a syscalls_wrapper canvas)

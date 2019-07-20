@@ -49,6 +49,7 @@ void init_load_window_manager(int lfb_w, int lfb_h, int lfb_depth) {
     char *c_lfb_h = (char *) lfb_h;
     char *c_lfb_d = (char *) lfb_depth;
     char *args[] = {c_lfb_w, c_lfb_h, c_lfb_d};
-    task_manager_load_process("window manager", wm_bytes, args, 3);
+    uint32_t pid = task_manager_load_process("window manager", wm_bytes, args, 3);
+    window_manager = task_manager_find_process_by_id(pid);
     k_free(wm_bytes);
 }
