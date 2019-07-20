@@ -27,6 +27,8 @@
 #define EVENT_TIMER_TICK 2
 #define EVENT_GUI_CONSOLE_SWITCH 3
 
+#define __nullable
+
 void panic(char* reason);
 
 extern void write_port(uint32_t port,uint32_t data);

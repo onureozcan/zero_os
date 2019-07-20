@@ -3,7 +3,7 @@ project(ZeroOs C)
 set(CMAKE_C_STANDARD 11)
 enable_language(ASM_NASM)
 
-set(OPTIMIZATION_FLAG "")
+set(OPTIMIZATION_FLAG "-O2")
 set(DEBUG_FLAG "-g")
 set(CMAKE_C_FLAGS "-m32 -Wall ${DEBUG_FLAG}")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f elf32 -o <OBJECT> <SOURCE>")
@@ -93,11 +93,14 @@ target_link_libraries(hello_world PUBLIC libc.a syscalls_wrapper)
 
 add_executable(window_manager
         src/user/window_manager/src/window_manager.c
+        src/user/window_manager/src/screen_object.c
+        src/user/window_manager/src/screen_objects/background_object.c
         )
 set_target_properties(window_manager PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
 set_target_properties(window_manager PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
 
-target_link_libraries(window_manager PUBLIC libc.a syscalls_wrapper)
+target_include_directories(window_manager PRIVATE src/user/window_manager/include)
+target_link_libraries(window_manager PUBLIC libc.a syscalls_wrapper canvas)
 
 
 
