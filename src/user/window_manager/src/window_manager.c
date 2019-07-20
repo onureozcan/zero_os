@@ -8,13 +8,14 @@
 
 #include <screen_object.h>
 #include <screen_objects/background_object.h>
+#include <screen_objects/mouse_object.h>
 
 FILE *lfb, *mouse;
 int depth;
 int height;
 int width;
 
-struct screen_object *background_object;
+screen_object_t *background_object, *mouse_object;
 
 typedef struct mouse_data {
     uint32_t x;
@@ -55,6 +56,7 @@ int main(int argc, char **argv) {
 
 void initialize_screen_objects() {
     background_object = background_object_init(width, height, depth);
+    mouse_object = mouse_object_init(background_object, 20, 20, depth);
 }
 
 void update_screen_loop() {
@@ -71,6 +73,7 @@ void update_screen_loop() {
 void update_mouse_pos() {
     fread(&mouse_data_buffer, sizeof(struct mouse_data), 1, mouse);
     fseek(mouse, 0, SEEK_SET);
+    screen_object_relocate(mouse_object, mouse_data_buffer.x, mouse_data_buffer.y);
 }
 
 FILE *open_mouse() {

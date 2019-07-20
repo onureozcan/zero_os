@@ -23,12 +23,15 @@ typedef struct screen_object {
     char* buffer;
     struct screen_object *next_sibling;
     struct screen_object *first_child;
+    struct screen_object *parent; // objects copy their buffer to their parents
     void (*repaint)(struct screen_object*);
 } screen_object_t;
 
 screen_object_t* screen_object_new(__nullable screen_object_t* parent, int width, int height, int depth);
 
 void screen_object_repaint(screen_object_t* obj);
+
+void screen_object_relocate(screen_object_t* obj, int x, int y);
 
 
 

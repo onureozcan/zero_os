@@ -95,6 +95,7 @@ add_executable(window_manager
         src/user/window_manager/src/window_manager.c
         src/user/window_manager/src/screen_object.c
         src/user/window_manager/src/screen_objects/background_object.c
+        src/user/window_manager/src/screen_objects/mouse_object.c
         )
 set_target_properties(window_manager PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/user/link.ld -nostdlib  -L ${NEWLIB_LIB_DIR} -lc -lm")
 set_target_properties(window_manager PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
