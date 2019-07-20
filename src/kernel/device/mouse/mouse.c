@@ -27,8 +27,8 @@
 static uint8_t mouse_click = 0;
 static uint8_t mouse_cycle = 0;
 static int8_t mouse_byte[3];
-static int32_t mouse_x = 500;
-static int32_t mouse_y = 500;
+static int32_t mouse_pos_x = 0;
+static int32_t mouse_pos_y = 0;
 static int enabled = FALSE;
 
 static void mouse_wait(uint8_t a_type);
@@ -72,8 +72,8 @@ static void mouse_write(uint8_t a_write) {
 
 static int mouse_device_read(struct device *device, char *buffer, int size, int offset) {
     mouse_data_t* data = (mouse_data_t*) buffer;
-    data->x = mouse_x;
-    data->y = mouse_y;
+    data->x = mouse_pos_x;
+    data->y = mouse_pos_y;
     data->l_click = mouse_click;
     return 0;
 }
@@ -116,37 +116,37 @@ static int mouse_device_disable() {
 }
 
 void mouse_handler() {
-    switch (mouse_cycle) {
+    int8_t mouse_x, mouse_y;
+    switch(mouse_cycle)
+    {
         case 0:
-            mouse_byte[0] = read_port(0x60);
-            if (!(mouse_byte[0] & MOUSE_V_BIT))
-                return;
+            mouse_byte[0]=read_port(0x60);
             mouse_cycle++;
             break;
         case 1:
-            mouse_byte[1] = read_port(0x60);
+            mouse_byte[1]=read_port(0x60);
             mouse_cycle++;
             break;
         case 2:
-            mouse_byte[2] = read_port(0x60);
-            mouse_x += mouse_byte[1];
-            mouse_y += mouse_byte[2];
-            mouse_cycle = 0;
-            //broken package
+            mouse_byte[2]=read_port(0x60);
+            mouse_x=mouse_byte[1];
+            mouse_y=mouse_byte[2];
             if (mouse_byte[0] & 128 || mouse_byte[0] & 64)
                 return;
 
-            if (mouse_byte[0] & 0x20)
+            if (BIT_CHECK(mouse_byte[0],2))
                 mouse_y = -mouse_y;
-            if (mouse_byte[0] & 0x10)
+            if (BIT_CHECK(mouse_byte[0],3))
                 mouse_x = -mouse_x;
-            if (mouse_byte[0] & 0x1)
+            if (BIT_CHECK(mouse_byte[0],7))
                 mouse_click = 1;
             else
                 mouse_click = 0;
+            mouse_cycle=0;
+            mouse_pos_x -= mouse_x;
+            mouse_pos_y -= mouse_y;
             break;
     }
-    console_info(LOG_TAG, "mouse move: %d, %d\n", mouse_x, mouse_y);
 }
 
 void mouse_init() {
