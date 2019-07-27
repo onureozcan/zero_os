@@ -40,7 +40,7 @@ void canvas_init();
 
 void canvas_blur_xy(canvas_t *canvas, int x, int y, int h, int w , int mult);
 
-void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t h, uint8_t w);
+void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint32_t h, uint32_t w);
 
 void
 canvas_draw_line(canvas_t *canvas, int x, int y, int x2, int y2, uint8_t r, uint8_t g, uint8_t b, uint32_t thickness);

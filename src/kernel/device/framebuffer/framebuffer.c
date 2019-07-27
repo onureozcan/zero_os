@@ -46,7 +46,7 @@ void framebuffer_device_register(int size, void *buffer_addr) {
     fb_size = size;
     device_t *dev = (device_t *) (k_malloc(sizeof(device_t)));
     dev->type = DEVICE_TYPE_BLOCK;
-    dev->block_device_props.size_bytes = 0;
+    dev->block_device_props.size_bytes = fb_size;
     dev->device_name = "fb0";
     dev->read = fb_device_read;
     dev->write = fb_device_write;

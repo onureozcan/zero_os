@@ -82,21 +82,21 @@ void canvas_init() {
 
 
 // from osdev
-void canvas_fill_rect(canvas_t *canvas, char *where, uint8_t r, uint8_t g, uint8_t b, uint8_t h, uint8_t w) {
+void canvas_fill_rect(canvas_t *canvas, char *where, uint8_t r, uint8_t g, uint8_t b, uint32_t h, uint32_t w) {
     int i, j;
-    for (i = 0; i < w; i++) {
-        for (j = 0; j < h; j++) {
+    for (i = 0; i < h; i++) {
+        for (j = 0; j < w; j++) {
             int t = j * canvas->depth;
-            where[t] = r;
+            where[t] = b;
             where[t + 1] = g;
-            where[t + 2] = b;
+            where[t + 2] = r;
         }
         where += canvas->width * canvas->depth;
     }
 }
 
 // from osdev
-void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t h, uint8_t w) {
+void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint32_t h, uint32_t w) {
     uint32_t where = x * canvas->depth + y * canvas->depth * canvas->width;
     canvas_fill_rect(canvas, canvas->buffer + where, r, g, b, h, w);
 }
@@ -107,8 +107,8 @@ void canvas_put_pixel(canvas_t *canvas, int x, int y, uint8_t b, uint8_t g, uint
         return;
     if (y < 0 || y > canvas->height)
         return;
-    // FIXME: what if the depth is of type 32 bits or 16 bits?
-    uint32_t where = x * 3 + y * 3 * canvas->width;
+    // FIXME: what if the depth is of type 16 bits?
+    uint32_t where = x * canvas->depth + y * canvas->depth * canvas->width;
     canvas->buffer[where] = b;
     canvas->buffer[where + 1] = g;
     canvas->buffer[where + 2] = r;

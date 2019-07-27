@@ -116,7 +116,7 @@ uint32_t task_manager_load_process(char *name, char *bytes, char **args, uint32_
                 uint32_t total_bytes_to_load = section->sh_size;
                 uint32_t total_bytes_loaded = 0;
 
-                while (total_bytes_loaded < section->sh_size) {
+                while (total_bytes_to_load > 0) {
 
                     void *source = bytes + section->sh_offset + total_bytes_loaded;
                     uint32_t virtual_page_number_lower = current_virtual_addr / PAGE_SIZE_BYTES;
@@ -193,7 +193,8 @@ void task_manager_push_to_user_stack(process_t *process, thread_t *thread, uint3
         // if not mapped, first alloc a page and map it
         int page_number = (uint32_t) thread->trap_frame.esp / PAGE_SIZE_BYTES;
         void *page_aligned_virtual_address = (void *) (page_number * PAGE_SIZE_BYTES);
-        page_manager_map_page(process->page_directory, page_aligned_virtual_address, memory_manager_alloc_page_frame(),
+        void *address = memory_manager_alloc_page_frame();
+        page_manager_map_page(process->page_directory, page_aligned_virtual_address, address,
                               FALSE);
         console_debug(LOG_TAG, "adding stack frame to thread %p, %p\n", thread, thread->trap_frame.esp);
         goto get_physical_addr;
@@ -214,13 +215,14 @@ uint32_t task_manager_add_thread(process_t *process, void *eip, void *stack) {
     thread->trap_frame.esp = stack;
     thread->next = NULL;
     thread->user_stack_size = PAGE_SIZE_BYTES * THREAD_INITIAL_STACK_FRAME_SIZE;
-    for (int i = 0; i < THREAD_INITIAL_STACK_FRAME_SIZE; i++) {
+    for (int i = 1; i <= THREAD_INITIAL_STACK_FRAME_SIZE; i++) {
         void *address = memory_manager_alloc_page_frame();
+        void *virtual_address = stack - PAGE_SIZE_BYTES * i;
         page_manager_map_page(process->page_directory,
-                              stack - PAGE_SIZE_BYTES * i,
+                              virtual_address,
                               address,
                               FALSE);
-        console_trace(LOG_TAG, "mapping stack frame %p, physical %p\n", stack - PAGE_SIZE_BYTES * i, address);
+        console_trace(LOG_TAG, "mapping stack frame %p, physical %p\n", virtual_address, address);
     }
     // if not the first thread
     if (process->current_thread) {
@@ -249,19 +251,16 @@ void task_manager_next_task() {
 
 void *task_manager_sbrk(process_t *process, int inc) {
 
-    console_debug(LOG_TAG, "sbrk: %p requested %d bytes\n", process, inc);
+    console_info(LOG_TAG, "sbrk: %p requested %d bytes\n", process, inc);
+    console_debug(LOG_TAG, "free before sbrk :%d mb\n", memory_manager_get_number_of_free_pages() / 256);
     void *old_break = process->v_program_break;
     uint32_t current_virtual_addr = (uint32_t) process->v_program_break;
     int total_bytes_to_load = inc;
-    int total_bytes_loaded = 0;
 
-    while (total_bytes_loaded < inc) {
+    while (total_bytes_to_load > 0) {
 
-        uint32_t virtual_page_number_lower = current_virtual_addr / PAGE_SIZE_BYTES;
-        uint32_t virtual_page_number_upper = virtual_page_number_lower + 1;
-
+        uint32_t virtual_page_number_upper = current_virtual_addr / PAGE_SIZE_BYTES + 1;
         uint32_t virtual_page_boundary_upper = virtual_page_number_upper * PAGE_SIZE_BYTES;
-        uint32_t virtual_page_boundary_lower = virtual_page_number_lower * PAGE_SIZE_BYTES;
 
         int bytes_to_load_for_page = virtual_page_boundary_upper - current_virtual_addr;
 
@@ -273,24 +272,24 @@ void *task_manager_sbrk(process_t *process, int inc) {
                                                           (void *) (current_virtual_addr));
         if (!physical) {
             // not mapped
-            void *new_frame = memory_manager_alloc_page_frame();
+            physical = memory_manager_alloc_page_frame();
             page_manager_map_page(process->page_directory,
-                                  (void *) virtual_page_boundary_lower, new_frame,
+                                  (void *) current_virtual_addr, physical,
                                   FALSE);
         }
         current_virtual_addr += bytes_to_load_for_page;
-        total_bytes_loaded += bytes_to_load_for_page;
         total_bytes_to_load -= bytes_to_load_for_page;
     }
-    process->v_program_break += total_bytes_loaded;
-    console_info(LOG_TAG, "%d bytes added process %p. new brk is %p\n",
-                 total_bytes_loaded,
+    process->v_program_break += inc;
+    console_info(LOG_TAG, "%d bytes added to process %p. new brk is %p\n",
+                 inc,
                  process->pid,
                  process->v_program_break);
+    console_debug(LOG_TAG, "free after sbrk: %d mb\n", memory_manager_get_number_of_free_pages() / 256);
     return old_break;
 }
 
-void task_manager_set_next_process(process_t* process) {
+void task_manager_set_next_process(process_t *process) {
     current_process->next->next = process->next;
     process->next = current_process->next;
     current_process->next = process;
