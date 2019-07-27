@@ -8,6 +8,8 @@
 #include <display/lfb.h>
 #include <common.h>
 
+#define COM1_DEBUG(c) write_port(0x3f8,c)
+
 char kernel_console_buffer[KERNEL_CONSOLE_BUFFER_SIZE] = {0};
 int console_buffer_pos = 0;
 char *video_memory = (char *) VGA_TEXT_MODE_MEMORY_START_ADDRESS;
@@ -89,6 +91,7 @@ static void console_buffer_scroll_by_n_chars(int n) {
 void console_put_char_internal(char c) {
     if (c < 31) return; // this is a control character. nothing to display
     kernel_console_buffer[console_buffer_pos] = c;
+    COM1_DEBUG(c);
     console_buffer_pos++;
     // scroll if necessary
     if (console_buffer_pos >= KERNEL_CONSOLE_BUFFER_SIZE) {
