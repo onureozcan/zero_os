@@ -52,7 +52,9 @@ screen_object_t *screen_object_new(__nullable screen_object_t *parent, int width
     obj->height = height;
     obj->width = width;
     obj->depth = depth;
-    obj->buffer = malloc(width * height * depth);
+    int size_of_buffer = width * height * depth;
+    printf("screen object: size of buffer: %d\n", size_of_buffer);
+    obj->buffer = malloc(size_of_buffer);
     obj->next_sibling = NULL;
     obj->first_child = NULL;
     SET_DIRTY(obj);

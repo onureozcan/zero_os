@@ -9,6 +9,7 @@
 #include <screen_object.h>
 #include <screen_objects/background_object.h>
 #include <screen_objects/mouse_object.h>
+#include <canvas.h>
 
 FILE *lfb, *mouse;
 int depth;
@@ -55,8 +56,9 @@ int main(int argc, char **argv) {
 }
 
 void initialize_screen_objects() {
+    canvas_init();
     background_object = background_object_init(width, height, depth);
-    mouse_object = mouse_object_init(background_object, 20, 20, depth);
+    mouse_object = mouse_object_init(background_object, height / 45, height / 45, depth);
 }
 
 void update_screen_loop() {
@@ -66,6 +68,7 @@ void update_screen_loop() {
         update_mouse_pos();
         screen_object_repaint(background_object);
         fwrite(background_object->buffer, screen_size_bytes, 1, lfb);
+        fseek(lfb, 0, SEEK_SET);
         goto repaint;
     }
 }
