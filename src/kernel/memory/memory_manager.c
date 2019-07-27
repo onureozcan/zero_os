@@ -56,6 +56,10 @@ static void memory_manager_set_page_by_address(uint32_t address) {
     mmap_set(index);
 }
 
+uint32_t memory_manager_get_number_of_free_pages() {
+    return memory_manager_number_of_free_pages;
+}
+
 void *memory_manager_alloc_page_frame() {
     // The simplest solution.
     for (int i = 0; i < memory_manager_total_number_of_pages; i++) {
