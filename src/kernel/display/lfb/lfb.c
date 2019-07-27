@@ -12,7 +12,7 @@
 static int lfb_width;
 static int lfb_height;
 static uint8_t *framebuffer;
-static uint8_t back_buffer[LFB_MAX_SUPPORTED_HEIGHT * LFB_MAX_SUPPORTED_WIDTH * LFB_DEPTH_BYTES];
+static uint8_t *back_buffer;
 static int buffer_size;
 static int char_width_pixels;
 static int char_height_pixels;
@@ -27,7 +27,7 @@ static int caches_available;
 // of height char_height_pixels
 static uint8_t **font_cache_map;
 
-#define LFB_SCREEN_PADDING_X 100
+#define LFB_SCREEN_PADDING_X 50
 #define LFB_SCREEN_PADDING_Y 5
 #define LFB_LINE_SPACING_X 1
 #define LFB_LINE_SPACING_Y 2
@@ -149,6 +149,7 @@ void lfb_init(int height, int width, void *lfb_buffer) {
     lfb_clear();
     char_height_pixels = (height - LFB_SCREEN_PADDING_Y) / KERNEL_CONSOLE_HEIGHT;
     char_width_pixels = (width - LFB_SCREEN_PADDING_X) / KERNEL_CONSOLE_WIDTH;
+    back_buffer = (uint8_t*) k_malloc(width * height * LFB_DEPTH_BYTES);
     canvas_init();
     canvas.depth = LFB_DEPTH_BYTES;
     canvas.buffer = (char *) back_buffer;
