@@ -5,11 +5,20 @@
 #ifndef ZEROOS_SCREEN_OBJECT_H
 #define ZEROOS_SCREEN_OBJECT_H
 
+#define DEPTH_32_BITS_ALPHA 4
+
+// needs re-rendering
 #define SCREEN_OBJ_DIRTY 0
+// needs alpha blend
+#define SCREEN_OBJ_HAS_ALPHA 1
 
 #define IS_DIRTY(obj) BIT_CHECK(obj->flags, SCREEN_OBJ_DIRTY)
 #define SET_DIRTY(obj) BIT_SET(obj->flags, SCREEN_OBJ_DIRTY)
 #define CLEAR_DIRTY(obj) BIT_CLEAR(obj->flags, SCREEN_OBJ_DIRTY)
+
+#define HAS_ALPHA(obj) BIT_CHECK(obj->flags, SCREEN_OBJ_HAS_ALPHA)
+#define SET_HAS_ALPHA(obj) BIT_SET(obj->flags, SCREEN_OBJ_HAS_ALPHA)
+#define CLEAR_HAS_ALPHA(obj) BIT_CLEAR(obj->flags, SCREEN_OBJ_HAS_ALPHA)
 
 #include <common.h>
 

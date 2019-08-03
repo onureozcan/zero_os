@@ -25,6 +25,8 @@ screen_object_t *mouse_object_init(screen_object_t *parent, int width, int heigh
     canvas.width = width;
     canvas.buffer = object->buffer;
     canvas.depth = depth;
+    // mouse cursor has alpha
+    SET_HAS_ALPHA(object);
     return object;
 
 }

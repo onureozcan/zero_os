@@ -90,6 +90,7 @@ void canvas_fill_rect(canvas_t *canvas, char *where, uint8_t r, uint8_t g, uint8
             where[t] = b;
             where[t + 1] = g;
             where[t + 2] = r;
+            where[t + 3] = 0xff; // visibility byte
         }
         where += canvas->width * canvas->depth;
     }
