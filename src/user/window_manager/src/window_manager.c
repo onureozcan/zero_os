@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 void initialize_screen_objects() {
     canvas_init();
     background_object = background_object_init(width, height, depth);
-    mouse_object = mouse_object_init(background_object, height / 45, height / 45, depth);
+    mouse_object = mouse_object_init(background_object, height / 25, height / 25, depth);
 }
 
 void update_screen_loop() {
