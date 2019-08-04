@@ -267,6 +267,9 @@ void canvas_blur_xy(canvas_t *canvas, int i, int j, int h, int w, int mult) {
             pixel_11[2] = (pixel_00[2] + pixel_01[2] + pixel_02[2]
                            + pixel_10[2] + pixel_11[2] * mult + pixel_12[2]
                            + pixel_20[2] + pixel_21[2] + pixel_22[2]) / (8 + mult);
+            pixel_11[3] = (pixel_00[3] + pixel_01[3] + pixel_02[3]
+                           + pixel_10[3] + pixel_11[3] * mult + pixel_12[3]
+                           + pixel_20[3] + pixel_21[3] + pixel_22[3]) / (8 + mult);
         }
     }
 }
