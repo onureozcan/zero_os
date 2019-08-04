@@ -9,9 +9,23 @@
 #include <assert.h>
 #include <unistd.h>
 
+static int width;
+static int height;
+static int depth;
+static char *buffer;
+
 void screen_object_add_to_parent(screen_object_t *parent, screen_object_t *child);
 
+void screen_object_draw_self_on_buffer(screen_object_t *object);
+
 void screen_object_draw_self_on_parent(struct screen_object *parent, screen_object_t *object);
+
+void screen_object_init(char *_buffer, int _width, int _height, int _depth) {
+    width = _width;
+    height = _height;
+    depth = _depth;
+    buffer = _buffer;
+}
 
 void screen_object_repaint(screen_object_t *obj) {
 
@@ -19,18 +33,15 @@ void screen_object_repaint(screen_object_t *obj) {
         obj->repaint(obj);
     }
     screen_object_t *child = obj->first_child;
+    screen_object_draw_self_on_buffer(obj);
     while (child) {
         screen_object_repaint(child);
         child = child->next_sibling;
     }
-    if (obj->parent) {
-        screen_object_draw_self_on_parent(obj->parent, obj);
-    }
 }
 
-void screen_object_draw_self_on_parent(struct screen_object *parent, screen_object_t *object) {
-
-    int width_parent_bytes = parent->width * parent->depth;
+void screen_object_draw_self_on_buffer(screen_object_t *object) {
+    int width_parent_bytes = width * depth;
     int width_obj_bytes = object->width * object->depth;
 
     if (HAS_ALPHA(object)) {
@@ -38,8 +49,8 @@ void screen_object_draw_self_on_parent(struct screen_object *parent, screen_obje
             for (int i = 0; i < object->width; i++) {
                 for (int j = 0; j < object->height; j++) {
                     uint8_t *dest = (uint8_t *)
-                                            parent->buffer +
-                                    ((object->x + i) * parent->depth + (width_parent_bytes * (j + object->y)));
+                                            buffer +
+                                    ((object->x + i) * depth + (width_parent_bytes * (j + object->y)));
                     uint8_t *src = (uint8_t *) object->buffer + (i * object->depth + width_obj_bytes * j);
                     uint8_t alpha = src[3]; // 4th byte is alpha.
                     for (int k = 0; k < 3; k++) {
@@ -55,7 +66,7 @@ void screen_object_draw_self_on_parent(struct screen_object *parent, screen_obje
             exit(-1);
         }
     } else {
-        char *parent_buffer = parent->buffer + width_parent_bytes * object->y + object->x * parent->depth;
+        char *parent_buffer = buffer + width_parent_bytes * object->y + object->x * depth;
         char *object_buffer = object->buffer;
         for (int i = 0; i < object->height; i++) {
             memcpy(parent_buffer, object_buffer, width_obj_bytes);
@@ -65,7 +76,7 @@ void screen_object_draw_self_on_parent(struct screen_object *parent, screen_obje
     }
 }
 
-screen_object_t *screen_object_new(__nullable screen_object_t *parent, int width, int height, int depth) {
+screen_object_t *screen_object_new(__nullable screen_object_t *parent, int _width, int _height, int _depth) {
 
     screen_object_t *obj = malloc(sizeof(screen_object_t));
     if (obj == NULL) {
@@ -75,10 +86,10 @@ screen_object_t *screen_object_new(__nullable screen_object_t *parent, int width
 
     obj->x = 0;
     obj->y = 0;
-    obj->height = height;
-    obj->width = width;
-    obj->depth = depth;
-    int size_of_buffer = width * height * depth;
+    obj->height = _height;
+    obj->width = _width;
+    obj->depth = _depth;
+    int size_of_buffer = _width * _height * _depth;
     printf("screen object: size of buffer: %d\n", size_of_buffer);
     obj->buffer = malloc(size_of_buffer);
     obj->next_sibling = NULL;
@@ -101,7 +112,6 @@ void screen_object_relocate(screen_object_t *obj, int x, int y) {
 
     if (obj->x != x || obj->y != y) {
         screen_object_t *parent = obj->parent;
-        SET_DIRTY(parent);
         obj->x = x;
         obj->y = y;
         // bounds_check:

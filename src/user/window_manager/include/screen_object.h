@@ -36,6 +36,8 @@ typedef struct screen_object {
     void (*repaint)(struct screen_object*);
 } screen_object_t;
 
+void screen_object_init(char* back_buffer, int width, int height, int depth);
+
 screen_object_t* screen_object_new(__nullable screen_object_t* parent, int width, int height, int depth);
 
 void screen_object_repaint(screen_object_t* obj);

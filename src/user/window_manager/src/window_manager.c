@@ -15,6 +15,7 @@ FILE *lfb, *mouse;
 int depth;
 int height;
 int width;
+char *back_buffer;
 
 screen_object_t *background_object, *mouse_object;
 
@@ -57,6 +58,12 @@ int main(int argc, char **argv) {
 
 void initialize_screen_objects() {
     canvas_init();
+    back_buffer = (char *) malloc(width * height * depth);
+    if (!back_buffer) {
+        printf("failed to alloc back buffer\n");
+        exit(-1);
+    }
+    screen_object_init(back_buffer, width, height, depth);
     background_object = background_object_init(width, height, depth);
     mouse_object = mouse_object_init(background_object, width / 75, height / 25, depth);
 }
@@ -67,7 +74,7 @@ void update_screen_loop() {
     {
         update_mouse_pos();
         screen_object_repaint(background_object);
-        fwrite(background_object->buffer, screen_size_bytes, 1, lfb);
+        fwrite(back_buffer, screen_size_bytes, 1, lfb);
         fseek(lfb, 0, SEEK_SET);
         goto repaint;
     }
