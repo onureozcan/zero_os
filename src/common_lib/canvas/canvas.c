@@ -7,6 +7,9 @@
 
 #define CANVAS_BEZIER_CURVE_SAMPLING 100
 
+static float canvas_area_triangle(int x1, int y1, int x2, int y2, int x3, int y3);
+
+static int canvas_is_point_inside_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y);
 
 void canvas_init() {
     // init font table
@@ -80,6 +83,20 @@ void canvas_init() {
     set_bezier_data_46();
 }
 
+void canvas_fill_triangle(canvas_t *canvas, int *coords, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    for (int i = 0; i < canvas->width; i++) {
+        for (int j = 0; j < canvas->height; j++) {
+            if (canvas_is_point_inside_triangle(
+                    coords[0], coords[1],
+                    coords[2], coords[3],
+                    coords[4], coords[5],
+                    i, j
+            )) {
+                canvas_put_pixel(canvas, i, j, r, g, b, a);
+            }
+        }
+    }
+}
 
 // from osdev
 void canvas_fill_rect(canvas_t *canvas, char *where, uint8_t r, uint8_t g, uint8_t b, uint32_t h, uint32_t w) {
@@ -103,7 +120,7 @@ void canvas_fill_rect_xy(canvas_t *canvas, int x, int y, uint8_t r, uint8_t g, u
 }
 
 // from osdev
-void canvas_put_pixel(canvas_t *canvas, int x, int y, uint8_t b, uint8_t g, uint8_t r) {
+void canvas_put_pixel(canvas_t *canvas, int x, int y, uint8_t b, uint8_t g, uint8_t r, uint8_t alpha) {
     if (x < 0 || x > canvas->width)
         return;
     if (y < 0 || y > canvas->height)
@@ -113,6 +130,7 @@ void canvas_put_pixel(canvas_t *canvas, int x, int y, uint8_t b, uint8_t g, uint
     canvas->buffer[where] = b;
     canvas->buffer[where + 1] = g;
     canvas->buffer[where + 2] = r;
+    canvas->buffer[where + 3] = alpha; // ALPHA
 }
 
 void
@@ -139,6 +157,22 @@ canvas_draw_line(canvas_t *canvas, int x, int y, int x2, int y2, uint8_t r, uint
             y += sy;
         }
     }
+}
+
+static int canvas_is_point_inside_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y) {
+    float area_all = canvas_area_triangle(x1, y1, x2, y2, x3, y3);
+    float area1 = canvas_area_triangle(x1, y1, x, y, x3, y3);
+    float area2 = canvas_area_triangle(x, y, x2, y2, x3, y3);
+    float area3 = canvas_area_triangle(x1, y1, x2, y2, x, y);
+    return (area_all == area1 + area2 + area3);
+}
+
+float canvas_area_triangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+    float area = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0f;
+    if (area < 0) {
+        area = -area;
+    }
+    return area;
 }
 
 static point_t canvas_get_interpolated_point(point_t p1, point_t p2, float percent) {
