@@ -14,7 +14,7 @@ section .text
         resb 20
         dd 0 ; lfb
         dd 1280 ; width pixels
-        dd 768 ; height pixels
+        dd 720 ; height pixels
         dd 32 ; depth
 
 global start

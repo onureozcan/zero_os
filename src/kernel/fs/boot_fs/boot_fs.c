@@ -42,6 +42,9 @@ int boot_fs_open(vfs_node_t *file, int flags) {
     } else if (strcmp(name, "window_manager") == 0) {
         // load test file
         index = 2;
+    } else if (strcmp(name, "mouse_cursor.data") == 0) {
+        // load mouse_cursor file
+        index = 3;
     }
     if (index != -1) {
         int size = 0;

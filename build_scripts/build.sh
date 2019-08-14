@@ -23,6 +23,7 @@ function download_external_file() {
 && mkdir -p ../iso/user \
 && cp hello_world ../iso/user \
 && cp window_manager ../iso/user \
+&& cp ../src/user/window_manager/resources/mouse_cursor.data ../iso/user/mouse_cursor.data \
 && mkdir -p ../dist \
 && chmod 777 ../dist \
 && grub-mkrescue -o ../dist/os.iso ../iso \
