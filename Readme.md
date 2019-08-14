@@ -1,15 +1,18 @@
 # Zero Os
 
-It is an x86 hobby os written in C and assembly.   
-Uses GRUB to boot.  
-It utilizes paging, can load elf32 binaries (only statically linked).   
-Has multitasking and multithreading.   
-Uses newlib in user applications. 
-17 syscalls required by newlib are placed in syscall interface. 
-Some of them has implementations and some are empty.  
-Virtual file system is implemented and supports mount point lists. 
-However no known filesystems are implemented, only an imaginary file system called boot fs for reading files from GRUB kernel modules exists.   
-Uses VBE linear frame buffer but does not have a gui yet. Uses sequences of simple bezier curves for drawing fonts rather than standard formats like otf, ttf etc.
+ - It is an x86 hobby os written in C and assembly.   
+ - Uses GRUB to boot.   
+ - Supports PS2 mouse and keyboard.  
+ - It utilizes paging, can load elf32 binaries (only statically linked).   
+ - Has multitasking and multithreading.   
+ - Uses newlib in user applications. 
+ - 17 syscalls required by newlib are placed in syscall interface. 
+ - Some of them has implementations and some are empty.  
+ - Virtual file system is implemented and supports mount point lists.  
+ - However no known filesystems are implemented, only an imaginary file system called boot fs for reading files from GRUB kernel modules exists.   
+ - Uses VBE linear frame buffer with only 32 bit rgba modes. Gui is under construction. 
+ - Mouse data and framebuffer is mapped to virtual file system at /dev/fb0 and /dev/mouse.  
+ - Uses sequences of simple bezier curves for drawing fonts rather than standard formats like otf, ttf etc.
 
 It is still too young and I am implementing core features one by one. 
 As new features are added, will amend this file also.
@@ -41,6 +44,10 @@ build ... using docker files are bash scripts but they do nothing fancy apart fr
  Symbol files will appear inside iso folder after build. You can configure your ide to debug user apps or kernel image.
  
  **Screenshots**
+
+ 
+ (14.08.2019) window manager is loaded as a user app and mouse cursor working  
+ ![image](https://user-images.githubusercontent.com/21360651/63044895-dc03e680-bed7-11e9-8abd-9df40fc341a8.png) 
   
  (30.06.2019) use app reads a file via syscall  
  ![image](https://user-images.githubusercontent.com/21360651/60397265-9e2f4680-9b53-11e9-9a9f-15ce2c7620ff.png) 
