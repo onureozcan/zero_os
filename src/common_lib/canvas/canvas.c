@@ -4,6 +4,7 @@
 #include <canvas/canvas.h>
 #include <common.h>
 #include <canvas/font_data.h>
+#include <util/img_utils.h>
 
 #define CANVAS_BEZIER_CURVE_SAMPLING 100
 
@@ -272,4 +273,11 @@ void canvas_blur_xy(canvas_t *canvas, int i, int j, int h, int w, int mult) {
                            + pixel_20[3] + pixel_21[3] + pixel_22[3]) / (8 + mult);
         }
     }
+}
+
+void
+canvas_draw_image(canvas_t *canvas, uint8_t *image_data, int x, int y, int image_width, int image_height, int width,
+                  int height) {
+    uint8_t *dest_ptr = canvas_get_pixel_xy(canvas, x, y);
+    img_util_resize(image_data, dest_ptr, image_width, image_height, width, height, canvas->depth);
 }

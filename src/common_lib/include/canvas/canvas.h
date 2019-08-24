@@ -64,5 +64,6 @@ canvas_draw_bezier_curve(canvas_t *canvas, int x, int y, point_t points[], int s
 
 void canvas_draw_char(canvas_t *canvas, int c, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint32_t h, uint32_t w,
                       uint32_t thickness);
+void canvas_draw_image(canvas_t *canvas, uint8_t* image_data, int x, int y, int image_width, int image_height, int width, int height);
 
 #endif //ZEROOS_CANVAS_H

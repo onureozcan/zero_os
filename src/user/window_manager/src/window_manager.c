@@ -65,7 +65,7 @@ void initialize_screen_objects() {
     }
     screen_object_init(back_buffer, width, height, depth);
     background_object = background_object_init(width, height, depth);
-    mouse_object = mouse_object_init(background_object, 35, 45, depth);
+    mouse_object = mouse_object_init(background_object, 17, 22, depth);
 }
 
 void update_screen_loop() {
