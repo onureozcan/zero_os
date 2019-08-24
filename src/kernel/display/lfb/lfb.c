@@ -8,6 +8,7 @@
 #include <display/console.h>
 #include <canvas/canvas.h>
 #include <common.h>
+#include <util/img_utils.h>
 
 static int lfb_width;
 static int lfb_height;
@@ -17,7 +18,7 @@ static int buffer_size;
 static int char_width_pixels;
 static int char_height_pixels;
 static int char_pos;
-static int bkg_color = 40;
+static int bkg_color = 10;
 static int lfb_available = FALSE;
 // are caches initialized?
 static int caches_available;
@@ -86,30 +87,7 @@ static uint8_t *lfb_cache_char_alpha_map(int c, int w, int h) {
         canvas_draw_char(&temp_canvas, c, 1, 1, CHAR_COLOR_R, CHAR_COLOR_G, CHAR_COLOR_B,
                          temp_canvas.height - 1 - LFB_CHAR_THICKNESS - LFB_LINE_SPACING_Y,
                          temp_canvas.width - 1 - LFB_CHAR_THICKNESS - LFB_LINE_SPACING_X, LFB_CHAR_THICKNESS);
-        for (int j = 0; j < temp_canvas.height; j += LFB_AA_SUPER_SAMPLING_RATE) {
-            for (int i = 0; i < temp_canvas.width; i += LFB_AA_SUPER_SAMPLING_RATE) {
-                uint32_t sum_r = 0;
-                uint32_t sum_g = 0;
-                uint32_t sum_b = 0;
-                for (int t = 0; t < LFB_AA_SUPER_SAMPLING_RATE; t++) {
-                    for (int k = 0; k < LFB_AA_SUPER_SAMPLING_RATE; k++) {
-                        uint8_t *val =
-                                aa_atlas + ((i + k) * LFB_DEPTH_BYTES + (j + t) * LFB_DEPTH_BYTES * temp_canvas.width);
-                        sum_r += val[0];
-                        sum_g += val[1];
-                        sum_b += val[2];
-                    }
-                }
-
-                uint8_t *small =
-                        font_cache_map[c] + (i / LFB_AA_SUPER_SAMPLING_RATE * LFB_DEPTH_BYTES +
-                                             j / LFB_AA_SUPER_SAMPLING_RATE * LFB_DEPTH_BYTES * w);
-
-                small[0] = sum_r / (LFB_AA_SUPER_SAMPLING_RATE * LFB_AA_SUPER_SAMPLING_RATE);
-                small[1] = sum_g / (LFB_AA_SUPER_SAMPLING_RATE * LFB_AA_SUPER_SAMPLING_RATE);
-                small[2] = sum_b / (LFB_AA_SUPER_SAMPLING_RATE * LFB_AA_SUPER_SAMPLING_RATE);
-            }
-        }
+        img_util_resize(aa_atlas, font_cache_map[c], temp_canvas.width, temp_canvas.height, w, h, temp_canvas.depth);
 
     }
     return font_cache_map[c];
@@ -149,7 +127,7 @@ void lfb_init(int height, int width, void *lfb_buffer) {
     lfb_clear();
     char_height_pixels = (height - LFB_SCREEN_PADDING_Y) / KERNEL_CONSOLE_HEIGHT;
     char_width_pixels = (width - LFB_SCREEN_PADDING_X) / KERNEL_CONSOLE_WIDTH;
-    back_buffer = (uint8_t*) k_malloc(width * height * LFB_DEPTH_BYTES);
+    back_buffer = (uint8_t *) k_malloc(width * height * LFB_DEPTH_BYTES);
     canvas_init();
     canvas.depth = LFB_DEPTH_BYTES;
     canvas.buffer = (char *) back_buffer;
