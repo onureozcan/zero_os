@@ -9,7 +9,7 @@
 #include <screen_object.h>
 #include <screen_objects/background_object.h>
 #include <screen_objects/mouse_object.h>
-#include <canvas.h>
+#include <canvas/canvas.h>
 
 FILE *lfb, *mouse;
 int depth;

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <screen_object.h>
-#include <canvas.h>
+#include <canvas/canvas.h>
 
 static canvas_t canvas;
 
@@ -35,7 +35,11 @@ screen_object_t *mouse_object_init(screen_object_t *parent, int width, int heigh
     fseek(cursor_image_file, 0, SEEK_END);
     size_t size_of_file = ftell(cursor_image_file);
     fseek(cursor_image_file, 0, SEEK_SET);
-    fread(object->buffer, size_of_file, 1, cursor_image_file);
+
+    char* buff = malloc(size_of_file);
+
+
+    fread(buff, size_of_file, 1, cursor_image_file);
 
     return object;
 

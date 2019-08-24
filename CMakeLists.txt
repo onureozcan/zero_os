@@ -13,8 +13,12 @@ include_directories(src/kernel/lib/include)
 include_directories(src/common_lib/include)
 
 
-add_library(canvas src/common_lib/canvas/canvas.c src/common_lib/canvas/font_data.c)
-set_target_properties(canvas PROPERTIES COMPILE_FLAGS "-fno-stack-protector ${OPTIMIZATION_FLAG}")
+add_library(common
+        src/common_lib/canvas/canvas.c
+        src/common_lib/canvas/font_data.c
+        src/common_lib/util/img_utils.c
+        )
+set_target_properties(common PROPERTIES COMPILE_FLAGS "-fno-stack-protector ${OPTIMIZATION_FLAG}")
 
 add_executable(kernel
         src/kernel/kernel.c
@@ -55,7 +59,7 @@ add_executable(kernel
 set_target_properties(kernel PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/src/link.ld -F dwarf ${DEBUG_FLAG} -nostdlib")
 set_target_properties(kernel PROPERTIES COMPILE_FLAGS "-m32 -masm=intel ${OPTIMIZATION_FLAG} -nostdlib ${DEBUG_FLAG} -Wall")
 
-target_link_libraries(kernel libgcc.a canvas)
+target_link_libraries(kernel libgcc.a common)
 
 ## TESTS
 
@@ -101,7 +105,7 @@ set_target_properties(window_manager PROPERTIES LINK_FLAGS "-T ${CMAKE_SOURCE_DI
 set_target_properties(window_manager PROPERTIES COMPILE_FLAGS "-m32 ${DEBUG_FLAG} ${OPTIMIZATION_FLAG} -I${NEWLIB_INCLUDE_DIR} -nostdlib -Wall")
 
 target_include_directories(window_manager PRIVATE src/user/window_manager/include)
-target_link_libraries(window_manager PUBLIC libc.a syscalls_wrapper canvas)
+target_link_libraries(window_manager PUBLIC libc.a syscalls_wrapper common)
 
 
 

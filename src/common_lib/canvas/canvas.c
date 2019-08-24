@@ -1,9 +1,9 @@
 //
 // Created by onureozcan on 14.06.2019.
 //
-#include <canvas.h>
+#include <canvas/canvas.h>
 #include <common.h>
-#include <font_data.h>
+#include <canvas/font_data.h>
 
 #define CANVAS_BEZIER_CURVE_SAMPLING 100
 

@@ -6,7 +6,7 @@
 #include <display/lfb.h>
 #include <string/k_string.h>
 #include <display/console.h>
-#include <canvas.h>
+#include <canvas/canvas.h>
 #include <common.h>
 
 static int lfb_width;

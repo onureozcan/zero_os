@@ -6,7 +6,7 @@
 
 #include <screen_object.h>
 #include <common.h>
-#include <canvas.h>
+#include <canvas/canvas.h>
 
 static uint8_t r, g, b;
 static canvas_t canvas;

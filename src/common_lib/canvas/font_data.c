@@ -2,7 +2,7 @@
 // Created by onureozcan on 15.06.2019.
 //
 
-#include <canvas.h>
+#include <canvas/canvas.h>
 
 #define BEZIER_FONT_HALF_Y 40
 #define BEZIER_FONT_FULL_Y 100
